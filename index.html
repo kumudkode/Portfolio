@@ -129,6 +129,70 @@
 
         .lenis.lenis-smooth { scroll-behavior: auto; }
         html.lenis { height: auto; }
+
+        /* Animated Ring Effect */
+        .ring-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .ring-container i {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: 0.5s;
+        }
+        .ring-container i:nth-child(1) {
+            border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+            animation: animateRing 6s linear infinite;
+        }
+        .ring-container i:nth-child(2) {
+            border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+            animation: animateRing 4s linear infinite;
+        }
+        .ring-container i:nth-child(3) {
+            border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+            animation: animateRing2 10s linear infinite;
+        }
+        .ring-container:hover i {
+            border: 4px solid var(--clr);
+            filter: drop-shadow(0 0 20px var(--clr));
+        }
+        @keyframes animateRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes animateRing2 {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .profile-img {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            object-fit: cover;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 40px rgba(255, 77, 0, 0.2);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        .ring-container:hover .profile-img {
+            transform: scale(1.05);
+            box-shadow: 0 0 60px rgba(255, 77, 0, 0.4);
+        }
+        @media (max-width: 1024px) {
+            .ring-container {
+                width: 300px;
+                height: 300px;
+            }
+            .profile-img {
+                width: 220px;
+                height: 220px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -164,8 +228,8 @@
         <!-- Hero Section -->
         <section class="min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 relative overflow-hidden">
             <div class="max-w-[1400px] w-full mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
-                    <div class="lg:col-span-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7">
                         <div class="overflow-hidden mb-4">
                             <span class="mono opacity-50 block translate-y-full hero-reveal">Full Stack Engineer — Noida, IN</span>
                         </div>
@@ -174,9 +238,7 @@
                             <div class="overflow-hidden italic"><span class="block translate-y-full hero-reveal text-orange-600" style="transition-delay: 0.1s;">High Performance</span></div>
                             <div class="overflow-hidden"><span class="block translate-y-full hero-reveal" style="transition-delay: 0.2s;">Cloud Solutions.</span></div>
                         </h1>
-                    </div>
-                    <div class="lg:col-span-4 lg:pb-6">
-                        <p class="text-lg leading-relaxed opacity-70 mb-8 max-w-sm reveal-text">
+                        <p class="text-lg leading-relaxed opacity-70 my-8 max-w-lg reveal-text">
                             Specializing in MERN stack development and scalable AWS architectures. Turning complex backend logic into elegant, human-centric interfaces.
                         </p>
                         <div class="flex gap-4">
@@ -190,6 +252,15 @@
                                     GitHub
                                 </a>
                             </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                        <!-- Animated Ring with Profile Image -->
+                        <div class="ring-container">
+                            <i style="--clr:#ff4d00;"></i>
+                            <i style="--clr:#ff6b35;"></i>
+                            <i style="--clr:#fffd44;"></i>
+                            <img src="assets/portfolio.jpg" alt="Kumud Ranjan" class="profile-img">
                         </div>
                     </div>
                 </div>
@@ -359,7 +430,6 @@
                     <div>
                         <div class="mono opacity-30 mb-6 text-orange-500">Direct Reach</div>
                         <p class="serif text-xl">raj94971@gmail.com</p>
-                        <p class="mono mt-2 opacity-50">+91 6200322456</p>
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
