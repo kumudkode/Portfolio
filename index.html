@@ -1,549 +1,785 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kumud Ranjan | Full Stack & Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Premium Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
     <!-- Animation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
-    
+
     <style>
-        :root {
-            --bg: #f7f7f7;
-            --ink: #0a0a0a;
-            --accent: #ff4d00; /* Designer Orange */
-            --paper-grain: url("https://www.transparenttextures.com/patterns/natural-paper-light.png");
+      :root {
+        --bg: #f7f7f7;
+        --ink: #0a0a0a;
+        --accent: #ff4d00; /* Designer Orange */
+        --paper-grain: url("https://www.transparenttextures.com/patterns/natural-paper-light.png");
+      }
+
+      * {
+        cursor: none !important;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .serif {
+        font-family: "Instrument Serif", serif;
+      }
+      .mono {
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      /* Grainy Overlay */
+      .noise-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0.06;
+        background-image: var(--paper-grain);
+      }
+
+      /* Smooth Cursor (Refined Sizes) */
+      #cursor-blob {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: var(--ink);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10001;
+        mix-blend-mode: difference;
+      }
+
+      #cursor-ring {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 10000;
+        transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+          height 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      /* Preloader */
+      #loader {
+        position: fixed;
+        inset: 0;
+        background: var(--ink);
+        z-index: 10002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--bg);
+      }
+
+      .divider {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.08);
+        width: 100%;
+        transform-origin: left;
+      }
+
+      /* Magnetic Button Effect */
+      .magnetic-wrap {
+        display: inline-block;
+        position: relative;
+      }
+
+      /* Text Hover Reveal */
+      .hover-reveal {
+        position: relative;
+        overflow: hidden;
+      }
+      .hover-reveal::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+      }
+      .hover-reveal:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .project-row:hover .project-arrow {
+        transform: translateX(10px) rotate(-45deg);
+      }
+
+      .skill-tag {
+        padding: 4px 12px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 100px;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+      }
+      .skill-tag:hover {
+        background: var(--accent);
+        color: white;
+        border-color: var(--accent);
+      }
+
+      /* Logo Cycling Animation */
+      .logo-word {
+        display: inline-block;
+        position: relative;
+      }
+
+      .lenis.lenis-smooth {
+        scroll-behavior: auto;
+      }
+      html.lenis {
+        height: auto;
+      }
+
+      /* Animated Ring Effect */
+      .ring-container {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .ring-container i {
+        position: absolute;
+        inset: 0;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: 0.5s;
+      }
+      .ring-container i:nth-child(1) {
+        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        animation: animateRing 6s linear infinite;
+      }
+      .ring-container i:nth-child(2) {
+        border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+        animation: animateRing 4s linear infinite;
+      }
+      .ring-container i:nth-child(3) {
+        border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+        animation: animateRing2 10s linear infinite;
+      }
+      .ring-container:hover i {
+        border: 4px solid var(--clr);
+        filter: drop-shadow(0 0 20px var(--clr));
+      }
+      @keyframes animateRing {
+        0% {
+          transform: rotate(0deg);
         }
-
-        * { cursor: none !important; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--ink);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+        100% {
+          transform: rotate(360deg);
         }
-
-        .serif { font-family: 'Instrument Serif', serif; }
-        .mono { font-family: 'Space Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
-
-        /* Grainy Overlay */
-        .noise-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            pointer-events: none;
-            opacity: 0.06;
-            background-image: var(--paper-grain);
+      }
+      @keyframes animateRing2 {
+        0% {
+          transform: rotate(360deg);
         }
-
-        /* Smooth Cursor (Refined Sizes) */
-        #cursor-blob {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            background: var(--ink);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10001;
-            mix-blend-mode: difference;
+        100% {
+          transform: rotate(0deg);
         }
-
-        #cursor-ring {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            border: 1px solid var(--ink);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1), 
-                        height 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        /* Preloader */
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: var(--ink);
-            z-index: 10002;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--bg);
-        }
-
-        .divider { height: 1px; background: rgba(0,0,0,0.08); width: 100%; transform-origin: left; }
-        
-        /* Magnetic Button Effect */
-        .magnetic-wrap { display: inline-block; position: relative; }
-
-        /* Text Hover Reveal */
-        .hover-reveal {
-            position: relative;
-            overflow: hidden;
-        }
-        .hover-reveal::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%; height: 1px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        .hover-reveal:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-
-        .project-row:hover .project-arrow {
-            transform: translateX(10px) rotate(-45deg);
-        }
-
-        .skill-tag {
-            padding: 4px 12px;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 100px;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-        }
-        .skill-tag:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        /* Logo Cycling Animation */
-        .logo-word {
-            display: inline-block;
-            position: relative;
-        }
-
-        .lenis.lenis-smooth { scroll-behavior: auto; }
-        html.lenis { height: auto; }
-
-        /* Animated Ring Effect */
+      }
+      .profile-img {
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 40px rgba(255, 77, 0, 0.2);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+      }
+      .ring-container:hover .profile-img {
+        transform: scale(1.05);
+        box-shadow: 0 0 60px rgba(255, 77, 0, 0.4);
+      }
+      @media (max-width: 1024px) {
         .ring-container {
-            position: relative;
-            width: 400px;
-            height: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .ring-container i {
-            position: absolute;
-            inset: 0;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: 0.5s;
-        }
-        .ring-container i:nth-child(1) {
-            border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
-            animation: animateRing 6s linear infinite;
-        }
-        .ring-container i:nth-child(2) {
-            border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
-            animation: animateRing 4s linear infinite;
-        }
-        .ring-container i:nth-child(3) {
-            border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
-            animation: animateRing2 10s linear infinite;
-        }
-        .ring-container:hover i {
-            border: 4px solid var(--clr);
-            filter: drop-shadow(0 0 20px var(--clr));
-        }
-        @keyframes animateRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes animateRing2 {
-            0% { transform: rotate(360deg); }
-            100% { transform: rotate(0deg); }
+          width: 300px;
+          height: 300px;
         }
         .profile-img {
-            width: 280px;
-            height: 280px;
-            border-radius: 50%;
-            object-fit: cover;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 0 40px rgba(255, 77, 0, 0.2);
-            transition: transform 0.5s ease, box-shadow 0.5s ease;
+          width: 220px;
+          height: 220px;
         }
-        .ring-container:hover .profile-img {
-            transform: scale(1.05);
-            box-shadow: 0 0 60px rgba(255, 77, 0, 0.4);
-        }
-        @media (max-width: 1024px) {
-            .ring-container {
-                width: 300px;
-                height: 300px;
-            }
-            .profile-img {
-                width: 220px;
-                height: 220px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="noise-overlay"></div>
     <div id="cursor-blob"></div>
     <div id="cursor-ring"></div>
 
     <!-- Preloader -->
     <div id="loader">
-        <div class="text-center overflow-hidden">
-            <div id="loader-text" class="mono">KUMUD KODE // 2025</div>
-            <div class="h-[1px] w-48 bg-white/10 mt-4 overflow-hidden">
-                <div id="loader-bar" class="h-full bg-white w-0"></div>
-            </div>
+      <div class="text-center overflow-hidden">
+        <div id="loader-text" class="mono">KUMUD KODE // 2025</div>
+        <div class="h-[1px] w-48 bg-white/10 mt-4 overflow-hidden">
+          <div id="loader-bar" class="h-full bg-white w-0"></div>
         </div>
+      </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-[100] mix-blend-difference">
-        <div class="mono text-white text-lg font-bold select-none cursor-pointer flex gap-1">
-            <span>KUMUD</span>
-            <span id="cycle-logo" class="logo-word text-orange-500">KODE</span>
-        </div>
-        <div class="flex gap-6 md:gap-12">
-            <a href="#about" class="mono text-white hover-reveal">About</a>
-            <a href="#works" class="mono text-white hover-reveal">Works</a>
-            <a href="#contact" class="mono text-white hover-reveal">Contact</a>
-        </div>
+    <nav
+      class="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-[100] mix-blend-difference"
+    >
+      <div
+        class="mono text-white text-lg font-bold select-none cursor-pointer flex gap-1"
+      >
+        <span>KUMUD</span>
+        <span id="cycle-logo" class="logo-word text-orange-500">KODE</span>
+      </div>
+      <div class="flex gap-6 md:gap-12">
+        <a href="#about" class="mono text-white hover-reveal">About</a>
+        <a href="#works" class="mono text-white hover-reveal">Works</a>
+        <a href="#contact" class="mono text-white hover-reveal">Contact</a>
+      </div>
     </nav>
 
     <main id="main-content">
-        <!-- Hero Section -->
-        <section class="min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 relative overflow-hidden">
-            <div class="max-w-[1400px] w-full mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    <div class="lg:col-span-7">
-                        <div class="overflow-hidden mb-4">
-                            <span class="mono opacity-50 block translate-y-full hero-reveal">Full Stack Engineer — Noida, IN</span>
-                        </div>
-                        <h1 class="text-[12vw] md:text-[7vw] leading-[0.9] serif tracking-tight">
-                            <div class="overflow-hidden"><span class="block translate-y-full hero-reveal">Architecting</span></div>
-                            <div class="overflow-hidden italic"><span class="block translate-y-full hero-reveal text-orange-600" style="transition-delay: 0.1s;">High Performance</span></div>
-                            <div class="overflow-hidden"><span class="block translate-y-full hero-reveal" style="transition-delay: 0.2s;">Cloud Solutions.</span></div>
-                        </h1>
-                        <p class="text-lg leading-relaxed opacity-70 my-8 max-w-lg reveal-text">
-                            Specializing in MERN stack development and scalable AWS architectures. Turning complex backend logic into elegant, human-centric interfaces.
-                        </p>
-                        <div class="flex gap-4">
-                            <div class="magnetic-wrap">
-                                <a href="#works" class="mono py-3 px-8 border border-black rounded-full hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all duration-500 block">
-                                    Browse Projects
-                                </a>
-                            </div>
-                            <div class="magnetic-wrap">
-                                <a href="https://github.com/kumudkode" target="_blank" class="mono py-3 px-8 bg-black text-white rounded-full hover:bg-orange-600 border border-black hover:border-orange-600 transition-all duration-500 block">
-                                    GitHub
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-5 flex justify-center lg:justify-end">
-                        <!-- Animated Ring with Profile Image -->
-                        <div class="ring-container">
-                            <i style="--clr:#ff4d00;"></i>
-                            <i style="--clr:#ff6b35;"></i>
-                            <i style="--clr:#fffd44;"></i>
-                            <img src="assets/portfolio.jpg" alt="Kumud Ranjan" class="profile-img">
-                        </div>
-                    </div>
+      <!-- Hero Section -->
+      <section
+        class="min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 relative overflow-hidden"
+      >
+        <div class="max-w-[1400px] w-full mx-auto">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7">
+              <div class="overflow-hidden mb-4">
+                <span class="mono opacity-50 block translate-y-full hero-reveal"
+                  >Full Stack Engineer — Noida, IN</span
+                >
+              </div>
+              <h1
+                class="text-[12vw] md:text-[7vw] leading-[0.9] serif tracking-tight"
+              >
+                <div class="overflow-hidden">
+                  <span class="block translate-y-full hero-reveal"
+                    >Architecting</span
+                  >
                 </div>
-            </div>
-            
-            <div class="absolute -right-20 bottom-10 select-none pointer-events-none opacity-[0.03] text-[20vw] serif leading-none font-bold">
-                KODE
-            </div>
-        </section>
-
-        <!-- Divider -->
-        <div class="px-6 md:px-16"><div class="divider scroll-line"></div></div>
-
-        <!-- Skills Section -->
-        <section class="py-24 px-6 md:px-16 bg-white/30">
-            <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
-                <div class="md:col-span-4 mono opacity-50">(01) Technical Arsenal</div>
-                <div class="md:col-span-8 grid grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div>
-                        <h4 class="mono mb-4 opacity-40">Frontend</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="skill-tag">React.js</span>
-                            <span class="skill-tag">Next.js</span>
-                            <span class="skill-tag">Tailwind CSS</span>
-                            <span class="skill-tag">Framer Motion</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="mono mb-4 opacity-40">Backend</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="skill-tag">Node.js</span>
-                            <span class="skill-tag">Express.js</span>
-                            <span class="skill-tag">Django</span>
-                            <span class="skill-tag">JWT</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 class="mono mb-4 opacity-40">Cloud & DB</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="skill-tag text-orange-600 font-bold border-orange-200">AWS (EC2/S3)</span>
-                            <span class="skill-tag">MongoDB</span>
-                            <span class="skill-tag">MySQL</span>
-                            <span class="skill-tag">Firebase</span>
-                        </div>
-                    </div>
+                <div class="overflow-hidden italic">
+                  <span
+                    class="block translate-y-full hero-reveal text-orange-600"
+                    style="transition-delay: 0.1s"
+                    >High Performance</span
+                  >
                 </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-32 px-6 md:px-16 border-t border-black/5">
-            <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-16">
-                <div class="md:col-span-4 mono opacity-50">(02) Experience & Bio</div>
-                <div class="md:col-span-8">
-                    <h2 class="text-3xl md:text-5xl leading-[1.2] serif reveal-text">
-                        A developer who speaks both <span class="italic text-orange-600">design</span> and <span class="italic">infrastructure</span>.
-                    </h2>
-                    <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 text-lg opacity-70 leading-relaxed">
-                        <div class="reveal-text">
-                            <p class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4">MERN Stack Intern — 2022</p>
-                            <p>Developed a full-stack Swiggy-like delivery platform. Integrated high-availability cloud storage and responsive UI architectures that improved user retention during test phases.</p>
-                        </div>
-                        <div class="reveal-text">
-                            <p class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4">Master of Computer Applications</p>
-                            <p>Currently specializing in advanced computing at Amity University. Focused on deep problem solving, DSA, and optimized backend system design.</p>
-                        </div>
-                    </div>
+                <div class="overflow-hidden">
+                  <span
+                    class="block translate-y-full hero-reveal"
+                    style="transition-delay: 0.2s"
+                    >Cloud Solutions.</span
+                  >
                 </div>
-            </div>
-        </section>
-
-        <!-- Projects List -->
-        <section id="works" class="py-32 px-6 md:px-16">
-            <div class="max-w-[1400px] mx-auto">
-                <div class="flex justify-between items-end mb-16">
-                    <h2 class="text-5xl md:text-7xl serif italic tracking-tighter">Selected Works</h2>
-                    <div class="mono opacity-50 mb-2">Projects 2022—2025</div>
+              </h1>
+              <p
+                class="text-lg leading-relaxed opacity-70 my-8 max-w-lg reveal-text"
+              >
+                Specializing in MERN stack development and scalable AWS
+                architectures. Turning complex backend logic into elegant,
+                human-centric interfaces.
+              </p>
+              <div class="flex gap-4">
+                <div class="magnetic-wrap">
+                  <a
+                    href="#works"
+                    class="mono py-3 px-8 border border-black rounded-full hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all duration-500 block"
+                  >
+                    Browse Projects
+                  </a>
                 </div>
-                
-                <!-- Project: V-Tube -->
-                <a href="https://github.com/kumudkode/v-tube" target="_blank" class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700">
-                    <div class="flex items-center gap-12">
-                        <span class="mono opacity-30">01</span>
-                        <div>
-                            <h3 class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all">V-Tube (Video System)</h3>
-                            <p class="mono opacity-40 mt-1">Node.js / Express / AI Integration</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-8 mt-4 md:mt-0">
-                        <p class="max-w-xs text-sm opacity-50 hidden lg:block">Backend for a streaming platform with AI-powered title & thumbnail generation.</p>
-                        <div class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600">→</div>
-                    </div>
-                </a>
-
-                <!-- Project: Maze Runner -->
-                <a href="https://kumudkode.github.io/maze-runner/" target="_blank" class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700">
-                    <div class="flex items-center gap-12">
-                        <span class="mono opacity-30">02</span>
-                        <div>
-                            <h3 class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all">Maze Runner Visualizer</h3>
-                            <p class="mono opacity-40 mt-1">Canvas API / DSA / JavaScript</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-8 mt-4 md:mt-0">
-                        <p class="max-w-xs text-sm opacity-50 hidden lg:block">A* pathfinding and recursive maze generation visualizer with 60fps performance.</p>
-                        <div class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600">→</div>
-                    </div>
-                </a>
-
-                <!-- Project: AWS Infrastructure -->
-                <a href="https://github.com/kumudkode/aws-infrastructure" target="_blank" class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700">
-                    <div class="flex items-center gap-12">
-                        <span class="mono opacity-30">03</span>
-                        <div>
-                            <h3 class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all">AWS Cloud Architecture</h3>
-                            <p class="mono opacity-40 mt-1">VPC / CloudFront / S3 / EC2</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-8 mt-4 md:mt-0">
-                        <p class="max-w-xs text-sm opacity-50 hidden lg:block">Secure, high-availability architecture with global CDN distribution and SSL.</p>
-                        <div class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600">→</div>
-                    </div>
-                </a>
-
-            </div>
-        </section>
-
-        <!-- Education Section -->
-        <section class="py-24 px-6 md:px-16 border-y border-black/5 bg-white/40">
-            <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
-                <div class="md:col-span-4 mono opacity-50">(03) Academic Foundation</div>
-                <div class="md:col-span-8 flex flex-col gap-12">
-                    <div class="flex justify-between items-start border-b border-black/5 pb-8">
-                        <div>
-                            <h4 class="text-2xl font-semibold">Master of Computer Applications</h4>
-                            <p class="opacity-60">Amity University, Noida</p>
-                        </div>
-                        <p class="mono opacity-50 text-right"><span class="text-orange-600 font-bold">2024 — 2026</span><br/>CGPA: 8.0</p>
-                    </div>
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="text-2xl font-semibold">Bachelor of Computer Applications</h4>
-                            <p class="opacity-60">GNIOT, Greater Noida</p>
-                        </div>
-                        <p class="mono opacity-50 text-right">2021 — 2024<br/>CGPA: 7.0</p>
-                    </div>
+                <div class="magnetic-wrap">
+                  <a
+                    href="https://github.com/kumudkode"
+                    target="_blank"
+                    class="mono py-3 px-8 bg-black text-white rounded-full hover:bg-orange-600 border border-black hover:border-orange-600 transition-all duration-500 block"
+                  >
+                    GitHub
+                  </a>
                 </div>
+              </div>
             </div>
-        </section>
+            <div class="lg:col-span-5 flex justify-center lg:justify-end">
+              <!-- Animated Ring with Profile Image -->
+              <div class="ring-container">
+                <i style="--clr: #ff4d00"></i>
+                <i style="--clr: #ff6b35"></i>
+                <i style="--clr: #fffd44"></i>
+                <img
+                  src="assets/portfolio.jpg"
+                  alt="Kumud Ranjan"
+                  class="profile-img"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <!-- Footer / Contact -->
-        <footer id="contact" class="bg-black text-white py-32 px-6 md:px-16">
-            <div class="max-w-[1400px] mx-auto text-center">
-                <div class="mono opacity-40 mb-12">Collaborate with the engineer</div>
-                <a href="mailto:raj94971@gmail.com" class="text-[10vw] md:text-[8vw] serif italic tracking-tighter leading-none hover:text-orange-500 transition-colors duration-700 block">
-                    Contact.
-                </a>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-32 border-t border-white/10 pt-16 text-left">
-                    <div>
-                        <div class="mono opacity-30 mb-6 text-orange-500">Social Connections</div>
-                        <div class="flex flex-col gap-2">
-                            <a href="https://linkedin.com/in/kumudkode" target="_blank" class="serif text-xl hover:italic transition-all">LinkedIn</a>
-                            <a href="https://github.com/kumudkode" target="_blank" class="serif text-xl hover:italic transition-all">GitHub</a>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="mono opacity-30 mb-6 text-orange-500">Direct Reach</div>
-                        <p class="serif text-xl">raj94971@gmail.com</p>
-                    </div>
-                    <div class="flex flex-col justify-between">
-                        <div>
-                            <div class="mono opacity-30 mb-6 text-orange-500">Location</div>
-                            <p class="serif text-xl italic">Noida, UP</p>
-                        </div>
-                        <div class="mono opacity-20 mt-12">© 2025 KUMUD RANJAN</div>
-                    </div>
-                </div>
+        <div
+          class="absolute -right-20 bottom-10 select-none pointer-events-none opacity-[0.03] text-[20vw] serif leading-none font-bold"
+        >
+          KODE
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="px-6 md:px-16"><div class="divider scroll-line"></div></div>
+
+      <!-- Skills Section -->
+      <section class="py-24 px-6 md:px-16 bg-white/30">
+        <div
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12"
+        >
+          <div class="md:col-span-4 mono opacity-50">
+            (01) Technical Arsenal
+          </div>
+          <div class="md:col-span-8 grid grid-cols-2 lg:grid-cols-3 gap-8">
+            <div>
+              <h4 class="mono mb-4 opacity-40">Frontend</h4>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">React.js</span>
+                <span class="skill-tag">Next.js</span>
+                <span class="skill-tag">Tailwind CSS</span>
+                <span class="skill-tag">Framer Motion</span>
+              </div>
             </div>
-        </footer>
+            <div>
+              <h4 class="mono mb-4 opacity-40">Backend</h4>
+              <div class="flex flex-wrap gap-2">
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">Express.js</span>
+                <span class="skill-tag">Django</span>
+                <span class="skill-tag">JWT</span>
+              </div>
+            </div>
+            <div>
+              <h4 class="mono mb-4 opacity-40">Cloud & DB</h4>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="skill-tag text-orange-600 font-bold border-orange-200"
+                  >AWS (EC2/S3)</span
+                >
+                <span class="skill-tag">MongoDB</span>
+                <span class="skill-tag">MySQL</span>
+                <span class="skill-tag">Firebase</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="py-32 px-6 md:px-16 border-t border-black/5">
+        <div
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-16"
+        >
+          <div class="md:col-span-4 mono opacity-50">(02) Experience & Bio</div>
+          <div class="md:col-span-8">
+            <h2 class="text-3xl md:text-5xl leading-[1.2] serif reveal-text">
+              A developer who speaks both
+              <span class="italic text-orange-600">design</span> and
+              <span class="italic">infrastructure</span>.
+            </h2>
+            <div
+              class="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 text-lg opacity-70 leading-relaxed"
+            >
+              <div class="reveal-text">
+                <p
+                  class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4"
+                >
+                  MERN Stack Intern — 2022
+                </p>
+                <p>
+                  Developed a full-stack Swiggy-like delivery platform.
+                  Integrated high-availability cloud storage and responsive UI
+                  architectures that improved user retention during test phases.
+                </p>
+              </div>
+              <div class="reveal-text">
+                <p
+                  class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4"
+                >
+                  Master of Computer Applications
+                </p>
+                <p>
+                  Currently specializing in advanced computing at Amity
+                  University. Focused on deep problem solving, DSA, and
+                  optimized backend system design.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects List -->
+      <section id="works" class="py-32 px-6 md:px-16">
+        <div class="max-w-[1400px] mx-auto">
+          <div class="flex justify-between items-end mb-16">
+            <h2 class="text-5xl md:text-7xl serif italic tracking-tighter">
+              Selected Works
+            </h2>
+            <div class="mono opacity-50 mb-2">Projects 2022—2025</div>
+          </div>
+
+          <!-- Project: V-Tube -->
+          <a
+            href="https://github.com/kumudkode/v-tube"
+            target="_blank"
+            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
+          >
+            <div class="flex items-center gap-12">
+              <span class="mono opacity-30">01</span>
+              <div>
+                <h3
+                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
+                >
+                  V-Tube (Video System)
+                </h3>
+                <p class="mono opacity-40 mt-1">
+                  Node.js / Express / AI Integration
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-8 mt-4 md:mt-0">
+              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
+                Backend for a streaming platform with AI-powered title &
+                thumbnail generation.
+              </p>
+              <div
+                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
+              >
+                →
+              </div>
+            </div>
+          </a>
+
+          <!-- Project: Maze Runner -->
+          <a
+            href="https://kumudkode.github.io/maze-runner/"
+            target="_blank"
+            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
+          >
+            <div class="flex items-center gap-12">
+              <span class="mono opacity-30">02</span>
+              <div>
+                <h3
+                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
+                >
+                  Maze Runner Visualizer
+                </h3>
+                <p class="mono opacity-40 mt-1">
+                  Canvas API / DSA / JavaScript
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-8 mt-4 md:mt-0">
+              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
+                A* pathfinding and recursive maze generation visualizer with
+                60fps performance.
+              </p>
+              <div
+                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
+              >
+                →
+              </div>
+            </div>
+          </a>
+
+          <!-- Project: AWS Infrastructure -->
+          <a
+            href="https://github.com/kumudkode/aws-infrastructure"
+            target="_blank"
+            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
+          >
+            <div class="flex items-center gap-12">
+              <span class="mono opacity-30">03</span>
+              <div>
+                <h3
+                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
+                >
+                  AWS Cloud Architecture
+                </h3>
+                <p class="mono opacity-40 mt-1">VPC / CloudFront / S3 / EC2</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-8 mt-4 md:mt-0">
+              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
+                Secure, high-availability architecture with global CDN
+                distribution and SSL.
+              </p>
+              <div
+                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
+              >
+                →
+              </div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Education Section -->
+      <section class="py-24 px-6 md:px-16 border-y border-black/5 bg-white/40">
+        <div
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12"
+        >
+          <div class="md:col-span-4 mono opacity-50">
+            (03) Academic Foundation
+          </div>
+          <div class="md:col-span-8 flex flex-col gap-12">
+            <div
+              class="flex justify-between items-start border-b border-black/5 pb-8"
+            >
+              <div>
+                <h4 class="text-2xl font-semibold">
+                  Master of Computer Applications
+                </h4>
+                <p class="opacity-60">Amity University, Noida</p>
+              </div>
+              <p class="mono opacity-50 text-right">
+                <span class="text-orange-600 font-bold">2024 — 2026</span
+                ><br />CGPA: 8.0
+              </p>
+            </div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="text-2xl font-semibold">
+                  Bachelor of Computer Applications
+                </h4>
+                <p class="opacity-60">GNIOT, Greater Noida</p>
+              </div>
+              <p class="mono opacity-50 text-right">
+                2021 — 2024<br />CGPA: 7.0
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer / Contact -->
+      <footer id="contact" class="bg-black text-white py-32 px-6 md:px-16">
+        <div class="max-w-[1400px] mx-auto text-center">
+          <div class="mono opacity-40 mb-12">Collaborate with the engineer</div>
+          <a
+            href="mailto:raj94971@gmail.com"
+            class="text-[10vw] md:text-[8vw] serif italic tracking-tighter leading-none hover:text-orange-500 transition-colors duration-700 block"
+          >
+            Contact.
+          </a>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-32 border-t border-white/10 pt-16 text-left"
+          >
+            <div>
+              <div class="mono opacity-30 mb-6 text-orange-500">
+                Social Connections
+              </div>
+              <div class="flex flex-col gap-2">
+                <a
+                  href="https://linkedin.com/in/kumudkode"
+                  target="_blank"
+                  class="serif text-xl hover:italic transition-all"
+                  >LinkedIn</a
+                >
+                <a
+                  href="https://github.com/kumudkode"
+                  target="_blank"
+                  class="serif text-xl hover:italic transition-all"
+                  >GitHub</a
+                >
+              </div>
+            </div>
+            <div>
+              <div class="mono opacity-30 mb-6 text-orange-500">
+                Direct Reach
+              </div>
+              <p class="serif text-xl">raj94971@gmail.com</p>
+            </div>
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="mono opacity-30 mb-6 text-orange-500">Location</div>
+                <p class="serif text-xl italic">Noida, UP</p>
+              </div>
+              <div class="mono opacity-20 mt-12">© 2025 KUMUD RANJAN</div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
 
     <script>
-        const lenis = new Lenis();
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
         requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
 
-        gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger);
 
-        // Preloader
-        window.addEventListener('load', () => {
-            const tl = gsap.timeline();
-            tl.to("#loader-bar", { width: "100%", duration: 1.2, ease: "power4.inOut" })
-              .to("#loader-text", { opacity: 0, y: -10, duration: 0.4 })
-              .to("#loader", { yPercent: -100, duration: 0.8, ease: "power4.inOut" }, "+=0.1")
-              .from(".hero-reveal", { yPercent: 100, duration: 1, stagger: 0.1, ease: "expo.out" }, "-=0.3");
-        });
+      // Preloader
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+        tl.to("#loader-bar", {
+          width: "100%",
+          duration: 1.2,
+          ease: "power4.inOut",
+        })
+          .to("#loader-text", { opacity: 0, y: -10, duration: 0.4 })
+          .to(
+            "#loader",
+            { yPercent: -100, duration: 0.8, ease: "power4.inOut" },
+            "+=0.1"
+          )
+          .from(
+            ".hero-reveal",
+            { yPercent: 100, duration: 1, stagger: 0.1, ease: "expo.out" },
+            "-=0.3"
+          );
+      });
 
-        // Logo Text Cycling
-        const logoCycle = document.getElementById('cycle-logo');
-        const words = ['KODE', 'CODE', 'DEV', 'SYSTEM'];
-        let wordIndex = 0;
+      // Logo Text Cycling
+      const logoCycle = document.getElementById("cycle-logo");
+      const words = ["KODE", "CODE", "DEV", "SYSTEM"];
+      let wordIndex = 0;
 
-        function cycleText() {
+      function cycleText() {
+        gsap.to(logoCycle, {
+          opacity: 0,
+          y: -5,
+          duration: 0.3,
+          onComplete: () => {
+            wordIndex = (wordIndex + 1) % words.length;
+            logoCycle.innerText = words[wordIndex];
             gsap.to(logoCycle, {
-                opacity: 0,
-                y: -5,
-                duration: 0.3,
-                onComplete: () => {
-                    wordIndex = (wordIndex + 1) % words.length;
-                    logoCycle.innerText = words[wordIndex];
-                    gsap.to(logoCycle, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.3
-                    });
-                }
+              opacity: 1,
+              y: 0,
+              duration: 0.3,
             });
-        }
-        setInterval(cycleText, 3000);
-
-        // Refined Cursor
-        const blob = document.getElementById('cursor-blob');
-        const ring = document.getElementById('cursor-ring');
-        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            gsap.to(blob, { x: mouseX - 3, y: mouseY - 3, duration: 0.1 });
+          },
         });
+      }
+      setInterval(cycleText, 3000);
 
-        const animateRing = () => {
-            ringX += (mouseX - ringX - 15) * 0.2;
-            ringY += (mouseY - ringY - 15) * 0.2;
-            ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-            requestAnimationFrame(animateRing);
-        };
-        animateRing();
+      // Refined Cursor
+      const blob = document.getElementById("cursor-blob");
+      const ring = document.getElementById("cursor-ring");
+      let mouseX = 0,
+        mouseY = 0,
+        ringX = 0,
+        ringY = 0;
 
-        // Mouse Hover States (Smaller & More precise)
-        const hoverables = document.querySelectorAll('a, button, .cursor-pointer, .project-row, .skill-tag');
-        hoverables.forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                gsap.to(ring, { width: 50, height: 50, backgroundColor: 'rgba(255, 77, 0, 0.05)', borderColor: 'var(--accent)', duration: 0.3 });
-                gsap.to(blob, { scale: 1.2, backgroundColor: 'var(--accent)', duration: 0.3 });
-            });
-            el.addEventListener('mouseleave', () => {
-                gsap.to(ring, { width: 30, height: 30, backgroundColor: 'transparent', borderColor: 'var(--ink)', duration: 0.3 });
-                gsap.to(blob, { scale: 1, backgroundColor: 'var(--ink)', duration: 0.3 });
-            });
+      window.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        gsap.to(blob, { x: mouseX - 3, y: mouseY - 3, duration: 0.1 });
+      });
+
+      const animateRing = () => {
+        ringX += (mouseX - ringX - 15) * 0.2;
+        ringY += (mouseY - ringY - 15) * 0.2;
+        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        requestAnimationFrame(animateRing);
+      };
+      animateRing();
+
+      // Mouse Hover States (Smaller & More precise)
+      const hoverables = document.querySelectorAll(
+        "a, button, .cursor-pointer, .project-row, .skill-tag"
+      );
+      hoverables.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          gsap.to(ring, {
+            width: 50,
+            height: 50,
+            backgroundColor: "rgba(255, 77, 0, 0.05)",
+            borderColor: "var(--accent)",
+            duration: 0.3,
+          });
+          gsap.to(blob, {
+            scale: 1.2,
+            backgroundColor: "var(--accent)",
+            duration: 0.3,
+          });
         });
-
-        // Reveal animations
-        gsap.utils.toArray('.reveal-text').forEach(text => {
-            gsap.from(text, {
-                scrollTrigger: { trigger: text, start: "top 90%" },
-                opacity: 0, y: 20, duration: 1, ease: "power3.out"
-            });
+        el.addEventListener("mouseleave", () => {
+          gsap.to(ring, {
+            width: 30,
+            height: 30,
+            backgroundColor: "transparent",
+            borderColor: "var(--ink)",
+            duration: 0.3,
+          });
+          gsap.to(blob, {
+            scale: 1,
+            backgroundColor: "var(--ink)",
+            duration: 0.3,
+          });
         });
+      });
 
-        gsap.utils.toArray('.scroll-line').forEach(line => {
-            gsap.from(line, {
-                scrollTrigger: { trigger: line, start: "top 95%" },
-                scaleX: 0, duration: 1.5, ease: "expo.out"
-            });
+      // Reveal animations
+      gsap.utils.toArray(".reveal-text").forEach((text) => {
+        gsap.from(text, {
+          scrollTrigger: { trigger: text, start: "top 90%" },
+          opacity: 0,
+          y: 20,
+          duration: 1,
+          ease: "power3.out",
         });
+      });
 
-        const magnets = document.querySelectorAll('.magnetic-wrap');
-        magnets.forEach((magnet) => {
-            magnet.addEventListener('mousemove', (e) => {
-                const rect = magnet.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
-                const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
-                gsap.to(magnet.querySelector('a'), { x, y, duration: 0.3 });
-            });
-            magnet.addEventListener('mouseleave', () => {
-                gsap.to(magnet.querySelector('a'), { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
-            });
+      gsap.utils.toArray(".scroll-line").forEach((line) => {
+        gsap.from(line, {
+          scrollTrigger: { trigger: line, start: "top 95%" },
+          scaleX: 0,
+          duration: 1.5,
+          ease: "expo.out",
         });
+      });
+
+      const magnets = document.querySelectorAll(".magnetic-wrap");
+      magnets.forEach((magnet) => {
+        magnet.addEventListener("mousemove", (e) => {
+          const rect = magnet.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
+          const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+          gsap.to(magnet.querySelector("a"), { x, y, duration: 0.3 });
+        });
+        magnet.addEventListener("mouseleave", () => {
+          gsap.to(magnet.querySelector("a"), {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
