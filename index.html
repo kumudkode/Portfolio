@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Premium Fonts -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
     />
     <!-- Animation Libraries -->
@@ -19,8 +19,181 @@
       :root {
         --bg: #f7f7f7;
         --ink: #0a0a0a;
-        --accent: #ff4d00; /* Designer Orange */
+        --accent: #ff4d00;
         --paper-grain: url("https://www.transparenttextures.com/patterns/natural-paper-light.png");
+      }
+
+      [data-theme="dark"] {
+        --bg: #0a0a0a;
+        --ink: #f7f7f7;
+        --paper-grain: url("https://www.transparenttextures.com/patterns/black-paper.png");
+      }
+
+      /* Accessibility - Skip to Content Link */
+      .skip-link {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 0 0 8px 8px;
+        z-index: 9999;
+        font-family: "Space Mono", monospace;
+        font-size: 14px;
+        text-decoration: none;
+        transition: top 0.3s ease;
+      }
+
+      .skip-link:focus {
+        top: 0;
+        outline: 3px solid white;
+        outline-offset: 2px;
+      }
+
+      /* Focus States for Keyboard Navigation */
+      a:focus-visible,
+      button:focus-visible,
+      [tabindex]:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      .theme-toggle:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+        border-radius: 50%;
+      }
+
+      /* Screen Reader Only Utility */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* Reduced Motion Support */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--ink);
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      /* Dark mode overrides */
+      [data-theme="dark"] .bg-white\/30,
+      [data-theme="dark"] .bg-white\/40 {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      [data-theme="dark"] .border-black\/5,
+      [data-theme="dark"] .border-black\/10 {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      [data-theme="dark"] .text-black {
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .border-black {
+        border-color: var(--ink);
+      }
+
+      [data-theme="dark"] .bg-black {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .skill-tag {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .divider {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Footer - truly uniform with page */
+      #contact {
+        background-color: var(--bg) !important;
+        color: var(--ink) !important;
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      #contact .border-white\/10 {
+        border-color: rgba(128, 128, 128, 0.2);
+      }
+
+      #contact .text-white {
+        color: var(--ink) !important;
+      }
+
+      #contact .opacity-20,
+      #contact .opacity-30,
+      #contact .opacity-40 {
+        opacity: 0.6;
+      }
+
+      /* Theme toggle - Sun/Moon */
+      .theme-toggle {
+        width: 20px;
+        height: 20px;
+        cursor: pointer !important;
+        position: relative;
+        transition: transform 0.5s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: rotate(30deg);
+      }
+
+      .theme-toggle svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+        transition: transform 0.5s ease, opacity 0.3s ease;
+      }
+
+      .sun-icon {
+        color: #fbbf24;
+      }
+
+      .moon-icon {
+        color: #a78bfa;
+      }
+
+      [data-theme="light"] .moon-icon {
+        display: none;
+      }
+
+      [data-theme="dark"] .sun-icon {
+        display: none;
+      }
+
+      [data-theme="light"] .theme-toggle:hover {
+        transform: rotate(180deg);
+      }
+
+      [data-theme="dark"] .theme-toggle:hover {
+        transform: rotate(-30deg);
       }
 
       * {
@@ -58,20 +231,19 @@
       /* Smooth Cursor (Refined Sizes) */
       #cursor-blob {
         position: fixed;
-        width: 6px;
-        height: 6px;
-        background: var(--ink);
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
         border-radius: 50%;
         pointer-events: none;
         z-index: 10001;
-        mix-blend-mode: difference;
       }
 
       #cursor-ring {
         position: fixed;
-        width: 30px;
-        height: 30px;
-        border: 1px solid var(--ink);
+        width: 35px;
+        height: 35px;
+        border: 2px solid var(--accent);
         border-radius: 50%;
         pointer-events: none;
         z-index: 10000;
@@ -159,8 +331,8 @@
       /* Animated Ring Effect */
       .ring-container {
         position: relative;
-        width: 400px;
-        height: 400px;
+        width: 340px;
+        height: 340px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -168,24 +340,25 @@
       .ring-container i {
         position: absolute;
         inset: 0;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        border: 3px solid var(--clr);
         transition: 0.5s;
+        filter: drop-shadow(0 0 8px var(--clr));
       }
       .ring-container i:nth-child(1) {
-        border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+        border-radius: var(--br1, 38% 62% 63% 37% / 41% 44% 56% 59%);
         animation: animateRing 6s linear infinite;
       }
       .ring-container i:nth-child(2) {
-        border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
-        animation: animateRing 4s linear infinite;
+        border-radius: var(--br2, 41% 44% 56% 59%/38% 62% 63% 37%);
+        animation: animateRing 4s linear infinite reverse;
       }
       .ring-container i:nth-child(3) {
-        border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+        border-radius: var(--br3, 61% 39% 45% 55%/34% 67% 33% 66%);
         animation: animateRing2 10s linear infinite;
       }
       .ring-container:hover i {
-        border: 4px solid var(--clr);
-        filter: drop-shadow(0 0 20px var(--clr));
+        border: 5px solid var(--clr);
+        filter: drop-shadow(0 0 30px var(--clr));
       }
       @keyframes animateRing {
         0% {
@@ -204,8 +377,8 @@
         }
       }
       .profile-img {
-        width: 280px;
-        height: 280px;
+        width: 240px;
+        height: 240px;
         border-radius: 50%;
         object-fit: cover;
         position: relative;
@@ -219,25 +392,114 @@
       }
       @media (max-width: 1024px) {
         .ring-container {
-          width: 300px;
-          height: 300px;
+          width: 280px;
+          height: 280px;
         }
         .profile-img {
+          width: 200px;
+          height: 200px;
+        }
+      }
+
+      /* Tablet styles (768px - 1024px) */
+      @media (max-width: 1024px) and (min-width: 768px) {
+        .skill-tag {
+          font-size: 0.75rem;
+          padding: 3px 10px;
+        }
+      }
+
+      /* Mobile styles (max 768px) */
+      @media (max-width: 768px) {
+        .ring-container {
           width: 220px;
           height: 220px;
+          margin-top: 2rem;
+        }
+        .profile-img {
+          width: 160px;
+          height: 160px;
+        }
+        .ring-container i {
+          border-width: 2px;
+        }
+        .skill-tag {
+          font-size: 0.7rem;
+          padding: 3px 8px;
+        }
+        /* Hide custom cursor on mobile */
+        #cursor-blob,
+        #cursor-ring {
+          display: none !important;
+        }
+      }
+
+      /* Small mobile (max 480px) */
+      @media (max-width: 480px) {
+        .ring-container {
+          width: 180px;
+          height: 180px;
+        }
+        .profile-img {
+          width: 130px;
+          height: 130px;
+        }
+      }
+
+      /* KODE watermark responsive */
+      .kode-watermark {
+        position: absolute;
+        right: -20px;
+        bottom: 10px;
+        font-size: 20vw;
+        opacity: 0.04;
+        pointer-events: none;
+        user-select: none;
+        font-weight: bold;
+        line-height: 1;
+        z-index: 0;
+      }
+
+      @media (max-width: 1024px) {
+        .kode-watermark {
+          font-size: 18vw;
+          right: -10px;
+          bottom: 5px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .kode-watermark {
+          font-size: 22vw;
+          right: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          bottom: 2rem;
+          text-align: center;
+          opacity: 0.03;
         }
       }
     </style>
   </head>
   <body>
-    <div class="noise-overlay"></div>
-    <div id="cursor-blob"></div>
-    <div id="cursor-ring"></div>
+    <!-- Skip to Content Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="noise-overlay" aria-hidden="true"></div>
+    <div id="cursor-blob" aria-hidden="true"></div>
+    <div id="cursor-ring" aria-hidden="true"></div>
 
     <!-- Preloader -->
-    <div id="loader">
+    <div
+      id="loader"
+      role="status"
+      aria-label="Loading page content"
+      aria-live="polite"
+    >
       <div class="text-center overflow-hidden">
-        <div id="loader-text" class="mono">KUMUD KODE // 2025</div>
+        <div id="loader-text" class="mono" aria-hidden="true">
+          KUMUD KODE // 2025
+        </div>
         <div class="h-[1px] w-48 bg-white/10 mt-4 overflow-hidden">
           <div id="loader-bar" class="h-full bg-white w-0"></div>
         </div>
@@ -246,93 +508,317 @@
 
     <!-- Navigation -->
     <nav
-      class="fixed top-0 w-full p-6 md:p-8 flex justify-between items-center z-[100] mix-blend-difference"
+      class="fixed top-0 w-full px-4 sm:px-6 md:px-12 py-4 sm:py-5 flex justify-between items-center z-[100] mix-blend-difference"
+      role="navigation"
+      aria-label="Main navigation"
     >
-      <div
-        class="mono text-white text-lg font-bold select-none cursor-pointer flex gap-1"
+      <a
+        href="#"
+        class="flex items-center gap-1 select-none cursor-pointer"
+        aria-label="Kumud Kode - Home"
       >
-        <span>KUMUD</span>
-        <span id="cycle-logo" class="logo-word text-orange-500">KODE</span>
-      </div>
-      <div class="flex gap-6 md:gap-12">
-        <a href="#about" class="mono text-white hover-reveal">About</a>
-        <a href="#works" class="mono text-white hover-reveal">Works</a>
-        <a href="#contact" class="mono text-white hover-reveal">Contact</a>
+        <span
+          class="text-white text-base sm:text-lg md:text-xl tracking-normal"
+          style="font-family: 'Lora', serif"
+          >Kumud</span
+        >
+        <span
+          id="cycle-logo"
+          class="logo-word text-base sm:text-lg md:text-xl tracking-normal"
+          style="font-family: 'Lora', serif"
+          >Kode</span
+        >
+      </a>
+      <div class="flex items-center gap-3 sm:gap-6 md:gap-8" role="menubar">
+        <a
+          href="#about"
+          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
+          style="font-family: 'Lora', serif"
+          role="menuitem"
+          >About</a
+        >
+        <a
+          href="projects.html"
+          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+          style="font-family: 'Lora', serif"
+          role="menuitem"
+          >Projects</a
+        >
+        <a
+          href="#contact"
+          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+          style="font-family: 'Lora', serif"
+          role="menuitem"
+          >Contact</a
+        >
+        <button
+          class="theme-toggle flex-shrink-0"
+          onclick="toggleTheme()"
+          aria-label="Toggle dark and light theme"
+          aria-pressed="false"
+          type="button"
+          tabindex="0"
+        >
+          <!-- Sun Icon -->
+          <svg
+            class="sun-icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <line
+              x1="12"
+              y1="1"
+              x2="12"
+              y2="3"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="12"
+              y1="21"
+              x2="12"
+              y2="23"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="4.22"
+              y1="4.22"
+              x2="5.64"
+              y2="5.64"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="18.36"
+              y1="18.36"
+              x2="19.78"
+              y2="19.78"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="1"
+              y1="12"
+              x2="3"
+              y2="12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="21"
+              y1="12"
+              x2="23"
+              y2="12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="4.22"
+              y1="19.78"
+              x2="5.64"
+              y2="18.36"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <line
+              x1="18.36"
+              y1="5.64"
+              x2="19.78"
+              y2="4.22"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <!-- Moon Icon -->
+          <svg
+            class="moon-icon"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <span class="sr-only">Toggle theme</span>
+        </button>
       </div>
     </nav>
 
-    <main id="main-content">
+    <main id="main-content" role="main" tabindex="-1">
       <!-- Hero Section -->
       <section
-        class="min-h-screen flex flex-col justify-center px-6 md:px-16 pt-24 relative overflow-hidden"
+        class="min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-center px-4 sm:px-6 md:px-16 pt-16 sm:pt-20 pb-8 sm:pb-12 relative overflow-hidden"
+        aria-label="Introduction"
       >
         <div class="max-w-[1400px] w-full mx-auto">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div class="lg:col-span-7">
-              <div class="overflow-hidden mb-4">
-                <span class="mono opacity-50 block translate-y-full hero-reveal"
-                  >Full Stack Engineer — Noida, IN</span
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center"
+          >
+            <div class="order-2 lg:order-1">
+              <!-- Status Badge + Location -->
+              <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                <div class="flex items-center gap-2 hero-reveal">
+                  <span class="relative flex h-2 w-2">
+                    <span
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                    ></span>
+                    <span
+                      class="relative inline-flex rounded-full h-2 w-2 bg-green-500"
+                    ></span>
+                  </span>
+                  <span class="mono text-xs text-green-600">Open to work</span>
+                </div>
+                <span class="mono text-xs opacity-50 hero-reveal"
+                  >• Noida, IN</span
                 >
               </div>
+
               <h1
-                class="text-[12vw] md:text-[7vw] leading-[0.9] serif tracking-tight"
+                class="text-[9vw] sm:text-[8vw] md:text-[5vw] leading-[0.95] serif tracking-tight mb-2 sm:mb-3"
               >
                 <div class="overflow-hidden">
                   <span class="block translate-y-full hero-reveal"
-                    >Architecting</span
-                  >
-                </div>
-                <div class="overflow-hidden italic">
-                  <span
-                    class="block translate-y-full hero-reveal text-orange-600"
-                    style="transition-delay: 0.1s"
-                    >High Performance</span
+                    >Hi, I'm <span class="text-orange-600">Kumud</span></span
                   >
                 </div>
                 <div class="overflow-hidden">
                   <span
-                    class="block translate-y-full hero-reveal"
+                    class="block translate-y-full hero-reveal italic"
+                    style="transition-delay: 0.1s"
+                    >Full-Stack Developer</span
+                  >
+                </div>
+                <div class="overflow-hidden">
+                  <span
+                    class="block translate-y-full hero-reveal opacity-60 text-[5.5vw] sm:text-[5vw] md:text-[3.5vw]"
                     style="transition-delay: 0.2s"
-                    >Cloud Solutions.</span
+                    >& Cloud Enthusiast</span
                   >
                 </div>
               </h1>
+
               <p
-                class="text-lg leading-relaxed opacity-70 my-8 max-w-lg reveal-text"
+                class="text-sm sm:text-base leading-relaxed opacity-60 mb-4 max-w-lg reveal-text"
               >
-                Specializing in MERN stack development and scalable AWS
-                architectures. Turning complex backend logic into elegant,
-                human-centric interfaces.
+                MCA student at Amity University crafting scalable MERN
+                applications deployed on AWS. Passionate about clean code and
+                open source.
               </p>
-              <div class="flex gap-4">
+
+              <!-- Inline Stats -->
+              <div class="flex flex-wrap gap-4 mb-4 reveal-text">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-bold text-orange-600">400+</span>
+                  <span class="mono text-xs opacity-50">commits</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-bold text-orange-600">21</span>
+                  <span class="mono text-xs opacity-50">repos</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xl font-bold text-orange-600">43</span>
+                  <span class="mono text-xs opacity-50">day streak</span>
+                </div>
+              </div>
+
+              <!-- CTA Buttons -->
+              <div
+                class="flex flex-wrap gap-3 mb-4"
+                role="group"
+                aria-label="Quick links"
+              >
                 <div class="magnetic-wrap">
                   <a
-                    href="#works"
-                    class="mono py-3 px-8 border border-black rounded-full hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all duration-500 block"
+                    href="projects.html"
+                    class="mono text-sm py-2.5 px-6 border border-black rounded-full hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all duration-500 block"
+                    aria-label="View all my projects"
                   >
-                    Browse Projects
+                    View Projects
                   </a>
                 </div>
                 <div class="magnetic-wrap">
                   <a
                     href="https://github.com/kumudkode"
                     target="_blank"
-                    class="mono py-3 px-8 bg-black text-white rounded-full hover:bg-orange-600 border border-black hover:border-orange-600 transition-all duration-500 block"
+                    rel="noopener noreferrer"
+                    class="mono text-sm py-2.5 px-6 bg-black text-white rounded-full hover:bg-orange-600 transition-all duration-500 block"
+                    aria-label="Visit my GitHub profile (opens in new tab)"
                   >
                     GitHub
                   </a>
                 </div>
+                <div class="magnetic-wrap">
+                  <a
+                    href="https://linkedin.com/in/kumudkode"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mono text-sm py-2.5 px-6 border border-black/20 rounded-full hover:border-blue-500 hover:text-blue-600 transition-all duration-500 block"
+                    aria-label="Connect on LinkedIn (opens in new tab)"
+                  >
+                    LinkedIn
+                  </a>
+                </div>
+              </div>
+
+              <!-- Tech Icons -->
+              <div class="flex flex-wrap gap-2 reveal-text">
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+                  alt="React"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+                  alt="Node.js"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg"
+                  alt="MongoDB"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg"
+                  alt="JavaScript"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+                  alt="TypeScript"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+                  alt="Python"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
+                <img
+                  src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg"
+                  alt="AWS"
+                  class="w-5 h-5 opacity-50 hover:opacity-100 transition-opacity"
+                />
               </div>
             </div>
-            <div class="lg:col-span-5 flex justify-center lg:justify-end">
-              <!-- Animated Ring with Profile Image -->
-              <div class="ring-container">
+
+            <!-- Profile Image with Ring -->
+            <div
+              class="flex justify-center lg:justify-end order-1 lg:order-2 mb-6 lg:mb-0"
+            >
+              <div class="ring-container" aria-hidden="true">
                 <i style="--clr: #ff4d00"></i>
                 <i style="--clr: #ff6b35"></i>
                 <i style="--clr: #fffd44"></i>
                 <img
                   src="assets/portfolio.jpg"
-                  alt="Kumud Ranjan"
+                  alt="Kumud Ranjan - Full Stack Developer"
                   class="profile-img"
                 />
               </div>
@@ -340,28 +826,33 @@
           </div>
         </div>
 
-        <div
-          class="absolute -right-20 bottom-10 select-none pointer-events-none opacity-[0.03] text-[20vw] serif leading-none font-bold"
-        >
-          KODE
-        </div>
+        <div class="kode-watermark serif" aria-hidden="true">KODE</div>
       </section>
 
       <!-- Divider -->
-      <div class="px-6 md:px-16"><div class="divider scroll-line"></div></div>
+      <div class="px-6 md:px-16" aria-hidden="true">
+        <div class="divider scroll-line"></div>
+      </div>
 
       <!-- Skills Section -->
-      <section class="py-24 px-6 md:px-16 bg-white/30">
+      <section
+        class="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-16 bg-white/30"
+        aria-label="Technical Skills"
+      >
         <div
-          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12"
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-12"
         >
-          <div class="md:col-span-4 mono opacity-50">
+          <div class="md:col-span-4 mono opacity-50 text-sm sm:text-base">
             (01) Technical Arsenal
           </div>
-          <div class="md:col-span-8 grid grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="md:col-span-8 grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+          >
             <div>
-              <h4 class="mono mb-4 opacity-40">Frontend</h4>
-              <div class="flex flex-wrap gap-2">
+              <h4 class="mono mb-3 sm:mb-4 opacity-40 text-xs sm:text-sm">
+                Frontend
+              </h4>
+              <div class="flex flex-wrap gap-1.5 sm:gap-2">
                 <span class="skill-tag">React.js</span>
                 <span class="skill-tag">Next.js</span>
                 <span class="skill-tag">Tailwind CSS</span>
@@ -369,17 +860,21 @@
               </div>
             </div>
             <div>
-              <h4 class="mono mb-4 opacity-40">Backend</h4>
-              <div class="flex flex-wrap gap-2">
+              <h4 class="mono mb-3 sm:mb-4 opacity-40 text-xs sm:text-sm">
+                Backend
+              </h4>
+              <div class="flex flex-wrap gap-1.5 sm:gap-2">
                 <span class="skill-tag">Node.js</span>
                 <span class="skill-tag">Express.js</span>
                 <span class="skill-tag">Django</span>
                 <span class="skill-tag">JWT</span>
               </div>
             </div>
-            <div>
-              <h4 class="mono mb-4 opacity-40">Cloud & DB</h4>
-              <div class="flex flex-wrap gap-2">
+            <div class="col-span-2 lg:col-span-1">
+              <h4 class="mono mb-3 sm:mb-4 opacity-40 text-xs sm:text-sm">
+                Cloud & DB
+              </h4>
+              <div class="flex flex-wrap gap-1.5 sm:gap-2">
                 <span
                   class="skill-tag text-orange-600 font-bold border-orange-200"
                   >AWS (EC2/S3)</span
@@ -394,27 +889,35 @@
       </section>
 
       <!-- About Section -->
-      <section id="about" class="py-32 px-6 md:px-16 border-t border-black/5">
+      <section
+        id="about"
+        class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16 border-t border-black/5"
+        aria-label="About me and experience"
+      >
         <div
-          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-16"
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 sm:gap-12 md:gap-16"
         >
-          <div class="md:col-span-4 mono opacity-50">(02) Experience & Bio</div>
+          <div class="md:col-span-4 mono opacity-50 text-sm sm:text-base">
+            (02) Experience & Bio
+          </div>
           <div class="md:col-span-8">
-            <h2 class="text-3xl md:text-5xl leading-[1.2] serif reveal-text">
+            <h2
+              class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.2] serif reveal-text"
+            >
               A developer who speaks both
               <span class="italic text-orange-600">design</span> and
               <span class="italic">infrastructure</span>.
             </h2>
             <div
-              class="mt-16 grid grid-cols-1 sm:grid-cols-2 gap-12 text-lg opacity-70 leading-relaxed"
+              class="mt-8 sm:mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 text-base sm:text-lg opacity-70 leading-relaxed"
             >
               <div class="reveal-text">
                 <p
-                  class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4"
+                  class="mb-4 sm:mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4 text-sm sm:text-base"
                 >
                   MERN Stack Intern — 2022
                 </p>
-                <p>
+                <p class="text-sm sm:text-base">
                   Developed a full-stack Swiggy-like delivery platform.
                   Integrated high-availability cloud storage and responsive UI
                   architectures that improved user retention during test phases.
@@ -422,11 +925,11 @@
               </div>
               <div class="reveal-text">
                 <p
-                  class="mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4"
+                  class="mb-4 sm:mb-6 font-medium text-black opacity-100 border-l-2 border-orange-500 pl-4 text-sm sm:text-base"
                 >
                   Master of Computer Applications
                 </p>
-                <p>
+                <p class="text-sm sm:text-base">
                   Currently specializing in advanced computing at Amity
                   University. Focused on deep problem solving, DSA, and
                   optimized backend system design.
@@ -438,142 +941,83 @@
       </section>
 
       <!-- Projects List -->
-      <section id="works" class="py-32 px-6 md:px-16">
+      <section
+        id="works"
+        class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16"
+        aria-label="Portfolio projects"
+      >
         <div class="max-w-[1400px] mx-auto">
-          <div class="flex justify-between items-end mb-16">
-            <h2 class="text-5xl md:text-7xl serif italic tracking-tighter">
-              Selected Works
-            </h2>
-            <div class="mono opacity-50 mb-2">Projects 2022—2025</div>
+          <div
+            class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-8 sm:mb-12 md:mb-16 gap-4"
+          >
+            <div>
+              <h2
+                class="text-3xl sm:text-5xl md:text-7xl serif italic tracking-tighter mb-2"
+              >
+                Selected Works
+              </h2>
+              <p class="text-sm sm:text-base opacity-60">
+                Featured projects from my portfolio
+              </p>
+            </div>
+            <a
+              href="projects.html"
+              class="mono text-sm py-2 px-5 border border-black/20 rounded-full hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all duration-500 self-start sm:self-end sm:mb-2"
+            >
+              View All →
+            </a>
           </div>
 
-          <!-- Project: V-Tube -->
-          <a
-            href="https://github.com/kumudkode/v-tube"
-            target="_blank"
-            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
-          >
-            <div class="flex items-center gap-12">
-              <span class="mono opacity-30">01</span>
-              <div>
-                <h3
-                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
-                >
-                  V-Tube (Video System)
-                </h3>
-                <p class="mono opacity-40 mt-1">
-                  Node.js / Express / AI Integration
-                </p>
-              </div>
+          <!-- Featured projects will be loaded dynamically from data/projects.json -->
+          <div id="featured-projects">
+            <!-- Loading state -->
+            <div class="text-center py-12 opacity-50 border-t border-black/10">
+              <p class="mono text-sm">Loading projects...</p>
             </div>
-            <div class="flex items-center gap-8 mt-4 md:mt-0">
-              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
-                Backend for a streaming platform with AI-powered title &
-                thumbnail generation.
-              </p>
-              <div
-                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
-              >
-                →
-              </div>
-            </div>
-          </a>
-
-          <!-- Project: Maze Runner -->
-          <a
-            href="https://kumudkode.github.io/maze-runner/"
-            target="_blank"
-            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
-          >
-            <div class="flex items-center gap-12">
-              <span class="mono opacity-30">02</span>
-              <div>
-                <h3
-                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
-                >
-                  Maze Runner Visualizer
-                </h3>
-                <p class="mono opacity-40 mt-1">
-                  Canvas API / DSA / JavaScript
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-8 mt-4 md:mt-0">
-              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
-                A* pathfinding and recursive maze generation visualizer with
-                60fps performance.
-              </p>
-              <div
-                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
-              >
-                →
-              </div>
-            </div>
-          </a>
-
-          <!-- Project: AWS Infrastructure -->
-          <a
-            href="https://github.com/kumudkode/aws-infrastructure"
-            target="_blank"
-            class="project-row group border-t border-black/10 py-10 flex flex-col md:flex-row justify-between items-start md:items-center cursor-pointer hover:px-6 transition-all duration-700"
-          >
-            <div class="flex items-center gap-12">
-              <span class="mono opacity-30">03</span>
-              <div>
-                <h3
-                  class="text-3xl md:text-5xl serif group-hover:italic group-hover:text-orange-600 transition-all"
-                >
-                  AWS Cloud Architecture
-                </h3>
-                <p class="mono opacity-40 mt-1">VPC / CloudFront / S3 / EC2</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-8 mt-4 md:mt-0">
-              <p class="max-w-xs text-sm opacity-50 hidden lg:block">
-                Secure, high-availability architecture with global CDN
-                distribution and SSL.
-              </p>
-              <div
-                class="project-arrow text-3xl transform transition-transform duration-500 group-hover:text-orange-600"
-              >
-                →
-              </div>
-            </div>
-          </a>
+          </div>
         </div>
       </section>
 
       <!-- Education Section -->
-      <section class="py-24 px-6 md:px-16 border-y border-black/5 bg-white/40">
+      <section
+        class="py-16 sm:py-24 px-4 sm:px-6 md:px-16 border-y border-black/5 bg-white/40"
+        aria-label="Education background"
+      >
         <div
-          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12"
+          class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12"
         >
-          <div class="md:col-span-4 mono opacity-50">
+          <div class="md:col-span-4 mono opacity-50 text-sm sm:text-base">
             (03) Academic Foundation
           </div>
-          <div class="md:col-span-8 flex flex-col gap-12">
+          <div class="md:col-span-8 flex flex-col gap-8 sm:gap-12">
             <div
-              class="flex justify-between items-start border-b border-black/5 pb-8"
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-black/5 pb-6 sm:pb-8 gap-2 sm:gap-4"
             >
               <div>
-                <h4 class="text-2xl font-semibold">
+                <h4 class="text-xl sm:text-2xl font-semibold">
                   Master of Computer Applications
                 </h4>
-                <p class="opacity-60">Amity University, Noida</p>
+                <p class="opacity-60 text-sm sm:text-base">
+                  Amity University, Noida
+                </p>
               </div>
-              <p class="mono opacity-50 text-right">
+              <p class="mono opacity-50 text-left sm:text-right text-sm">
                 <span class="text-orange-600 font-bold">2024 — 2026</span
                 ><br />CGPA: 8.0
               </p>
             </div>
-            <div class="flex justify-between items-start">
+            <div
+              class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4"
+            >
               <div>
-                <h4 class="text-2xl font-semibold">
+                <h4 class="text-xl sm:text-2xl font-semibold">
                   Bachelor of Computer Applications
                 </h4>
-                <p class="opacity-60">GNIOT, Greater Noida</p>
+                <p class="opacity-60 text-sm sm:text-base">
+                  GNIOT, Greater Noida
+                </p>
               </div>
-              <p class="mono opacity-50 text-right">
+              <p class="mono opacity-50 text-left sm:text-right text-sm">
                 2021 — 2024<br />CGPA: 7.0
               </p>
             </div>
@@ -582,50 +1026,78 @@
       </section>
 
       <!-- Footer / Contact -->
-      <footer id="contact" class="bg-black text-white py-32 px-6 md:px-16">
+      <footer
+        id="contact"
+        class="py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-16"
+        role="contentinfo"
+        aria-label="Contact information"
+      >
         <div class="max-w-[1400px] mx-auto text-center">
-          <div class="mono opacity-40 mb-12">Collaborate with the engineer</div>
+          <div class="mono opacity-40 mb-6 sm:mb-8 md:mb-12 text-xs sm:text-sm">
+            Collaborate with the engineer
+          </div>
           <a
             href="mailto:raj94971@gmail.com"
-            class="text-[10vw] md:text-[8vw] serif italic tracking-tighter leading-none hover:text-orange-500 transition-colors duration-700 block"
+            class="text-[12vw] sm:text-[10vw] md:text-[8vw] serif italic tracking-tighter leading-none hover:text-orange-500 transition-colors duration-700 block"
+            aria-label="Send email to raj94971@gmail.com"
           >
             Contact.
           </a>
 
           <div
-            class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-32 border-t border-white/10 pt-16 text-left"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16 mt-16 sm:mt-24 md:mt-32 border-t border-white/10 pt-8 sm:pt-12 md:pt-16 text-left"
           >
             <div>
-              <div class="mono opacity-30 mb-6 text-orange-500">
+              <div
+                class="mono opacity-30 mb-4 sm:mb-6 text-orange-500 text-xs sm:text-sm"
+              >
                 Social Connections
               </div>
-              <div class="flex flex-col gap-2">
+              <nav class="flex flex-col gap-2" aria-label="Social media links">
                 <a
                   href="https://linkedin.com/in/kumudkode"
                   target="_blank"
-                  class="serif text-xl hover:italic transition-all"
+                  rel="noopener noreferrer"
+                  class="serif text-lg sm:text-xl hover:italic transition-all"
+                  aria-label="LinkedIn profile (opens in new tab)"
                   >LinkedIn</a
                 >
                 <a
                   href="https://github.com/kumudkode"
                   target="_blank"
-                  class="serif text-xl hover:italic transition-all"
+                  rel="noopener noreferrer"
+                  class="serif text-lg sm:text-xl hover:italic transition-all"
+                  aria-label="GitHub profile (opens in new tab)"
                   >GitHub</a
                 >
-              </div>
+              </nav>
             </div>
             <div>
-              <div class="mono opacity-30 mb-6 text-orange-500">
+              <div
+                class="mono opacity-30 mb-4 sm:mb-6 text-orange-500 text-xs sm:text-sm"
+              >
                 Direct Reach
               </div>
-              <p class="serif text-xl">raj94971@gmail.com</p>
+              <p class="serif text-lg sm:text-xl break-all sm:break-normal">
+                <a href="mailto:raj94971@gmail.com" aria-label="Send email"
+                  >raj94971@gmail.com</a
+                >
+              </p>
             </div>
-            <div class="flex flex-col justify-between">
+            <div
+              class="flex flex-col justify-between sm:col-span-2 md:col-span-1"
+            >
               <div>
-                <div class="mono opacity-30 mb-6 text-orange-500">Location</div>
-                <p class="serif text-xl italic">Noida, UP</p>
+                <div
+                  class="mono opacity-30 mb-4 sm:mb-6 text-orange-500 text-xs sm:text-sm"
+                >
+                  Location
+                </div>
+                <p class="serif text-lg sm:text-xl italic">Noida, UP</p>
               </div>
-              <div class="mono opacity-20 mt-12">© 2025 KUMUD RANJAN</div>
+              <div class="mono opacity-20 mt-8 sm:mt-12 text-xs sm:text-sm">
+                © 2025 KUMUD RANJAN
+              </div>
             </div>
           </div>
         </div>
@@ -717,27 +1189,25 @@
           gsap.to(ring, {
             width: 50,
             height: 50,
-            backgroundColor: "rgba(255, 77, 0, 0.05)",
+            backgroundColor: "rgba(255, 77, 0, 0.1)",
             borderColor: "var(--accent)",
             duration: 0.3,
           });
           gsap.to(blob, {
-            scale: 1.2,
-            backgroundColor: "var(--accent)",
+            scale: 1.5,
             duration: 0.3,
           });
         });
         el.addEventListener("mouseleave", () => {
           gsap.to(ring, {
-            width: 30,
-            height: 30,
+            width: 35,
+            height: 35,
             backgroundColor: "transparent",
-            borderColor: "var(--ink)",
+            borderColor: "var(--accent)",
             duration: 0.3,
           });
           gsap.to(blob, {
             scale: 1,
-            backgroundColor: "var(--ink)",
             duration: 0.3,
           });
         });
@@ -780,6 +1250,92 @@
           });
         });
       });
+
+      // Random Ring Colors & Designs on Page Load
+      (function initRandomRingColors() {
+        const colorPalettes = [
+          ["#ff4d00", "#ff6b35", "#fffd44"], // Orange Fire
+          ["#00ff87", "#60efff", "#00d9ff"], // Cyan Mint
+          ["#ff0080", "#ff8c00", "#40e0d0"], // Neon Tropical
+          ["#8b5cf6", "#ec4899", "#06b6d4"], // Purple Pink
+          ["#fbbf24", "#f97316", "#ef4444"], // Sunset
+          ["#10b981", "#3b82f6", "#8b5cf6"], // Cool Gradient
+          ["#f43f5e", "#fb7185", "#fda4af"], // Rose
+          ["#22d3ee", "#a78bfa", "#f472b6"], // Pastel Neon
+          ["#84cc16", "#22c55e", "#14b8a6"], // Green Forest
+          ["#e11d48", "#7c3aed", "#2563eb"], // Vibrant Mix
+        ];
+
+        const borderRadiusPatterns = [
+          [
+            "38% 62% 63% 37% / 41% 44% 56% 59%",
+            "41% 44% 56% 59% / 38% 62% 63% 37%",
+            "61% 39% 45% 55% / 34% 67% 33% 66%",
+          ],
+          [
+            "70% 30% 30% 70% / 60% 40% 60% 40%",
+            "30% 70% 70% 30% / 40% 60% 40% 60%",
+            "50% 50% 30% 70% / 70% 30% 50% 50%",
+          ],
+          [
+            "60% 40% 55% 45% / 45% 55% 40% 60%",
+            "45% 55% 60% 40% / 55% 45% 45% 55%",
+            "40% 60% 45% 55% / 60% 40% 55% 45%",
+          ],
+          [
+            "25% 75% 65% 35% / 55% 45% 35% 65%",
+            "75% 25% 35% 65% / 45% 55% 65% 35%",
+            "55% 45% 75% 25% / 35% 65% 25% 75%",
+          ],
+          [
+            "80% 20% 40% 60% / 30% 70% 50% 50%",
+            "20% 80% 60% 40% / 70% 30% 50% 50%",
+            "50% 50% 20% 80% / 50% 50% 80% 20%",
+          ],
+        ];
+
+        const randomPalette =
+          colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+        const randomBorderRadius =
+          borderRadiusPatterns[
+            Math.floor(Math.random() * borderRadiusPatterns.length)
+          ];
+
+        // Store the primary color for use across the page
+        window.themeColor = randomPalette[0];
+
+        const rings = document.querySelectorAll(".ring-container i");
+        rings.forEach((ring, index) => {
+          ring.style.setProperty("--clr", randomPalette[index]);
+        });
+
+        const container = document.querySelector(".ring-container");
+        if (container) {
+          container.style.setProperty("--br1", randomBorderRadius[0]);
+          container.style.setProperty("--br2", randomBorderRadius[1]);
+          container.style.setProperty("--br3", randomBorderRadius[2]);
+        }
+
+        // Update logo color to match ring
+        const logoElement = document.getElementById("cycle-logo");
+        if (logoElement) {
+          logoElement.style.color = randomPalette[0];
+        }
+
+        // Update profile image shadow to match first ring color
+        const profileImg = document.querySelector(".profile-img");
+        if (profileImg) {
+          profileImg.style.boxShadow = `0 0 40px ${randomPalette[0]}40`;
+        }
+
+        // Update CSS accent variable
+        document.documentElement.style.setProperty(
+          "--accent",
+          randomPalette[0]
+        );
+      })();
     </script>
+    <script src="assets/theme.js"></script>
+    <script src="assets/projectLoader.js"></script>
   </body>
 </html>

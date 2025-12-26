@@ -1,0 +1,145 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "V-Tube Video System",
+      "description": "Backend for a streaming platform with AI-powered title & thumbnail generation using Gemini API. Built with Node.js, Express, MongoDB, and Cloudinary.",
+      "category": ["fullstack"],
+      "tech": ["Node.js", "Express", "MongoDB", "Gemini AI", "Cloudinary"],
+      "github": "https://github.com/kumudkode/v-tube",
+      "live": "",
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": 2,
+      "name": "Maze Runner Visualizer",
+      "description": "A* pathfinding and recursive maze generation visualizer with 60fps performance using Canvas API. Features multiple algorithms and customizable grid sizes.",
+      "category": ["algorithm", "frontend"],
+      "tech": ["JavaScript", "Canvas API", "A* Algorithm", "DSA"],
+      "github": "https://github.com/kumudkode/maze-runner",
+      "live": "https://kumudkode.github.io/maze-runner/",
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": 3,
+      "name": "AWS Cloud Architecture",
+      "description": "Secure, high-availability architecture with global CDN distribution and SSL. Implemented VPC, load balancing, and auto-scaling for production workloads.",
+      "category": ["cloud"],
+      "tech": ["AWS EC2", "S3", "CloudFront", "VPC", "Route53"],
+      "github": "https://github.com/kumudkode/aws-infrastructure",
+      "live": "",
+      "featured": true,
+      "order": 3
+    },
+    {
+      "id": 4,
+      "name": "Swiggy-Like Delivery App",
+      "description": "Full-stack food delivery platform with real-time order tracking, payment integration, and admin dashboard. Built during MERN Stack internship in 2022.",
+      "category": ["fullstack"],
+      "tech": ["React", "Node.js", "MongoDB", "Stripe", "Socket.io"],
+      "github": "",
+      "live": "",
+      "featured": false,
+      "order": 4
+    },
+    {
+      "id": 5,
+      "name": "Portfolio Website",
+      "description": "Modern, accessible portfolio with custom animations, dark mode, and full responsiveness. Features GSAP animations, custom cursor, and keyboard navigation.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "Tailwind CSS", "GSAP", "JavaScript"],
+      "github": "",
+      "live": "index.html",
+      "featured": false,
+      "order": 5
+    },
+    {
+      "id": 6,
+      "name": "REST API Aggregator",
+      "description": "Microservices-based API gateway that aggregates multiple third-party APIs with rate limiting, caching, and authentication middleware.",
+      "category": ["fullstack"],
+      "tech": ["Express.js", "Redis", "JWT", "Docker"],
+      "github": "",
+      "live": "",
+      "featured": false,
+      "order": 6
+    }
+  ],
+  "extraPages": [
+    {
+      "id": 7,
+      "name": "Project A",
+      "description": "Standalone HTML page hosted inside projects/a.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/a.html",
+      "featured": false,
+      "order": 7
+    },
+    {
+      "id": 8,
+      "name": "Project G",
+      "description": "Standalone HTML page hosted inside projects/g.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/g.html",
+      "featured": false,
+      "order": 8
+    },
+    {
+      "id": 9,
+      "name": "Project H",
+      "description": "Standalone HTML page hosted inside projects/h.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/h.html",
+      "featured": false,
+      "order": 9
+    },
+    {
+      "id": 10,
+      "name": "Project I",
+      "description": "Standalone HTML page hosted inside projects/i.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/i.html",
+      "featured": false,
+      "order": 10
+    },
+    {
+      "id": 11,
+      "name": "Photo Gallery",
+      "description": "Standalone HTML page hosted inside projects/photo.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/photo.html",
+      "featured": false,
+      "order": 11
+    },
+    {
+      "id": 12,
+      "name": "Photo Gallery 2",
+      "description": "Standalone HTML page hosted inside projects/photo2.html.",
+      "category": ["frontend"],
+      "tech": ["HTML5", "CSS"],
+      "github": "",
+      "live": "projects/photo2.html",
+      "featured": false,
+      "order": 12
+    }
+  ],
+  "categories": {
+    "all": "All Projects",
+    "fullstack": "Full Stack",
+    "frontend": "Frontend",
+    "cloud": "Cloud & DevOps",
+    "algorithm": "Algorithms"
+  }
+}

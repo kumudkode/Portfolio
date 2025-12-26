@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOMETRIC STUDIO | Redefining Dimensional Space</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #7e3af2;
+            --accent-secondary: #a855f7;
+            --accent-tertiary: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #7e3af2 0%, #a855f7 50%, #ec4899 100%);
+            --accent-gradient-h: linear-gradient(to right, #7e3af2, #a855f7, #ec4899);
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-hover: rgba(255, 255, 255, 0.08);
+            --nav-bg: rgba(10, 10, 10, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --vector-opacity: 0.2;
+            --marquee-opacity: 0.02;
+            --scroll-indicator: rgba(255, 255, 255, 0.15);
+            --transition-fast: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-normal: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-slow: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        [data-theme="light"] {
+            --bg: #f9fafb;
+            --text: #0a0a0a;
+            --accent: #7e3af2;
+            --accent-secondary: #a855f7;
+            --accent-tertiary: #ec4899;
+            --accent-gradient: linear-gradient(135deg, #7e3af2 0%, #a855f7 50%, #ec4899 100%);
+            --accent-gradient-h: linear-gradient(to right, #7e3af2, #a855f7, #ec4899);
+            --glass: rgba(255, 255, 255, 0.8);
+            --glass-hover: rgba(255, 255, 255, 0.9);
+            --nav-bg: rgba(249, 250, 251, 0.9);
+            --border: rgba(0, 0, 0, 0.1);
+            --vector-opacity: 0.1;
+            --marquee-opacity: 0.04;
+            --scroll-indicator: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            transition: background-color 0.5s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(126, 58, 242, 0.05) 0%, transparent 40%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        [data-theme="light"]::before {
+            background: radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.03) 0%, transparent 40%);
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            transition: opacity 0.4s ease;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            background: var(--text);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        .cursor-follower {
+            position: fixed;
+            width: 48px;
+            height: 48px;
+            border: 1.5px solid var(--text, #ffffff);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.18s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+            opacity: 0.2;
+            will-change: transform, opacity;
+        }
+
+        body:hover .cursor-follower {
+            opacity: 0.15;
+        }
+
+        body[data-cursor="pointer"] .cursor {
+            transform: translate(-50%, -50%) scale(0.7);
+            background: var(--accent);
+        }
+
+        body[data-cursor="pointer"] .cursor-follower {
+            opacity: 0.3;
+            border-color: var(--accent);
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        /* Text gradient animation */
+        .gradient-text {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .gradient-text::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 4px;
+        }
+
+        .gradient-text:hover::after {
+            opacity: 0.2;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        p, a, span, li {
+            font-family: 'Inter', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8rem 0;
+            position: relative;
+        }
+
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 120px;
+            height: 2px;
+            background: var(--accent-gradient-h);
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition-slow);
+            will-change: opacity, transform;
+        }
+
+        .reveal.delay-1 { transition-delay: 0.1s; }
+        .reveal.delay-2 { transition-delay: 0.2s; }
+        .reveal.delay-3 { transition-delay: 0.3s; }
+        .reveal.delay-4 { transition-delay: 0.4s; }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 0;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(10px);
+        }
+
+        nav.scrolled {
+            background: var(--nav-bg);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
+        }
+
+        .nav-link {
+            position: relative;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: var(--text);
+            opacity: 0.8;
+            transition: var(--transition-fast);
+            font-size: 0.875rem;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-gradient-h);
+            transition: var(--transition-fast);
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            opacity: 1;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Hero section */
+        .hero-title {
+            font-size: clamp(4rem, 10vw, 9rem);
+            line-height: 0.88;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+        }
+
+        .hero-subtitle {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 300;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            opacity: 0.35;
+            letter-spacing: -0.03em;
+        }
+
+        /* Marquee effect */
+        .marquee-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .marquee {
+            position: absolute;
+            white-space: nowrap;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 14vh;
+            opacity: var(--marquee-opacity);
+            color: var(--text);
+            will-change: transform;
+        }
+
+        .marquee span {
+            display: inline-block;
+            padding: 0 2rem;
+        }
+
+        /* Project cards */
+        .project-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-normal);
+            border-radius: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            will-change: transform;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0%;
+            background: var(--accent-gradient);
+            z-index: 5;
+            transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: bottom;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            width: 0%;
+            background: var(--accent-gradient-h);
+            z-index: 5;
+            transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: left;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            background: var(--glass-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        .project-card:hover::before { 
+            height: 100%;
+            transition-delay: 0.1s;
+        }
+        
+        .project-card:hover::after { 
+            width: 100%;
+            transition-delay: 0.2s;
+        }
+
+        .project-icon {
+            color: var(--accent);
+            opacity: 0;
+            transform: translate(8px, -8px);
+            transition: var(--transition-normal);
+        }
+
+        .project-card:hover .project-icon {
+            opacity: 1;
+            transform: translate(0, 0);
+        }
+
+        .project-preview-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            transition: var(--transition-normal);
+        }
+
+        .project-preview-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.07;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+            transform: scale(1.2);
+            transition: var(--transition-normal);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .project-card:hover .project-preview-content {
+            opacity: 0.2;
+            transform: scale(1);
+        }
+
+        /* Theme switcher */
+        .theme-switch {
+            width: 60px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            transition: var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .switch-handle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--text);
+            transition: var(--transition-fast);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .switch-handle {
+            transform: translateX(28px);
+        }
+
+        /* Stats section */
+        .stats-counter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 7rem;
+            line-height: 0.9;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Process cards */
+        .process-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: var(--transition-normal);
+            height: 100%;
+        }
+
+        .process-card:hover {
+            transform: translateY(-5px);
+            border-color: transparent;
+            background: var(--glass-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-indicator-text {
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .scroll-indicator-line {
+            width: 1px;
+            height: 40px;
+            background: var(--scroll-indicator);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .scroll-indicator-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--text);
+            border-radius: 4px;
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(32px); opacity: 0; }
+        }
+
+        /* Footer */
+        .footer-link {
+            opacity: 0.7;
+            transition: var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+        }
+
+        /* Vector field background */
+        #vector-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -2;
+            opacity: var(--vector-opacity);
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+            
+            .cursor, .cursor-follower {
+                display: none !important;
+            }
+            
+            .hero-title {
+                font-size: clamp(3rem, 14vw, 6rem);
+            }
+            
+            .hero-subtitle {
+                font-size: clamp(1.5rem, 8vw, 2.5rem);
+            }
+            
+            .stats-counter {
+                font-size: 4rem;
+            }
+            
+            .theme-switch {
+                width: 50px;
+                height: 28px;
+            }
+            
+            [data-theme="light"] .switch-handle {
+                transform: translateX(22px);
+            }
+            
+            .nav-menu-mobile {
+                display: block !important;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            .cursor, .cursor-follower {
+                display: none;
+            }
+        }
+
+        /* Animation for floating elements */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0.3; }
+        }
+
+        .pulsing {
+            animation: pulse 3s infinite;
+        }
+
+        /* Glowing effect */
+        .glow-effect {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .glow-purple {
+            background: linear-gradient(90deg, #7e3af2, #a855f7);
+            top: 10%;
+            left: 10%;
+        }
+        
+        .glow-pink {
+            background: linear-gradient(90deg, #ec4899, #f472b6);
+            bottom: 10%;
+            right: 10%;
+        }
+
+        /* Animated gradient border */
+        .gradient-border {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: var(--accent-gradient);
+            z-index: -1;
+            border-radius: 18px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        .gradient-border::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--bg);
+            border-radius: 16px;
+            z-index: -1;
+        }
+
+        /* Custom scrollbar */
+        *::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        *::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+            background: var(--text);
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <!-- Cursor elements -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Noise texture -->
+    <div class="noise"></div>
+
+    <!-- Canvas for vector field animation -->
+    <canvas id="vector-canvas"></canvas>
+
+    <!-- Glowing elements -->
+    <div class="glow-effect glow-purple"></div>
+    <div class="glow-effect glow-pink"></div>
+
+    <!-- Marquee background animation -->
+    <div class="marquee-container">
+        <div class="marquee" id="marquee1">
+            <span>GEOMETRIC STUDIO × KINETIC ARCHITECTURE × VECTOR FIELDS × </span>
+            <span>GEOMETRIC STUDIO × KINETIC ARCHITECTURE × VECTOR FIELDS × </span>
+        </div>
+        <div class="marquee" id="marquee2" style="top: 35%; opacity: 0.015;">
+            <span>FLUID STRUCTURES × PRECISION DESIGN × DIMENSIONAL LOGIC × </span>
+            <span>FLUID STRUCTURES × PRECISION DESIGN × DIMENSIONAL LOGIC × </span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="px-6 md:px-12">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl md:text-3xl font-bold">
+                <span class="font-space-grotesk bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">GS</span>
+            </div>
+            
+            <div class="flex items-center gap-10">
+                <div class="hidden md:flex gap-8">
+                    <a href="#projects" class="nav-link active">Projects</a>
+                    <a href="#process" class="nav-link">Process</a>
+                    <a href="#studio" class="nav-link">Studio</a>
+                </div>
+                <div class="theme-switch" id="theme-toggle">
+                    <div class="switch-handle"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative pt-28 pb-20 px-6 md:px-[8%]">
+        <!-- Hero section -->
+        <section id="home" class="min-h-screen flex flex-col justify-center relative pt-16">
+            <div class="max-w-5xl">
+                <div class="reveal delay-1">
+                    <div class="text-xs uppercase tracking-widest mb-6 opacity-50 font-space-grotesk flex items-center gap-3">
+                        <span class="w-8 h-[1px] bg-current opacity-70"></span> 
+                        ARCHITECTING DIMENSIONAL EXPERIENCES
+                    </div>
+                    <h1 class="hero-title mb-8 leading-[0.88]">
+                        <span class="block">REDEFINING</span>
+                        <span class="hero-subtitle block mt-2">PERCEPTUAL</span>
+                        <span class="block mt-2">SPACE</span>
+                    </h1>
+                    
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-12 mt-16">
+                        <p class="max-w-xl text-lg md:text-xl text-opacity-80 leading-relaxed">
+                            We craft immersive digital environments where mathematical precision meets emotional resonance. Each project is a dimensional experience that transcends traditional boundaries.
+                        </p>
+                        <div class="w-[1px] h-24 bg-current opacity-10 hidden md:block"></div>
+                    </div>
+                </div>
+                
+                <div class="reveal delay-3 mt-32">
+                    <div class="scroll-indicator">
+                        <div class="scroll-indicator-text">EXPLORE OUR WORK</div>
+                        <div class="scroll-indicator-line"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Stats section -->
+        <section id="stats" class="py-24">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center reveal">
+                    <div class="stats-counter">143</div>
+                    <div class="text-lg opacity-80 mt-4">Projects Delivered</div>
+                </div>
+                <div class="text-center reveal delay-1">
+                    <div class="stats-counter">57</div>
+                    <div class="text-lg opacity-80 mt-4">Global Collaborations</div>
+                </div>
+                <div class="text-center reveal delay-2">
+                    <div class="stats-counter">12</div>
+                    <div class="text-lg opacity-80 mt-4">Industry Awards</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Projects section -->
+        <section id="projects" class="py-28">
+            <div class="flex items-center gap-6 mb-20 reveal">
+                <span class="text-xs font-space-grotesk tracking-widest uppercase opacity-60">SELECTED PROJECTS</span>
+                <div class="h-[1px] flex-grow bg-current opacity-10"></div>
+                <div class="flex gap-3">
+                    <span class="text-xs font-space-grotesk opacity-30">2021</span>
+                    <span class="text-xs font-space-grotesk opacity-30">—</span>
+                    <span class="text-xs font-space-grotesk opacity-30">2024</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project cards -->
+                <div class="project-card reveal">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">VECTOR FLOW</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-01</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">VF</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                Immersive data visualization system for global financial institutions.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal delay-1">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">PRISM GRID</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-02</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">PG</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                Modular interface system for enterprise applications with kinetic behaviors.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal delay-2">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">QUANTUM UI</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-03</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">QI</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                Next-generation interface design for quantum computing platforms.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">META SPATIAL</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-04</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">MS</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                Spatial navigation system for virtual reality environments.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal delay-1">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">NEBULA TYPE</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-05</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">NT</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                Responsive typography system with fluid motion states.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card reveal delay-2">
+                    <div class="p-8 flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="text-2xl md:text-3xl font-space-grotesk font-medium">COSMIC UX</h3>
+                            <span class="text-xs tracking-widest opacity-50 uppercase font-space-grotesk">GS-06</span>
+                        </div>
+                        <div class="project-preview-box mb-8">
+                            <div class="project-preview-content">
+                                <div class="text-[5rem] md:text-[7rem] font-space-grotesk font-bold">CU</div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-6 border-t border-[var(--border)] flex justify-between items-end">
+                            <p class="text-sm opacity-70 max-w-[220px] leading-relaxed">
+                                User experience framework for space exploration platforms.
+                            </p>
+                            <i class="fas fa-arrow-up-right project-icon text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Process section -->
+        <section id="process" class="py-32">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="col-span-2 reveal">
+                        <div class="text-xs font-space-grotesk tracking-widest opacity-60 mb-4">OUR METHODOLOGY</div>
+                        <h2 class="text-5xl md:text-7xl font-space-grotesk font-bold leading-[0.9]">
+                            PRECISION <span class="block mt-2">IN <span class="opacity-30 font-light">MOTION</span></span>
+                        </h2>
+                    </div>
+                    <div class="process-card reveal">
+                        <div class="text-6xl font-space-grotesk font-bold opacity-5 mb-4">01</div>
+                        <h4 class="text-2xl font-space-grotesk mb-4">Research & Analysis</h4>
+                        <p class="opacity-80 leading-relaxed">
+                            We begin with deep technical research and conceptual exploration to understand dimensional relationships and emotional impact.
+                        </p>
+                    </div>
+                    <div class="process-card reveal delay-1">
+                        <div class="text-6xl font-space-grotesk font-bold opacity-5 mb-4">02</div>
+                        <h4 class="text-2xl font-space-grotesk mb-4">Algorithmic Design</h4>
+                        <p class="opacity-80 leading-relaxed">
+                            Our designs emerge from mathematical frameworks that prioritize both functional integrity and emotional resonance.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="relative h-[500px] md:h-[600px] rounded-2xl overflow-hidden border border-[var(--border)] reveal delay-2">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/30 to-pink-900/30"></div>
+                    <div class="absolute inset-0 flex items-center justify-center opacity-10">
+                        <div class="text-[8rem] font-space-grotesk font-bold tracking-tighter">SYSTEMS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <!-- Studio section -->
+        <section id="studio" class="py-32">
+            <div class="text-center max-w-3xl mx-auto mb-24 reveal">
+                <div class="text-xs font-space-grotesk tracking-widest opacity-60 mb-4">ABOUT US</div>
+                <h2 class="text-4xl md:text-6xl font-space-grotesk font-bold leading-[1.1]">
+                    WHERE <span class="gradient-text">MATHEMATICS</span> MEETS <span class="gradient-text">EMOTION</span>
+                </h2>
+                <p class="mt-8 text-lg opacity-80 leading-relaxed">
+                    Founded in 2018, Geometric Studio has pioneered the integration of algorithmic design and emotional storytelling. Our team of architects, designers, and engineers collaborate to create dimensional experiences that redefine human interaction with digital space.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="process-card reveal">
+                    <div class="text-4xl mb-4">✨</div>
+                    <h3 class="text-2xl font-space-grotesk mb-3">Vision</h3>
+                    <p class="opacity-80">
+                        To reimagine digital space as an extension of human perception through the language of geometry and motion.
+                    </p>
+                </div>
+                <div class="process-card reveal delay-1">
+                    <div class="text-4xl mb-4">🚀</div>
+                    <h3 class="text-2xl font-space-grotesk mb-3">Mission</h3>
+                    <p class="opacity-80">
+                        To create transformative experiences where mathematical precision and intuitive interaction exist in perfect harmony.
+                    </p>
+                </div>
+                <div class="process-card reveal delay-2">
+                    <div class="text-4xl mb-4">🤝</div>
+                    <h3 class="text-2xl font-space-grotesk mb-3">Values</h3>
+                    <p class="opacity-80">
+                        Rigorous innovation, thoughtful craftsmanship, and unwavering commitment to pushing dimensional boundaries.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-16 px-8 md:px-[8%] border-t border-[var(--border)]">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+            <div class="md:col-span-2">
+                <div class="text-2xl font-space-grotesk mb-6">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">GS</span> STUDIO
+                </div>
+                <p class="max-w-md opacity-80 mb-8 leading-relaxed">
+                    Architects of dimensional experiences at the intersection of mathematics, emotion, and human perception.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-12 h-12 rounded-xl border border-[var(--border)] flex items-center justify-center hover:bg-[var(--glass-hover)] transition-all footer-link">
+                        <i class="fab fa-behance text-base"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 rounded-xl border border-[var(--border)] flex items-center justify-center hover:bg-[var(--glass-hover)] transition-all footer-link">
+                        <i class="fab fa-instagram text-base"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 rounded-xl border border-[var(--border)] flex items-center justify-center hover:bg-[var(--glass-hover)] transition-all footer-link">
+                        <i class="fab fa-linkedin-in text-base"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-space-grotesk font-medium text-lg mb-6">Navigation</h4>
+                <ul class="space-y-3">
+                    <li><a href="#projects" class="opacity-70 hover:opacity-100 transition-opacity footer-link">Projects</a></li>
+                    <li><a href="#process" class="opacity-70 hover:opacity-100 transition-opacity footer-link">Process</a></li>
+                    <li><a href="#studio" class="opacity-70 hover:opacity-100 transition-opacity footer-link">Studio</a></li>
+                    <li><a href="#" class="opacity-70 hover:opacity-100 transition-opacity footer-link">Journal</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-space-grotesk font-medium text-lg mb-6">Contact</h4>
+                <ul class="space-y-3 opacity-80">
+                    <li>studio@geometric.studio</li>
+                    <li>+1 (212) 555-0123</li>
+                    <li>101 Dimensional Ave</li>
+                    <li>New York, NY 10001</li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-16 pt-8 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center opacity-60 text-xs font-space-grotesk tracking-widest">
+            <div>© 2025 GEOMETRIC STUDIO. ALL RIGHTS RESERVED.</div>
+            <div class="flex gap-8 mt-4 md:mt-0">
+                <a href="#" class="opacity-60 hover:opacity-100 transition-opacity footer-link">PRIVACY POLICY</a>
+                <a href="#" class="opacity-60 hover:opacity-100 transition-opacity footer-link">TERMS OF SERVICE</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize GSAP with ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Setup custom cursor
+        function setupCustomCursor() {
+            const cursor = document.querySelector('.cursor');
+            const cursorFollower = document.querySelector('.cursor-follower');
+            const interactiveElements = document.querySelectorAll('a, button, .theme-switch, .project-card, input, textarea');
+            
+            let mouseX = 0;
+            let mouseY = 0;
+            let followerX = 0;
+            let followerY = 0;
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                // Position the small cursor
+                cursor.style.left = `${mouseX}px`;
+                cursor.style.top = `${mouseY}px`;
+            });
+            
+            // Animate the follower cursor with delay
+            function animateFollower() {
+                followerX += (mouseX - followerX) * 0.2;
+                followerY += (mouseY - followerY) * 0.2;
+                
+                cursorFollower.style.left = `${followerX}px`;
+                cursorFollower.style.top = `${followerY}px`;
+                
+                requestAnimationFrame(animateFollower);
+            }
+            
+            animateFollower();
+            
+            // Handle cursor state on interactive elements
+            interactiveElements.forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    document.body.setAttribute('data-cursor', 'pointer');
+                });
+                
+                element.addEventListener('mouseleave', () => {
+                    document.body.removeAttribute('data-cursor');
+                });
+            });
+        }
+        
+        // Setup vector field animation
+        function setupVectorField() {
+            const canvas = document.getElementById('vector-canvas');
+            const ctx = canvas.getContext('2d');
+            let lines = [];
+            let mouse = { x: -100, y: -100 };
+            const config = { 
+                spacing: 80, 
+                maxLength: 40, 
+                influence: 200, 
+                baseAngle: 0 
+            };
+            
+            function initCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                lines = [];
+                const cols = Math.ceil(canvas.width / config.spacing) + 1;
+                const rows = Math.ceil(canvas.height / config.spacing) + 1;
+                
+                for(let x = 0; x < cols; x++) {
+                    for(let y = 0; y < rows; y++) {
+                        lines.push({ 
+                            originX: x * config.spacing, 
+                            originY: y * config.spacing, 
+                            angle: Math.random() * Math.PI * 2,
+                            baseAngle: Math.random() * 0.4 - 0.2
+                        });
+                    }
+                }
+            }
+            
+            function drawLines() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const color = getComputedStyle(document.documentElement).getPropertyValue('--text');
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.2;
+                ctx.lineCap = 'round';
+                
+                lines.forEach((line, index) => {
+                    // Base animation for all lines
+                    line.angle += line.baseAngle * 0.01;
+                    
+                    // Mouse interaction
+                    const dx = mouse.x - line.originX;
+                    const dy = mouse.y - line.originY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    let targetAngle = line.angle;
+                    if (dist < config.influence) {
+                        targetAngle = Math.atan2(dy, dx);
+                        const power = Math.max(0, 1 - (dist / config.influence));
+                        targetAngle = line.angle + (targetAngle - line.angle) * power * 0.4;
+                    } else {
+                        // Subtle wave motion for distant lines
+                        targetAngle = line.angle + Math.sin(Date.now() * 0.0005 + index * 0.01) * 0.02;
+                    }
+                    
+                    line.angle += (targetAngle - line.angle) * 0.1;
+                    
+                    // Calculate line endpoints
+                    const power = Math.max(0, 1 - (dist / config.influence));
+                    const lengthMultiplier = 0.3 + power * 0.7;
+                    const lineLength = config.maxLength * lengthMultiplier;
+                    
+                    const lx = line.originX + Math.cos(line.angle) * lineLength;
+                    const ly = line.originY + Math.sin(line.angle) * lineLength;
+                    
+                    // Draw line
+                    ctx.beginPath();
+                    ctx.moveTo(line.originX, line.originY);
+                    ctx.lineTo(lx, ly);
+                    ctx.globalAlpha = 0.05 + power * 0.15;
+                    ctx.stroke();
+                });
+                
+                requestAnimationFrame(drawLines);
+            }
+            
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            
+            window.addEventListener('resize', initCanvas);
+            
+            initCanvas();
+            drawLines();
+        }
+        
+        // Setup scrolling effects
+        function setupScrollEffects() {
+            const nav = document.getElementById('main-nav');
+            
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            });
+            
+            // Reveal elements on scroll
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            // Create a ScrollTrigger batch for performance
+            ScrollTrigger.batch(".reveal", {
+                start: "top 90%",
+                toggleActions: "play none none none",
+                onEnter: batch => batch.forEach(el => {
+                    el.style.opacity = 1;
+                    el.style.transform = "translateY(0)";
+                }),
+                once: true
+            });
+            
+            // Marquee animations
+            const marquees = document.querySelectorAll('.marquee');
+            marquees.forEach((marquee, index) => {
+                const duration = index === 0 ? 40 : 50;
+                marquee.style.animation = `marquee ${duration}s linear infinite`;
+            });
+            
+            // Add keyframes for marquee animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Setup theme toggle
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const body = document.body;
+            
+            // Apply saved theme
+            body.setAttribute('data-theme', savedTheme);
+            
+            // Toggle theme
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // Animate theme change
+                document.querySelectorAll('.reveal').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                    }, 100);
+                });
+            });
+        }
+        
+        // Initialize everything when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            setupCustomCursor();
+            setupVectorField();
+            setupScrollEffects();
+            setupThemeToggle();
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add floating animation to elements on scroll
+            gsap.utils.toArray('.project-card, .process-card').forEach(element => {
+                gsap.fromTo(element, 
+                    { y: 20, opacity: 0 },
+                    { 
+                        y: 0, 
+                        opacity: 1,
+                        scrollTrigger: {
+                            trigger: element,
+                            start: "top 90%",
+                            toggleActions: "play none none none"
+                        }
+                    }
+                );
+            });
+            
+            // Animate gradient text
+            const gradientTexts = document.querySelectorAll('.gradient-text');
+            gsap.utils.toArray(gradientTexts).forEach(text => {
+                ScrollTrigger.create({
+                    trigger: text,
+                    start: "top 85%",
+                    onEnter: () => {
+                        gsap.to(text, {
+                            backgroundPosition: "100%",
+                            duration: 1.5,
+                            ease: "power2.out"
+                        });
+                    },
+                    onLeaveBack: () => {
+                        gsap.to(text, {
+                            backgroundPosition: "0%",
+                            duration: 1.5,
+                            ease: "power2.out"
+                        });
+                    }
+                });
+            });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Recalculate canvas size for vector field
+            const canvas = document.getElementById('vector-canvas');
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
+    </script>
+</body>
+</html>

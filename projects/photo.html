@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VELOCITY | Visual Artist</title>
+    <meta name="description" content="Velocity - A digital archive exploring the space between moments. High-fidelity photography portfolio.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Manrope:wght@200;300;400;500&display=swap');
+
+        :root {
+            --bg: #050505;
+            --text: #e1e1e1;
+            --accent: #dbdbdb;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        html::-webkit-scrollbar { 
+            display: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto; 
+            overscroll-behavior: none;
+        }
+
+        .font-serif { font-family: 'Italiana', serif; }
+        
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+        }
+
+        .scroll-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            will-change: transform;
+            height: auto; 
+            min-height: 100vh;
+        }
+
+        #cursor {
+            width: 8px; height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        #cursor-follower {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9998;
+            transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s, background-color 0.2s;
+            mix-blend-mode: difference;
+        }
+
+        .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: #111;
+        }
+        .img-wrapper img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1), filter 0.5s ease;
+            transform: scale(1.3); 
+            filter: grayscale(100%);
+        }
+        
+        .reveal-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 2;
+            transform-origin: bottom;
+            transform: scaleY(1);
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .is-inview .reveal-overlay { transform: scaleY(0); }
+        .is-inview img { transform: scale(1); filter: grayscale(0%); }
+        
+        .img-wrapper:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%) contrast(1.1);
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 15vw, 18rem);
+            line-height: 0.8;
+            letter-spacing: -0.04em;
+        }
+
+        nav { mix-blend-mode: difference; }
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; width: 0%; height: 1px; background: #fff;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .quote-mark {
+            font-family: 'Italiana', serif;
+            font-size: 8rem;
+            line-height: 0;
+            opacity: 0.2;
+            position: absolute;
+            top: 0;
+            left: -2rem;
+        }
+        
+        button { cursor: none; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleY {
+            from { transform: scaleY(0); opacity: 0; }
+            to { transform: scaleY(1); opacity: 0.5; }
+        }
+        .animate-fade-in-up { animation: fadeInUp 1s ease forwards; }
+        .animate-scale-y { animation: scaleY 1s ease forwards; }
+
+    </style>
+</head>
+<body>
+
+    <div class="noise" aria-hidden="true"></div>
+    <div id="cursor" aria-hidden="true"></div>
+    <div id="cursor-follower" aria-hidden="true"></div>
+
+    <nav class="fixed top-0 left-0 w-full px-8 md:px-16 py-8 flex justify-between items-center z-50 text-white" aria-label="Main Navigation">
+        <a href="#" class="font-serif text-2xl tracking-widest hover:opacity-70 transition-opacity" aria-label="Velocity Home">VELOCITY</a>
+        <div class="hidden md:flex gap-12 font-manrope text-xs tracking-[0.2em] uppercase">
+            <a href="#" class="nav-link">Work</a>
+            <a href="#" class="nav-link">Studio</a>
+            <a href="#" class="nav-link">Journal</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+        <button class="md:hidden text-xs uppercase tracking-widest bg-transparent border-none text-white" aria-label="Open Menu">Menu</button>
+    </nav>
+
+    <div class="fixed right-8 top-1/2 h-24 w-[1px] bg-white/10 z-50 -translate-y-1/2 hidden md:block" aria-hidden="true">
+        <div id="progress-bar" class="w-full bg-white h-0 transition-all duration-100 ease-linear"></div>
+    </div>
+
+    <main class="scroll-container" id="scroll-container">
+        
+        <!-- HERO SECTION -->
+        <section class="h-screen w-full relative flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0" aria-hidden="true">
+                <div class="w-full h-full bg-black/40 absolute z-10"></div>
+                <img src="https://images.unsplash.com/photo-1444926521360-63943f6797f7?q=80&w=2576&auto=format&fit=crop" 
+                     class="w-full h-full object-cover grayscale opacity-70 scale-110" 
+                     alt=""
+                     style="transform-origin: center;">
+            </div>
+            
+            <div class="relative z-20 text-center mix-blend-overlay text-white flex flex-col items-center">
+                <span class="font-manrope text-xs md:text-sm tracking-[0.5em] uppercase mb-4 opacity-0 animate-fade-in-up" style="animation-delay: 0.5s; animation-fill-mode: forwards;">Est. 2024</span>
+                <h1 class="hero-title font-serif opacity-0 animate-fade-in-up" style="animation-delay: 0.8s; animation-fill-mode: forwards;">
+                    VELOCITY
+                </h1>
+                <div class="w-[1px] h-20 bg-white/50 mt-12 opacity-0 animate-scale-y" style="animation-delay: 1.2s; animation-fill-mode: forwards; transform-origin: top;" aria-hidden="true"></div>
+            </div>
+        </section>
+
+        <!-- QUOTE SECTION 1 (Now follows Hero directly) -->
+        <section class="py-32 px-8 md:px-16 flex justify-center items-center bg-[#050505]" aria-label="Quote by Henri Cartier-Bresson">
+            <div class="max-w-4xl relative reveal-trigger">
+                <span class="quote-mark text-white" aria-hidden="true">"</span>
+                <blockquote class="font-serif text-3xl md:text-5xl leading-tight text-center text-white/90 relative z-10 m-0">
+                    To photograph is to hold one's breath, when all faculties converge to capture fleeting reality.
+                </blockquote>
+                <div class="text-center mt-10">
+                    <span class="font-manrope text-xs tracking-[0.2em] uppercase opacity-50 block">– Henri Cartier-Bresson</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION 1 -->
+        <section class="px-8 md:px-16 py-20" aria-label="Fashion Editorial Gallery">
+            <div class="grid grid-cols-12 gap-8 items-center">
+                <div class="col-span-12 md:col-span-7 img-wrapper aspect-[4/3] reveal-trigger">
+                    <div class="reveal-overlay" aria-hidden="true"></div>
+                    <img src="https://images.pexels.com/photos/354939/pexels-photo-354939.jpeg" alt="Black and white fashion editorial model posing with dramatic lighting">
+                </div>
+                <div class="col-span-12 md:col-span-5 md:pl-12">
+                    <span class="text-[10px] tracking-[0.3em] uppercase opacity-50 block mb-4" aria-hidden="true">01 / Editorial</span>
+                    <h2 class="font-serif text-5xl md:text-7xl mb-8 leading-none">Noir<br>Vogue</h2>
+                    <p class="text-sm opacity-60 max-w-xs leading-relaxed mb-8">
+                        A study in monochrome aesthetics. Exploring the texture of fabric and light in a controlled environment.
+                    </p>
+                    <a href="#" class="text-xs uppercase tracking-widest border-b border-white/30 pb-1 hover:border-white transition-colors">View Series <span class="sr-only">about Noir Vogue</span></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY SECTION 2 -->
+        <section class="px-8 md:px-16 py-20" aria-label="Portraiture Gallery">
+            <div class="grid grid-cols-12 gap-8 items-center">
+                <div class="col-span-12 md:col-span-4 md:col-start-2 text-right md:text-left order-2 md:order-1">
+                     <span class="text-[10px] tracking-[0.3em] uppercase opacity-50 block mb-4" aria-hidden="true">02 / Portraiture</span>
+                    <h2 class="font-serif text-5xl md:text-7xl mb-8 leading-none">Silent<br>Gaze</h2>
+                    <p class="text-sm opacity-60 max-w-xs leading-relaxed mb-8">
+                        Intimate portraits capturing the raw, unfiltered human emotion. Shot on 120mm film.
+                    </p>
+                    <a href="#" class="text-xs uppercase tracking-widest border-b border-white/30 pb-1 hover:border-white transition-colors">View Series <span class="sr-only">about Silent Gaze</span></a>
+                </div>
+                <div class="col-span-12 md:col-span-6 md:col-start-7 img-wrapper aspect-[3/4] reveal-trigger order-1 md:order-2">
+                    <div class="reveal-overlay" aria-hidden="true"></div>
+                    <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=2000&auto=format&fit=crop" alt="Close up artistic portrait of a woman in low light">
+                </div>
+            </div>
+        </section>
+
+        <!-- FULL WIDTH BREAK -->
+        <section class="py-20 px-4" aria-label="Featured Landscape Work">
+            <div class="img-wrapper w-full h-[80vh] reveal-trigger relative">
+                <div class="reveal-overlay" aria-hidden="true"></div>
+                <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=2000&auto=format&fit=crop" alt="Mist covered mountain landscape at dawn" style="object-position: center 30%;">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <h2 class="font-serif text-[12vw] text-white mix-blend-overlay opacity-80">WANDERLUST</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="px-8 md:px-16 py-32 border-t border-white/10 mt-20 bg-[#080808]" role="contentinfo">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end">
+                <div>
+                    <h2 class="font-serif text-6xl md:text-9xl leading-none mb-8">Let's<br>Create.</h2>
+                    <a href="mailto:hello@velocity.art" class="text-xl border-b border-white/30 hover:border-white transition-colors pb-1">hello@velocity.art</a>
+                </div>
+                <div class="flex gap-8 mt-12 md:mt-0 text-xs uppercase tracking-widest opacity-50">
+                    <a href="#" class="hover:opacity-100 hover:text-white transition-opacity">Instagram</a>
+                    <a href="#" class="hover:opacity-100 hover:text-white transition-opacity">Twitter</a>
+                    <a href="#" class="hover:opacity-100 hover:text-white transition-opacity">Behance</a>
+                </div>
+            </div>
+            <div class="mt-20 text-[10px] uppercase tracking-widest opacity-20 text-center md:text-left">
+                &copy; 2025 Velocity Studios. All Rights Reserved.
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        const body = document.body;
+        const main = document.getElementById('scroll-container');
+        const progressBar = document.getElementById('progress-bar');
+        
+        let dy = 0; 
+        
+        function render() {
+            dy = li(dy, window.scrollY, 0.08);
+            const diff = window.scrollY - dy;
+            const skew = Math.min(Math.max(diff * 0.005, -5), 5); 
+            
+            main.style.transform = `translate3d(0, -${dy}px, 0) skewY(${skew}deg)`;
+            
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            const percent = maxScroll > 0 ? (dy / maxScroll) * 100 : 0;
+            
+            if(progressBar) progressBar.style.height = `${Math.max(0, percent)}%`;
+            
+            checkInView();
+            requestAnimationFrame(render);
+        }
+        
+        function li(a, b, n) {
+            return (1 - n) * a + n * b;
+        }
+
+        function setHeight() {
+            body.style.height = (main.clientHeight) + 'px';
+        }
+
+        const triggers = document.querySelectorAll('.reveal-trigger');
+        
+        function checkInView() {
+            const threshold = window.innerHeight * 0.95; 
+            
+            triggers.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < threshold) {
+                    el.classList.add('is-inview');
+                }
+            });
+        }
+
+        window.addEventListener('load', () => {
+            setHeight();
+            setTimeout(setHeight, 500);
+            setTimeout(() => {
+                render();
+            }, 100);
+        });
+        
+        window.addEventListener('resize', setHeight);
+
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        
+        if (matchMedia('(pointer:fine)').matches) {
+            document.addEventListener('mousemove', e => {
+                cursor.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
+                follower.style.transform = `translate3d(${e.clientX - 20}px, ${e.clientY - 20}px, 0)`;
+            });
+            
+            document.querySelectorAll('a, button, .img-wrapper, blockquote').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    follower.style.transform += ' scale(2)';
+                    follower.style.background = 'white';
+                    cursor.style.opacity = '0';
+                });
+                el.addEventListener('mouseleave', () => {
+                    follower.style.transform = follower.style.transform.replace(' scale(2)', '');
+                    follower.style.background = 'transparent';
+                    cursor.style.opacity = '1';
+                });
+            });
+        } else {
+            cursor.style.display = 'none';
+            follower.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

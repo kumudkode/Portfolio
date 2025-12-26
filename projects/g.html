@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMetric | Kinetic Artistry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
+
+        :root {
+            --bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #6366f1;
+            --accent-gradient: linear-gradient(to top, #6366f1, #a855f7);
+            --accent-gradient-h: linear-gradient(to right, #6366f1, #a855f7);
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-hover: rgba(255, 255, 255, 0.06);
+            --nav-bg: rgba(10, 10, 10, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --vector-opacity: 0.2;
+            --marquee-opacity: 0.03;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8f7f4; 
+            --text: #000000;
+            --accent: #ff3e00;
+            --accent-gradient: linear-gradient(to top, #ff3e00, #ff8c00);
+            --accent-gradient-h: linear-gradient(to right, #ff3e00, #ff8c00);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-hover: rgba(255, 255, 255, 0.95);
+            --nav-bg: rgba(248, 247, 244, 0.9);
+            --border: rgba(0, 0, 0, 0.1);
+            --vector-opacity: 0.25;
+            --marquee-opacity: 0.08;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        h1, h2, h3 {
+            font-family: 'Syncopate', sans-serif;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+        }
+
+        #cursor {
+            width: 8px; height: 8px;
+            background: var(--text);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s;
+        }
+
+        #cursor-follower {
+            width: 40px; height: 40px;
+            border: 1px solid var(--text);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #vector-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: var(--vector-opacity);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* L-FRAME KINETIC BORDER */
+        .project-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            z-index: 1;
+        }
+
+        /* Left side accent */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 0%;
+            background: var(--accent-gradient);
+            z-index: 5;
+            transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Bottom side accent */
+        .project-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: var(--accent-gradient-h);
+            z-index: 5;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .project-card:hover {
+            transform: translateX(12px) translateY(-6px);
+            background: var(--glass-hover);
+            border-color: transparent;
+            box-shadow: -10px 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-card:hover::before { height: 100%; }
+        .project-card:hover::after { width: 100%; }
+
+        .project-card:hover .project-icon {
+            color: var(--accent);
+            opacity: 1;
+            transform: translate(5px, -5px);
+        }
+
+        .theme-switch {
+            width: 60px; height: 30px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            background: var(--glass);
+        }
+
+        .switch-handle {
+            width: 20px; height: 20px;
+            background: var(--text);
+            border-radius: 50%;
+            transition: 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        [data-theme="light"] .switch-handle { transform: translateX(30px); }
+
+        .nav-link {
+            position: relative;
+            padding-bottom: 4px;
+            color: var(--text);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-link:hover { opacity: 1; }
+
+        .hero-title {
+            font-size: clamp(3rem, 10vw, 8rem);
+            line-height: 0.85;
+            color: var(--text);
+        }
+
+        .marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            gap: 2rem;
+            opacity: var(--marquee-opacity);
+            pointer-events: none;
+            position: absolute;
+            font-size: 15vh;
+            font-weight: 900;
+            top: 20%; width: 100%;
+            color: var(--text);
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .marquee-inner {
+            display: flex;
+            gap: 2rem;
+            animation: marquee 40s linear infinite;
+        }
+
+        nav.scrolled {
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project-preview-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        [data-theme="light"] .project-preview-box {
+            background: #ffffff;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="noise"></div>
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+    <canvas id="vector-canvas"></canvas>
+
+    <div class="marquee">
+        <div class="marquee-inner">
+            <span>KINETIC ARCHITECTURE — VECTOR FIELDS — GEOMETRIC LOGIC — </span>
+            <span>KINETIC ARCHITECTURE — VECTOR FIELDS — GEOMETRIC LOGIC — </span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="fixed top-0 left-0 w-full z-[100] px-8 md:px-12 py-10 flex justify-between items-center transition-all duration-500">
+        <div class="text-xl font-bold tracking-[-0.1em] text-[var(--text)]">
+            GC<span class="text-[10px] tracking-widest opacity-40 ml-2">STUDIO</span>
+        </div>
+        
+        <div class="flex items-center gap-12">
+            <div class="hidden md:flex gap-12 text-[10px] uppercase tracking-[0.4em] font-bold text-[var(--text)]">
+                <a href="#work" class="nav-link">Curation</a>
+                <a href="#about" class="nav-link">Logic</a>
+            </div>
+            <div class="theme-switch" id="theme-toggle">
+                <div class="switch-handle"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative px-8 md:px-[10%]">
+        <!-- Hero -->
+        <section id="home" class="min-h-screen flex flex-col justify-center relative">
+            <div class="reveal">
+                <div class="text-[11px] uppercase tracking-[0.8em] mb-12 opacity-40 font-bold flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-current"></span> 
+                    Digital Kinetic Design
+                </div>
+                <h1 class="hero-title mb-12">
+                    REDEFINING <br> <span class="italic font-light opacity-30">DIMENSIONAL</span> <br> SPACE
+                </h1>
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-12 mt-16">
+                    <p class="max-w-xl text-lg md:text-2xl font-light opacity-60 leading-[1.6]">
+                        A collection of 10 algorithmic explorations. Synthesizing precision with emotional motion at the intersection of structure and fluidity.
+                    </p>
+                    <div class="w-[1px] h-20 bg-current opacity-20 hidden md:block"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="work" class="py-40">
+            <div class="flex items-center gap-6 mb-32 reveal">
+                <span class="text-[10px] font-bold tracking-[0.5em] uppercase opacity-40">The Collection</span>
+                <div class="h-[1px] flex-grow bg-current opacity-10"></div>
+                <span class="text-[10px] font-bold opacity-20">01 — 10</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 lg:gap-x-24 gap-y-24">
+                <!-- Project Card Generator Loop (10 items) -->
+                <script>
+                    const projects = [
+                        { id: '01', title: 'Vortex-7', slug: 'VX', desc: 'Algorithmic visual patterns for digital installations.' },
+                        { id: '02', title: 'Neo-Grain', slug: 'NG', desc: 'Minimalist branding for architectural firms.', offset: true },
+                        { id: '03', title: 'Flux Line', slug: 'FL', desc: 'Variable typeface system for kinetic typography.' },
+                        { id: '04', title: 'Cipher 0', slug: 'C0', desc: 'Encrypted data visualization for secure networks.', offset: true },
+                        { id: '05', title: 'Mono Void', slug: 'MV', desc: 'Exploring the absence of form in digital space.' },
+                        { id: '06', title: 'Static Arc', slug: 'SA', desc: 'Curved geometry in rigid computational environments.', offset: true },
+                        { id: '07', title: 'Echo Grid', slug: 'EG', desc: 'Modular grid systems that react to ambient sound.' },
+                        { id: '08', title: 'Prime-X', slug: 'PX', desc: 'A study on mathematical symmetry in UI design.', offset: true },
+                        { id: '09', title: 'Zenith', slug: 'ZE', desc: 'Spatial UI concepts for next-gen operating systems.' },
+                        { id: '10', title: 'Kinetica', slug: 'KT', desc: 'Fluid motion studies for web-based applications.', offset: true }
+                    ];
+
+                    document.write(projects.map(p => `
+                        <div class="project-card aspect-[4/5] p-12 flex flex-col justify-between reveal group ${p.offset ? 'md:mt-32' : ''}">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-3xl font-medium tracking-tighter">${p.title}</h3>
+                                <span class="text-[10px] tracking-widest opacity-40 uppercase">${p.id}</span>
+                            </div>
+                            <div class="project-preview-box w-full h-1/2 overflow-hidden flex items-center justify-center">
+                                <div class="text-8xl opacity-[0.05] font-bold group-hover:scale-110 transition-transform duration-1000 select-none">${p.slug}</div>
+                            </div>
+                            <div class="flex justify-between items-end pt-8">
+                                <p class="text-xs opacity-60 max-w-[200px]">${p.desc}</p>
+                                <i class="fa-solid fa-arrow-up-right project-icon opacity-20 text-xl"></i>
+                            </div>
+                        </div>
+                    `).join(''));
+                </script>
+            </div>
+        </section>
+
+        <!-- Logic Section -->
+        <section id="about" class="py-40">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+                <div class="md:col-span-6 reveal">
+                    <h2 class="text-4xl md:text-7xl font-bold leading-[0.9] mb-12">THOUGHT <br> IS THE <br> <span class="opacity-20">VECTOR.</span></h2>
+                    <p class="text-lg opacity-60 font-light leading-relaxed max-w-md">
+                        Our design philosophy centers on the invisible lines of force. Every element is a coordinate in a larger, evolving system.
+                    </p>
+                </div>
+                <div class="md:col-span-6 reveal">
+                    <div class="aspect-square border border-[var(--border)] p-12 relative flex flex-col justify-end overflow-hidden group">
+                        <div class="absolute top-12 left-12 text-[10px] tracking-[0.8em] opacity-40 font-bold">LOGIC SYSTEM 1.0</div>
+                        <div class="text-[6vw] font-bold opacity-5 select-none translate-y-10 group-hover:translate-y-0 transition-transform duration-700">ARCHITECTURE</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-20 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center opacity-40 text-[9px] tracking-[0.5em] font-bold uppercase">
+            <div>© 2025 Kinetic Collective</div>
+            <div class="flex gap-12 mt-8 md:mt-0">
+                <a href="#" class="hover:opacity-100 transition-opacity">Archive</a>
+                <a href="#" class="hover:opacity-100 transition-opacity">Instagram</a>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('vector-canvas');
+        const ctx = canvas.getContext('2d');
+        let lines = [];
+        let mouse = { x: -500, y: -500 };
+        const config = { spacing: 85, maxLength: 45, influence: 220 };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            lines = [];
+            const cols = Math.ceil(canvas.width / config.spacing) + 1;
+            const rows = Math.ceil(canvas.height / config.spacing) + 1;
+            for(let x = 0; x < cols; x++) {
+                for(let y = 0; y < rows; y++) {
+                    lines.push({ originX: x * config.spacing, originY: y * config.spacing, angle: 0 });
+                }
+            }
+        }
+
+        function drawLines() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getComputedStyle(document.body).getPropertyValue('--text');
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.lineCap = 'round';
+            lines.forEach(line => {
+                const dx = mouse.x - line.originX;
+                const dy = mouse.y - line.originY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                let targetAngle = Math.atan2(dy, dx);
+                const power = Math.max(0, 1 - (dist / config.influence));
+                line.angle += (targetAngle - line.angle) * 0.12;
+                const lx = line.originX + Math.cos(line.angle) * (config.maxLength * (0.2 + power * 0.8));
+                const ly = line.originY + Math.sin(line.angle) * (config.maxLength * (0.2 + power * 0.8));
+                ctx.beginPath();
+                ctx.moveTo(line.originX, line.originY);
+                ctx.lineTo(lx, ly);
+                ctx.globalAlpha = 0.1 + (power * 0.7);
+                ctx.stroke();
+            });
+        }
+
+        function animate() { drawLines(); requestAnimationFrame(animate); }
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('resize', initCanvas);
+        initCanvas(); animate();
+
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            const body = document.body;
+            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        });
+
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
+            follower.style.transform = `translate3d(${e.clientX - 20}px, ${e.clientY - 20}px, 0)`;
+        });
+
+        document.querySelectorAll('a, .theme-switch, .project-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                follower.style.transform += ' scale(2.2)';
+                follower.style.background = 'var(--text)';
+                follower.style.opacity = '0.05';
+            });
+            el.addEventListener('mouseleave', () => {
+                follower.style.transform = follower.style.transform.replace(' scale(2.2)', '');
+                follower.style.background = 'transparent';
+                follower.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>

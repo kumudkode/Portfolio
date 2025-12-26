@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHER | Multidisciplinary Design Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* PREMIUM FONT STACK */
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Manrope:wght@200;300;400;500;600&display=swap');
+
+        :root {
+            --bg: #030303;
+            --surface: #0f0f0f;
+            --text-primary: #e6e6e6;
+            --text-secondary: #888888;
+            --accent: #d4d4d4;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(20, 20, 20, 0.6);
+            --vector-opacity: 0.12;
+            --easing: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f4f4f0; 
+            --surface: #e8e8e4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent: #000000;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(255, 255, 255, 0.8);
+            --vector-opacity: 0.25;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.8s var(--easing), color 0.8s var(--easing);
+        }
+
+        /* TYPOGRAPHY UTILS */
+        .font-display { font-family: 'Syne', sans-serif; }
+        .text-balance { text-wrap: balance; }
+
+        /* CUSTOM CURSOR */
+        #cursor {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            mix-blend-mode: difference;
+            transition: transform 0.2s var(--easing);
+        }
+        #cursor-follower {
+            width: 48px; height: 48px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s var(--easing), width 0.3s var(--easing), height 0.3s var(--easing), background 0.3s;
+            mix-blend-mode: difference;
+        }
+        
+        /* CANVAS BACKGROUND */
+        #vector-canvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            opacity: var(--vector-opacity);
+            pointer-events: none;
+        }
+
+        /* NOISE TEXTURE */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 998; opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+        }
+
+        /* UI ELEMENTS */
+        .btn-magnetic {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 12px 32px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.4s var(--easing);
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+            color: var(--text-primary);
+        }
+        .btn-magnetic::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--text-primary);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--easing);
+            z-index: -1;
+        }
+        .btn-magnetic:hover {
+            border-color: var(--text-primary);
+            color: var(--bg);
+        }
+        .btn-magnetic:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* KINETIC WATCH */
+        .kinetic-watch {
+            position: fixed; bottom: 2.5rem; right: 2.5rem;
+            z-index: 100;
+            display: flex; align-items: center; gap: 1.2rem;
+            font-family: 'Manrope', monospace;
+            mix-blend-mode: difference;
+            color: #fff;
+        }
+        .watch-ring {
+            width: 32px; height: 32px;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            position: relative;
+            animation: breathe 4s ease-in-out infinite;
+        }
+        .watch-dot {
+            position: absolute; top: 0; left: 50%;
+            width: 4px; height: 4px;
+            background: #fff; border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: orbit 12s linear infinite;
+            transform-origin: 0 16px;
+        }
+        @keyframes orbit { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes breathe { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } }
+
+        /* SECTIONS & REVEALS */
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+        .reveal-text span {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 1s var(--easing);
+        }
+        .reveal-text.active span { transform: translateY(0); }
+
+        .hover-reveal-img {
+            position: fixed; pointer-events: none; z-index: 50;
+            width: 300px; height: 400px;
+            object-fit: cover;
+            opacity: 0; transform: translate(-50%, -50%) scale(0.8);
+            transition: opacity 0.3s, transform 0.6s var(--easing);
+            filter: grayscale(100%);
+        }
+        .hover-reveal-img.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+        /* LIST STYLES */
+        .capability-item {
+            border-top: 1px solid var(--border);
+            transition: padding 0.4s var(--easing), background 0.4s;
+        }
+        .capability-item:hover {
+            padding-left: 1rem;
+            background: var(--surface);
+        }
+        .capability-item:last-child { border-bottom: 1px solid var(--border); }
+        
+        /* IMAGE CARDS */
+        .card-container { overflow: hidden; position: relative; }
+        .card-img {
+            transition: transform 1s var(--easing);
+            filter: grayscale(100%) contrast(1.1);
+        }
+        .card-container:hover .card-img {
+            transform: scale(1.05);
+            filter: grayscale(0%) contrast(1);
+        }
+
+        /* GRID SYSTEM */
+        .grid-premium {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* MARQUEE REFINED */
+        .marquee-container {
+            overflow: hidden;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .marquee-content {
+            display: flex; gap: 4rem;
+            animation: slide 30s linear infinite;
+        }
+        @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="noise"></div>
+    <canvas id="vector-canvas"></canvas>
+    
+    <!-- Cursor System -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+    
+    <!-- Hover Image (Hidden by default) -->
+    <img src="" id="hover-reveal" class="hover-reveal-img" alt="Project Preview">
+
+    <!-- Watch UI -->
+    <div class="kinetic-watch reveal">
+        <div class="watch-ring"><div class="watch-dot"></div></div>
+        <div class="time-display flex flex-col items-end">
+            <span id="clock-main" class="text-sm font-medium tracking-widest">00:00</span>
+            <span class="text-[9px] opacity-50 tracking-widest uppercase">London, UK</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-8 py-6 flex justify-between items-center mix-blend-difference text-white">
+        <a href="#" class="font-display font-bold text-2xl tracking-tight">AETHER<span class="text-[10px] align-top opacity-60 ml-1">®</span></a>
+        
+        <div class="flex items-center gap-12">
+            <div class="hidden md:flex gap-8 text-[11px] font-medium tracking-[0.2em] uppercase">
+                <a href="#studio" class="hover:opacity-60 transition-opacity">Studio</a>
+                <a href="#work" class="hover:opacity-60 transition-opacity">Work</a>
+                <a href="#capabilities" class="hover:opacity-60 transition-opacity">Capabilities</a>
+                <a href="#journal" class="hover:opacity-60 transition-opacity">Journal</a>
+            </div>
+            
+            <button id="theme-toggle" class="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center hover:bg-white hover:text-black transition-colors">
+                <div class="w-2 h-2 bg-current rounded-full"></div>
+            </button>
+            
+            <button class="md:hidden text-xs uppercase tracking-widest">Menu</button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HERO -->
+        <section class="min-h-screen flex flex-col justify-end px-6 md:px-16 pb-20 pt-40">
+            <div class="grid-premium">
+                <div class="col-span-12 md:col-span-10">
+                    <h1 class="font-display text-[13vw] leading-[0.85] font-semibold tracking-[-0.03em] mb-12 mix-blend-difference text-white">
+                        <span class="reveal-text block"><span>Designing</span></span>
+                        <span class="reveal-text block"><span class="ml-[10vw] italic font-normal">the</span></span>
+                        <span class="reveal-text block"><span>Invisible</span></span>
+                    </h1>
+                </div>
+                
+                <div class="col-span-12 md:col-span-4 flex flex-col justify-between h-full">
+                    <div class="w-12 h-[1px] bg-[var(--text-primary)] mb-8"></div>
+                    <p class="text-[var(--text-secondary)] text-sm md:text-base leading-relaxed text-balance">
+                        Aether is a digital design practice crafting immersive systems, kinetic interfaces, and brand identities for the forward-thinking.
+                    </p>
+                </div>
+                
+                <div class="col-span-12 md:col-span-4 md:col-start-9 flex items-end justify-end">
+                    <a href="#work" class="btn-magnetic">Explore Work</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTRO / PHILOSOPHY -->
+        <section id="studio" class="py-32 px-6 md:px-16 border-t border-[var(--border)]">
+            <div class="grid-premium">
+                <div class="col-span-12 md:col-span-3">
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold">01 / The Studio</span>
+                </div>
+                <div class="col-span-12 md:col-span-8 md:col-start-5">
+                    <h2 class="text-3xl md:text-5xl font-display font-medium leading-[1.2] mb-12">
+                        We believe in the power of <span class="text-[var(--text-secondary)]">silent design</span>. Removing the noise to amplify the signal. Our work exists at the intersection of rigorous grid systems and fluid, organic motion.
+                    </h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
+                        <div>
+                            <div class="text-4xl font-display mb-2">12+</div>
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--text-secondary)]">Years Active</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-display mb-2">45</div>
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--text-secondary)]">Awwwards</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-display mb-2">Global</div>
+                            <div class="text-[10px] uppercase tracking-widest text-[var(--text-secondary)]">Client Base</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK SHOWCASE -->
+        <section id="work" class="py-32 px-6 md:px-16">
+            <div class="flex justify-between items-end mb-20">
+                <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold">02 / Selected Works</span>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-secondary)]">2023 — 2025</span>
+            </div>
+
+            <div class="space-y-32">
+                <!-- Project 1 -->
+                <article class="group cursor-pointer">
+                    <div class="card-container w-full aspect-[16/9] md:aspect-[21/9] bg-[var(--surface)] mb-8 overflow-hidden">
+                        <!-- Generative Art Placeholder for 'Image' -->
+                        <div class="card-img w-full h-full bg-gradient-to-br from-[#1a1a1a] to-[#000] relative">
+                            <div class="absolute inset-0 opacity-30" style="background-image: repeating-linear-gradient(45deg, transparent 0, transparent 20px, #333 20px, #333 21px);"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-64 h-64 border border-white/10 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                                <div class="w-48 h-48 border border-white/20 absolute rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-premium items-start">
+                        <div class="col-span-12 md:col-span-6">
+                            <h3 class="text-3xl font-display mb-2">Apex Finance</h3>
+                            <p class="text-[var(--text-secondary)] text-sm">Fintech Identity & Web Platform</p>
+                        </div>
+                        <div class="col-span-12 md:col-span-6 md:text-right pt-2 md:pt-0">
+                            <div class="flex gap-2 md:justify-end flex-wrap">
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">Strategy</span>
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">WebGL</span>
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="group cursor-pointer">
+                    <div class="card-container w-full aspect-[16/9] md:aspect-[21/9] bg-[var(--surface)] mb-8 overflow-hidden">
+                        <div class="card-img w-full h-full bg-[#111] relative overflow-hidden">
+                            <div class="absolute -right-20 -top-20 w-[600px] h-[600px] bg-indigo-900/20 blur-[100px] rounded-full"></div>
+                            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[15vw] opacity-10 font-bold text-white">ONYX</div>
+                        </div>
+                    </div>
+                    <div class="grid-premium items-start">
+                        <div class="col-span-12 md:col-span-6">
+                            <h3 class="text-3xl font-display mb-2">Onyx Architecture</h3>
+                            <p class="text-[var(--text-secondary)] text-sm">Minimalist Portfolio & Archive</p>
+                        </div>
+                        <div class="col-span-12 md:col-span-6 md:text-right pt-2 md:pt-0">
+                            <div class="flex gap-2 md:justify-end flex-wrap">
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">Development</span>
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">Typography</span>
+                                <span class="px-3 py-1 border border-[var(--border)] rounded-full text-[10px] uppercase tracking-widest">2023</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="mt-20 text-center">
+                <a href="#" class="btn-magnetic">View Full Archive</a>
+            </div>
+        </section>
+
+        <!-- CAPABILITIES (List View) -->
+        <section id="capabilities" class="py-32 px-6 md:px-16">
+            <div class="grid-premium">
+                <div class="col-span-12 md:col-span-4 mb-12 md:mb-0">
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold block mb-8">03 / Capabilities</span>
+                    <p class="text-[var(--text-secondary)] text-sm leading-loose max-w-xs">
+                        Our process is holistic. We handle every stage of the digital lifecycle, from initial concept to final deployment.
+                    </p>
+                </div>
+                <div class="col-span-12 md:col-span-8">
+                    <div class="flex flex-col">
+                        <div class="capability-item py-8 flex justify-between items-center group cursor-pointer" data-img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop">
+                            <h4 class="text-2xl font-display group-hover:opacity-50 transition-opacity">Art Direction</h4>
+                            <i class="fa-solid fa-arrow-right -rotate-45 opacity-0 group-hover:opacity-100 group-hover:rotate-0 transition-all"></i>
+                        </div>
+                        <div class="capability-item py-8 flex justify-between items-center group cursor-pointer" data-img="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop">
+                            <h4 class="text-2xl font-display group-hover:opacity-50 transition-opacity">Creative Development</h4>
+                            <i class="fa-solid fa-arrow-right -rotate-45 opacity-0 group-hover:opacity-100 group-hover:rotate-0 transition-all"></i>
+                        </div>
+                        <div class="capability-item py-8 flex justify-between items-center group cursor-pointer" data-img="https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=1000&auto=format&fit=crop">
+                            <h4 class="text-2xl font-display group-hover:opacity-50 transition-opacity">Brand Identity</h4>
+                            <i class="fa-solid fa-arrow-right -rotate-45 opacity-0 group-hover:opacity-100 group-hover:rotate-0 transition-all"></i>
+                        </div>
+                        <div class="capability-item py-8 flex justify-between items-center group cursor-pointer" data-img="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=1000&auto=format&fit=crop">
+                            <h4 class="text-2xl font-display group-hover:opacity-50 transition-opacity">Motion Design</h4>
+                            <i class="fa-solid fa-arrow-right -rotate-45 opacity-0 group-hover:opacity-100 group-hover:rotate-0 transition-all"></i>
+                        </div>
+                        <div class="capability-item py-8 flex justify-between items-center group cursor-pointer" data-img="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=1000&auto=format&fit=crop">
+                            <h4 class="text-2xl font-display group-hover:opacity-50 transition-opacity">3D & WebGL</h4>
+                            <i class="fa-solid fa-arrow-right -rotate-45 opacity-0 group-hover:opacity-100 group-hover:rotate-0 transition-all"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RECOGNITION (Table) -->
+        <section id="journal" class="py-32 px-6 md:px-16 bg-[var(--surface)] border-y border-[var(--border)]">
+            <div class="grid-premium">
+                <div class="col-span-12 md:col-span-3">
+                    <span class="text-[10px] uppercase tracking-[0.2em] text-[var(--accent)] font-bold">04 / Recognition</span>
+                </div>
+                <div class="col-span-12 md:col-span-9">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-[10px] uppercase tracking-widest text-[var(--text-secondary)] border-b border-[var(--border)]">
+                                    <th class="py-4 font-normal">Award</th>
+                                    <th class="py-4 font-normal">Project</th>
+                                    <th class="py-4 font-normal text-right">Year</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-mono text-sm">
+                                <tr class="border-b border-[var(--border)] hover:bg-[var(--bg)] transition-colors">
+                                    <td class="py-6">Site of the Day</td>
+                                    <td class="py-6">Apex Finance</td>
+                                    <td class="py-6 text-right opacity-50">2024</td>
+                                </tr>
+                                <tr class="border-b border-[var(--border)] hover:bg-[var(--bg)] transition-colors">
+                                    <td class="py-6">Developer Award</td>
+                                    <td class="py-6">Onyx Portfolio</td>
+                                    <td class="py-6 text-right opacity-50">2023</td>
+                                </tr>
+                                <tr class="border-b border-[var(--border)] hover:bg-[var(--bg)] transition-colors">
+                                    <td class="py-6">Honorable Mention</td>
+                                    <td class="py-6">Vortex Installation</td>
+                                    <td class="py-6 text-right opacity-50">2023</td>
+                                </tr>
+                                <tr class="border-b border-[var(--border)] hover:bg-[var(--bg)] transition-colors">
+                                    <td class="py-6">Best UI Design</td>
+                                    <td class="py-6">Flux Mobile App</td>
+                                    <td class="py-6 text-right opacity-50">2022</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-32 px-6 md:px-16 relative overflow-hidden">
+            <div class="grid-premium mb-32">
+                <div class="col-span-12 md:col-span-8">
+                    <h2 class="font-display text-[8vw] leading-none mb-12">
+                        Have an idea?<br>
+                        <a href="mailto:hello@aether.studio" class="border-b border-[var(--text-secondary)] hover:text-[var(--text-secondary)] transition-colors">Let's build it.</a>
+                    </h2>
+                </div>
+                <div class="col-span-12 md:col-span-4 flex flex-col justify-end items-start md:items-end">
+                    <div class="flex flex-col gap-4 text-sm font-mono uppercase tracking-widest text-right">
+                        <a href="#" class="hover:line-through">Instagram</a>
+                        <a href="#" class="hover:line-through">Twitter</a>
+                        <a href="#" class="hover:line-through">LinkedIn</a>
+                        <a href="#" class="hover:line-through">Behance</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-end border-t border-[var(--border)] pt-8 text-[10px] uppercase tracking-widest text-[var(--text-secondary)]">
+                <div class="mb-4 md:mb-0">
+                    &copy; 2025 Aether Design Studio. <br> All Rights Reserved.
+                </div>
+                <div class="flex gap-8">
+                    <span>Privacy Policy</span>
+                    <span>Terms of Service</span>
+                </div>
+                <div id="back-to-top" class="cursor-pointer hover:text-[var(--text-primary)] transition-colors mt-4 md:mt-0">
+                    Back to Top &uarr;
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // --- 1. PREMIUM CLOCK LOGIC ---
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: false, 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            document.getElementById('clock-main').innerText = timeString;
+            requestAnimationFrame(updateClock);
+        }
+        updateClock();
+
+        // --- 2. SMOOTH & ELEGANT VECTOR FIELD ---
+        const canvas = document.getElementById('vector-canvas');
+        const ctx = canvas.getContext('2d');
+        let lines = [];
+        // Mouse starts off-screen
+        let mouse = { x: -5000, y: -5000 }; 
+        
+        // Configuration for "Ultra Premium" feel: thinner, slower, more spacing
+        const config = { 
+            spacing: 50, 
+            length: 15, 
+            mouseDist: 250,
+            color: getComputedStyle(document.body).getPropertyValue('--text-primary')
+        };
+
+        function initCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+            
+            lines = [];
+            const cols = Math.ceil(window.innerWidth / config.spacing) + 1;
+            const rows = Math.ceil(window.innerHeight / config.spacing) + 1;
+            
+            for(let x = 0; x < cols; x++) {
+                for(let y = 0; y < rows; y++) {
+                    lines.push({
+                        x: x * config.spacing,
+                        y: y * config.spacing,
+                        originX: x * config.spacing,
+                        originY: y * config.spacing,
+                        angle: 0,
+                        targetAngle: 0
+                    });
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Re-fetch color in case of theme switch
+            const style = getComputedStyle(document.body);
+            const color = style.getPropertyValue('--text-primary').trim();
+            
+            ctx.lineWidth = 0.5; // Very thin lines for elegance
+            ctx.strokeStyle = color;
+
+            lines.forEach(line => {
+                const dx = mouse.x - line.originX;
+                const dy = mouse.y - line.originY;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                // Calculate angle to mouse
+                const angleToMouse = Math.atan2(dy, dx);
+                
+                // Interaction logic
+                const influence = Math.max(0, 1 - dist / config.mouseDist);
+                
+                // Smooth interpolation for angle (Lag effect)
+                if (influence > 0) {
+                     line.targetAngle = angleToMouse;
+                } else {
+                     // Slowly rotate back to 0 or some noise
+                     line.targetAngle = 0; 
+                }
+                
+                // Ease the angle
+                line.angle += (line.targetAngle - line.angle) * 0.05;
+
+                // Subtle drift movement
+                const offsetX = Math.cos(line.angle) * (influence * 15);
+                const offsetY = Math.sin(line.angle) * (influence * 15);
+                
+                const startX = line.originX + offsetX;
+                const startY = line.originY + offsetY;
+                const endX = startX + Math.cos(line.angle) * config.length;
+                const endY = startY + Math.sin(line.angle) * config.length;
+
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                // Only draw full line if near mouse, otherwise dot
+                if (influence > 0.01) {
+                    ctx.lineTo(endX, endY);
+                    ctx.globalAlpha = influence * 0.5;
+                } else {
+                    ctx.lineTo(startX + 1, startY + 1); // Tiny dot
+                    ctx.globalAlpha = 0.05; // Very faint background grid
+                }
+                ctx.stroke();
+            });
+            
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        initCanvas();
+        draw();
+
+        // --- 3. CURSOR & HOVER REVEAL SYSTEM ---
+        const cursor = document.getElementById('cursor');
+        const follower = document.getElementById('cursor-follower');
+        const hoverImg = document.getElementById('hover-reveal');
+        
+        document.addEventListener('mousemove', (e) => {
+            // Main cursor (instant)
+            cursor.style.transform = `translate3d(${e.clientX - 4}px, ${e.clientY - 4}px, 0)`;
+            
+            // Follower (laggy)
+            follower.style.transform = `translate3d(${e.clientX - 24}px, ${e.clientY - 24}px, 0)`;
+            
+            // Image reveal positioning
+            if (hoverImg.classList.contains('visible')) {
+                hoverImg.style.left = e.clientX + 'px';
+                hoverImg.style.top = e.clientY + 'px';
+                // Slight tilt based on movement could be added here
+            }
+        });
+
+        // Hover interactions
+        document.querySelectorAll('a, button, .cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                follower.style.transform += ' scale(1.5)';
+                follower.style.borderColor = 'transparent';
+                follower.style.background = 'rgba(255,255,255,0.1)';
+            });
+            el.addEventListener('mouseleave', () => {
+                follower.style.transform = follower.style.transform.replace(' scale(1.5)', '');
+                follower.style.borderColor = 'var(--accent)';
+                follower.style.background = 'transparent';
+            });
+        });
+
+        // Image Reveal on Capabilities
+        document.querySelectorAll('.capability-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                const src = item.getAttribute('data-img');
+                hoverImg.src = src;
+                hoverImg.classList.add('visible');
+                cursor.style.opacity = '0'; // Hide cursor when showing image
+                follower.style.opacity = '0';
+            });
+            item.addEventListener('mouseleave', () => {
+                hoverImg.classList.remove('visible');
+                cursor.style.opacity = '1';
+                follower.style.opacity = '1';
+            });
+        });
+
+        // --- 4. SCROLL ANIMATIONS (INTERSECTION OBSERVER) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Stagger children if needed, or just activate class
+                    entry.target.classList.add('active');
+                    if(entry.target.classList.contains('reveal-text')) {
+                        // Logic handled by CSS transition on span
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+        
+        // --- 5. THEME TOGGLE ---
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            body.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        });
+
+        // --- 6. SMOOTH SCROLL TO TOP ---
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+    </script>
+</body>
+</html>

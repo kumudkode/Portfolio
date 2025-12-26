@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoMetric | Kinetic Aether Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap');
+
+        :root {
+            --bg: #050505;
+            --text: #ffffff;
+            --accent: #ffffff;
+            --secondary: #666666;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass: rgba(255, 255, 255, 0.02);
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --text: #0a0a0a;
+            --accent: #000000;
+            --secondary: #888888;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass: rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box; cursor: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.8s var(--ease-out-expo);
+        }
+
+        /* CUSTOM CURSOR */
+        #cursor-dot {
+            width: 6px; height: 6px; background: var(--text); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 10000;
+        }
+
+        #cursor-ring {
+            width: 40px; height: 40px; border: 1px solid var(--text); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 9999;
+            transition: width 0.3s, height 0.3s, border-width 0.3s;
+        }
+
+        /* BACKGROUND ENGINE */
+        #canvas-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.6; pointer-events: none;
+        }
+
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url("https://grainy-gradients.vercel.app/noise.svg");
+            opacity: 0.03; pointer-events: none; z-index: 9998;
+        }
+
+        /* TYPOGRAPHY */
+        .h-hero { font-family: 'Instrument Serif', serif; font-size: clamp(4rem, 12vw, 12rem); line-height: 0.9; }
+        .t-mono { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }
+
+        /* SECTIONS */
+        .section-padding { padding: 12rem 8% 8rem 8%; }
+
+        /* PREMUM CARDS */
+        .work-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2rem; }
+
+        .card-wrapper {
+            position: relative; overflow: hidden; border: 1px solid var(--border);
+            background: var(--glass); backdrop-filter: blur(10px);
+            transition: all 0.6s var(--ease-out-expo);
+        }
+
+        .card-image-container {
+            width: 100%; height: 100%; overflow: hidden;
+            position: relative; min-height: 400px;
+        }
+
+        .card-img-placeholder {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%) contrast(1.1);
+            transition: transform 1.2s var(--ease-out-expo), filter 0.8s ease;
+            opacity: 0.8;
+        }
+
+        .card-wrapper:hover .card-img-placeholder {
+            transform: scale(1.05); filter: grayscale(0%) contrast(1); opacity: 1;
+        }
+
+        .card-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 2rem; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            transform: translateY(20px); opacity: 0;
+            transition: all 0.5s var(--ease-out-expo);
+        }
+
+        .card-wrapper:hover .card-info { transform: translateY(0); opacity: 1; }
+
+        /* BUTTONS */
+        .btn-magnetic {
+            position: relative; display: inline-flex; align-items: center;
+            padding: 1rem 2.5rem; border: 1px solid var(--text);
+            border-radius: 100px; overflow: hidden;
+            transition: color 0.4s var(--ease-out-expo);
+        }
+
+        .btn-magnetic::before {
+            content: ''; position: absolute; top: 100%; left: 0; width: 100%; height: 100%;
+            background: var(--text); z-index: -1;
+            transition: transform 0.4s var(--ease-out-expo);
+        }
+
+        .btn-magnetic:hover { color: var(--bg); }
+        .btn-magnetic:hover::before { transform: translateY(-100%); }
+
+        /* ANIMATIONS */
+        .reveal-text {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            transition: transform 1.2s var(--ease-out-expo);
+        }
+
+        .scroll-reveal { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease-out-expo); }
+        .scroll-reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* THEME TOGGLE */
+        .theme-btn {
+            width: 44px; height: 44px; border-radius: 50%;
+            border: 1px solid var(--border); display: flex;
+            align-items: center; justify-content: center;
+            background: transparent;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+    <div class="noise-overlay"></div>
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Header -->
+    <nav class="fixed top-0 left-0 w-full z-[100] px-8 py-10 flex justify-between items-center pointer-events-none">
+        <div class="pointer-events-auto flex flex-col">
+            <span class="t-mono font-bold text-[14px]">GEO.METRIC</span>
+            <span class="t-mono text-[9px] opacity-40">Kinetic Studio ©2025</span>
+        </div>
+        
+        <div class="flex items-center gap-8 pointer-events-auto">
+            <div class="hidden md:flex gap-10">
+                <a href="#work" class="t-mono hover:opacity-50 transition-opacity">Index</a>
+                <a href="#about" class="t-mono hover:opacity-50 transition-opacity">Logic</a>
+                <a href="#contact" class="t-mono hover:opacity-50 transition-opacity">Contact</a>
+            </div>
+            <button id="theme-toggle" class="theme-btn">
+                <i class="fa-solid fa-circle-half-stroke text-xs"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex flex-col justify-center section-padding relative">
+            <div class="max-w-[1200px]">
+                <div class="t-mono mb-8 opacity-40 scroll-reveal active">Pioneering Digital Fluidity</div>
+                <h1 class="h-hero mb-12 scroll-reveal active" style="transition-delay: 0.1s;">
+                    The <span class="italic font-light">Intersection</span> <br> of Code & Soul
+                </h1>
+                <div class="flex flex-col md:flex-row gap-12 items-start scroll-reveal active" style="transition-delay: 0.2s;">
+                    <p class="max-w-md text-xl font-light opacity-60 leading-relaxed">
+                        A boutique studio dedicated to ultra-premium kinetic web experiences. We blend architectural precision with mathematical beauty.
+                    </p>
+                    <a href="#work" class="btn-magnetic">
+                        <span class="t-mono">Explore Works</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-20 t-mono animate-bounce text-[9px]">
+                Scroll to explore [↓]
+            </div>
+        </section>
+
+        <!-- Work Section -->
+        <section id="work" class="section-padding bg-transparent">
+            <div class="flex justify-between items-end mb-24 scroll-reveal">
+                <div>
+                    <h2 class="h-hero text-6xl">Curation</h2>
+                    <p class="t-mono opacity-40 mt-4">Selected Systems 001 — 004</p>
+                </div>
+                <div class="t-mono opacity-20 hidden md:block">Ref. No. 9942/XK</div>
+            </div>
+
+            <div class="work-grid">
+                <!-- Project 1: Large -->
+                <div class="col-span-12 md:col-span-8 card-wrapper scroll-reveal">
+                    <div class="card-image-container">
+                        <div class="absolute inset-0 bg-[#111] flex items-center justify-center">
+                            <i class="fa-solid fa-vector-square text-[10vw] opacity-10"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200" class="card-img-placeholder" alt="Vortex">
+                        <div class="card-info">
+                            <span class="t-mono text-[10px] mb-2 block">Experimental Visualization</span>
+                            <h3 class="text-3xl font-medium">VORTEX-7</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2: Small -->
+                <div class="col-span-12 md:col-span-4 card-wrapper scroll-reveal" style="transition-delay: 0.1s;">
+                    <div class="card-image-container">
+                        <div class="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center">
+                             <i class="fa-solid fa-shapes text-8xl opacity-10"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&q=80&w=800" class="card-img-placeholder" alt="NeoGrain">
+                        <div class="card-info">
+                            <span class="t-mono text-[10px] mb-2 block">Brand Identity</span>
+                            <h3 class="text-3xl font-medium">NEO-GRAIN</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3: Small -->
+                <div class="col-span-12 md:col-span-5 card-wrapper scroll-reveal">
+                    <div class="card-image-container">
+                        <div class="absolute inset-0 bg-[#0f0f0f] flex items-center justify-center">
+                             <i class="fa-solid fa-wave-square text-8xl opacity-10"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=800" class="card-img-placeholder" alt="Flux">
+                        <div class="card-info">
+                            <span class="t-mono text-[10px] mb-2 block">Kinetic Type</span>
+                            <h3 class="text-3xl font-medium">FLUX-LINE</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4: Medium -->
+                <div class="col-span-12 md:col-span-7 card-wrapper scroll-reveal" style="transition-delay: 0.2s;">
+                    <div class="card-image-container">
+                         <div class="absolute inset-0 bg-[#151515] flex items-center justify-center">
+                             <i class="fa-solid fa-fingerprint text-8xl opacity-10"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=1200" class="card-img-placeholder" alt="Cipher">
+                        <div class="card-info">
+                            <span class="t-mono text-[10px] mb-2 block">Data Interface</span>
+                            <h3 class="text-3xl font-medium">CIPHER-X</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Logic Section -->
+        <section id="about" class="section-padding border-t border-[var(--border)]">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
+                <div class="scroll-reveal">
+                    <span class="t-mono opacity-40 block mb-6">Our Philosophy</span>
+                    <h2 class="h-hero text-7xl leading-[0.8] mb-12">
+                        Systems <br> That <span class="italic">Breathe</span>
+                    </h2>
+                    <p class="text-xl opacity-60 leading-relaxed max-w-md font-light">
+                        We don't build pages. We architect ecosystems of interaction where every pixel has weight and every transition has purpose. Using custom shader logic and physics-based motion.
+                    </p>
+                </div>
+                <div class="relative scroll-reveal" style="transition-delay: 0.2s;">
+                    <div class="aspect-square border border-[var(--border)] p-12 flex flex-col justify-between group overflow-hidden">
+                        <div class="t-mono text-[10px] opacity-40">System Core 01.0</div>
+                        <div class="text-[8vw] font-bold opacity-5 leading-[0.8] transition-transform duration-1000 group-hover:scale-110">
+                            DIGITAL <br> AETHER
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div class="t-mono text-[10px] opacity-20">EST. 2025</div>
+                            <i class="fa-solid fa-plus opacity-20"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="contact" class="section-padding flex flex-col items-center text-center">
+            <h2 class="h-hero text-8xl mb-16 scroll-reveal">Ready to <br> <span class="opacity-20 italic">Elevate?</span></h2>
+            <a href="mailto:hello@geometric.studio" class="t-mono text-2xl border-b border-[var(--text)] pb-2 mb-24 inline-block hover:opacity-50 transition-all scroll-reveal">
+                hello@geometric.studio
+            </a>
+            
+            <div class="w-full pt-12 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-8 scroll-reveal">
+                <div class="t-mono text-[10px] opacity-40">© 2025 GC Studio. Crafted in Motion.</div>
+                <div class="flex gap-12 t-mono text-[10px] uppercase">
+                    <a href="#" class="hover:text-[var(--accent)] transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-[var(--accent)] transition-colors">Twitter</a>
+                    <a href="#" class="hover:text-[var(--accent)] transition-colors">Awwwards</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // --- PREMUM MOTION ENGINE ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: -100, y: -100, velocity: 0 };
+        let lastMouse = { x: 0, y: 0 };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            const count = Math.floor((canvas.width * canvas.height) / 15000);
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5
+                });
+            }
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const color = getComputedStyle(document.body).getPropertyValue('--text');
+            ctx.fillStyle = color;
+            
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Boundary Wrap
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+
+                // Mouse interaction
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 200) {
+                    const force = (200 - dist) / 200;
+                    p.x -= dx * force * 0.02;
+                    p.y -= dy * force * 0.02;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.globalAlpha = p.opacity;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawParticles);
+        }
+
+        // --- INTERACTIVE ELEMENTS ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorRing = document.getElementById('cursor-ring');
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            // Calculate mouse velocity for ring scale
+            const v = Math.sqrt(Math.pow(e.clientX - lastMouse.x, 2) + Math.pow(e.clientY - lastMouse.y, 2));
+            mouse.velocity = Math.min(v / 10, 2);
+            lastMouse = { x: e.clientX, y: e.clientY };
+
+            cursorDot.style.left = `${e.clientX}px`;
+            cursorDot.style.top = `${e.clientY}px`;
+            
+            cursorRing.style.transform = `translate3d(${e.clientX - 20}px, ${e.clientY - 20}px, 0) scale(${1 + mouse.velocity * 0.5})`;
+        });
+
+        // Magnetic Effect for Buttons
+        document.querySelectorAll('.btn-magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.5}px)`;
+                cursorRing.style.width = '80px';
+                cursorRing.style.height = '80px';
+                cursorRing.style.borderWidth = '2px';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = `translate(0,0)`;
+                cursorRing.style.width = '40px';
+                cursorRing.style.height = '40px';
+                cursorRing.style.borderWidth = '1px';
+            });
+        });
+
+        // Scroll Observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+        });
+
+        // Init
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        drawParticles();
+
+    </script>
+</body>
+</html>

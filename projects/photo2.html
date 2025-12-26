@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMEN | Photographic Artist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* FONTS */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@200;300;400;500&family=Space+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #050505;
+            --text-main: #f0f0f0;
+            --text-muted: #666;
+            --accent-red: #cc0000; /* Leica Red / Rec Dot */
+            --ui-color: rgba(255, 255, 255, 0.6);
+            --grid-line: rgba(255, 255, 255, 0.08);
+            --easing: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* TYPOGRAPHY UTILS */
+        .font-serif { font-family: 'Cormorant Garamond', serif; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+
+        /* FILM GRAIN OVERLAY */
+        .film-grain {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9998; opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+            animation: grainShift 0.5s steps(5) infinite;
+        }
+        @keyframes grainShift {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-2%, -2%); }
+            40% { transform: translate(2%, 2%); }
+            60% { transform: translate(-2%, 2%); }
+            80% { transform: translate(2%, -2%); }
+        }
+
+        /* FLASH EFFECT */
+        .camera-flash {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: white; z-index: 10000; opacity: 0; pointer-events: none;
+        }
+        .flash-active {
+            animation: flashAnim 0.15s ease-out forwards;
+        }
+        @keyframes flashAnim {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        /* SHUTTER OPENING ANIMATION */
+        .shutter-curtain {
+            position: fixed; z-index: 9999;
+            background: #080808;
+            transition: transform 1.2s var(--easing);
+            width: 100%; height: 50%;
+            left: 0;
+        }
+        .shutter-top { top: 0; transform-origin: top; }
+        .shutter-bottom { bottom: 0; transform-origin: bottom; }
+        
+        .shutter-open .shutter-top { transform: scaleY(0); }
+        .shutter-open .shutter-bottom { transform: scaleY(0); }
+
+        /* VIEWFINDER UI */
+        .viewfinder-ui {
+            position: fixed; top: 2rem; left: 2rem; right: 2rem; bottom: 2rem;
+            z-index: 100; pointer-events: none;
+            border: 1px solid transparent;
+        }
+        .vf-corner {
+            position: absolute; width: 20px; height: 20px;
+            border-color: var(--ui-color); border-style: solid;
+            transition: all 0.3s ease;
+        }
+        .vf-tl { top: 0; left: 0; border-width: 1px 0 0 1px; }
+        .vf-tr { top: 0; right: 0; border-width: 1px 1px 0 0; }
+        .vf-bl { bottom: 0; left: 0; border-width: 0 0 1px 1px; }
+        .vf-br { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+        
+        .vf-data {
+            position: absolute; font-family: 'Space Mono', monospace; 
+            font-size: 10px; color: var(--ui-color); text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* CROSSHAIR CURSOR */
+        #cursor-crosshair {
+            position: fixed; pointer-events: none; z-index: 10001;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, transform 0.3s;
+            mix-blend-mode: difference;
+        }
+        .crosshair-h { width: 40px; height: 1px; background: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: width 0.3s; }
+        .crosshair-v { width: 1px; height: 40px; background: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: height 0.3s; }
+        
+        /* HOVER STATES FOR IMAGES */
+        .focus-container {
+            position: relative; overflow: hidden;
+            filter: grayscale(100%);
+            transition: filter 0.6s var(--easing);
+        }
+        .focus-container img {
+            transition: transform 1.2s var(--easing), filter 0.6s ease;
+            filter: blur(4px); /* Default blurred state */
+        }
+        .focus-container:hover {
+            filter: grayscale(0%);
+        }
+        .focus-container:hover img {
+            transform: scale(1.05);
+            filter: blur(0px); /* Sharpen on hover */
+        }
+
+        /* GRID OVERLAY */
+        .grid-lines {
+            position: absolute; inset: 0; display: flex;
+            justify-content: space-between; pointer-events: none;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .focus-container:hover .grid-lines { opacity: 1; }
+        .grid-line-v { width: 1px; height: 100%; background: rgba(255,255,255,0.2); position: absolute; }
+        .grid-line-h { height: 1px; width: 100%; background: rgba(255,255,255,0.2); position: absolute; top: 33%; }
+        .grid-line-h-2 { height: 1px; width: 100%; background: rgba(255,255,255,0.2); position: absolute; top: 66%; }
+
+        /* RED DOT RECORDER */
+        .rec-dot {
+            width: 8px; height: 8px; background: var(--accent-red);
+            border-radius: 50%; display: inline-block;
+            margin-right: 8px; animation: blink 2s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* SCROLL REVEAL */
+        .reveal-up {
+            opacity: 0; transform: translateY(40px);
+            transition: all 1s var(--easing);
+        }
+        .reveal-up.active { opacity: 1; transform: translateY(0); }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- FX LAYERS -->
+    <div class="film-grain"></div>
+    <div class="camera-flash" id="flash"></div>
+    <div class="shutter-curtain shutter-top" id="s-top"></div>
+    <div class="shutter-curtain shutter-bottom" id="s-bottom"></div>
+
+    <!-- CURSOR -->
+    <div id="cursor-crosshair">
+        <div class="crosshair-h"></div>
+        <div class="crosshair-v"></div>
+    </div>
+
+    <!-- VIEWFINDER UI (FIXED) -->
+    <div class="viewfinder-ui">
+        <div class="vf-corner vf-tl"></div>
+        <div class="vf-corner vf-tr"></div>
+        <div class="vf-corner vf-bl"></div>
+        <div class="vf-corner vf-br"></div>
+        
+        <!-- Camera Data -->
+        <div class="vf-data" style="top: 0; left: 30px;">ISO <span id="iso-val">800</span></div>
+        <div class="vf-data" style="top: 0; right: 30px;">BAT 84%</div>
+        <div class="vf-data" style="bottom: 0; left: 30px;">f/<span id="aperture-val">1.8</span></div>
+        <div class="vf-data" style="bottom: 0; right: 30px;">1/<span id="shutter-val">250</span></div>
+        
+        <!-- Center Focus Ring (Visual Only) -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] border border-white/10 rounded-full pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[4px] h-[4px] bg-white/50 rounded-full pointer-events-none"></div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-12 py-8 flex justify-between items-center mix-blend-difference">
+        <div class="font-serif italic text-2xl tracking-wide">Lumen.</div>
+        <div class="flex gap-8 font-mono text-xs tracking-widest uppercase">
+            <a href="#portfolio" class="hover:text-[var(--accent-red)] transition-colors">Frames</a>
+            <a href="#about" class="hover:text-[var(--accent-red)] transition-colors">Profile</a>
+            <a href="#contact" class="hover:text-[var(--accent-red)] transition-colors">Book</a>
+        </div>
+    </nav>
+
+    <main class="relative z-10 pb-32">
+        
+        <!-- HERO SECTION -->
+        <section class="h-screen w-full flex items-center justify-center relative overflow-hidden">
+            <!-- Background Video/Image placeholder -->
+            <div class="absolute inset-0 bg-[#0a0a0a]">
+                <!-- Abstract blurred shapes simulating out-of-focus background -->
+                <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[120px] animate-pulse"></div>
+                <div class="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-red-900/10 rounded-full blur-[100px]"></div>
+            </div>
+
+            <div class="text-center relative z-20 mix-blend-screen">
+                <div class="font-mono text-[10px] tracking-[0.5em] mb-4 text-[var(--accent-red)] flex items-center justify-center gap-2">
+                    <span class="rec-dot"></span> REC [00:04:12]
+                </div>
+                <h1 class="font-serif text-[8vw] leading-[0.9] italic font-light tracking-tight mb-6">
+                    Capturing the<br>Ephemeral
+                </h1>
+                <p class="font-mono text-xs opacity-60 max-w-md mx-auto leading-relaxed">
+                    A study of light, shadow, and human emotion through the lens of a 35mm system.
+                </p>
+            </div>
+            
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 font-mono text-[9px] opacity-40 animate-bounce">
+                SCROLL TO FOCUS
+            </div>
+        </section>
+
+        <!-- PORTFOLIO GRID -->
+        <section id="portfolio" class="px-8 md:px-16 pt-32">
+            <div class="flex items-baseline justify-between mb-24 reveal-up">
+                <h2 class="font-serif text-5xl italic">Selected Frames</h2>
+                <div class="font-mono text-xs opacity-50">Volume 01 — 2025</div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-32">
+                
+                <!-- Project 1 -->
+                <div class="group reveal-up">
+                    <div class="focus-container aspect-[3/4] mb-6 cursor-pointer relative bg-[#111]">
+                        <!-- Rule of Thirds Grid -->
+                        <div class="grid-lines">
+                            <div class="grid-line-v" style="left: 33%"></div>
+                            <div class="grid-line-v" style="left: 66%"></div>
+                            <div class="grid-line-h"></div>
+                            <div class="grid-line-h-2"></div>
+                        </div>
+                        <!-- Image -->
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover" alt="Portrait">
+                        
+                        <!-- Metadata Overlay on Hover -->
+                        <div class="absolute bottom-4 left-4 font-mono text-[9px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            ISO 400 &nbsp; 50mm &nbsp; f/2.8
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-4">
+                        <h3 class="font-serif text-2xl italic">The Muse</h3>
+                        <span class="font-mono text-[10px] opacity-50">PORTRAIT</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 (Offset) -->
+                <div class="group reveal-up md:mt-32">
+                    <div class="focus-container aspect-[4/3] mb-6 cursor-pointer relative bg-[#111]">
+                         <div class="grid-lines">
+                            <div class="grid-line-v" style="left: 33%"></div>
+                            <div class="grid-line-v" style="left: 66%"></div>
+                            <div class="grid-line-h"></div>
+                            <div class="grid-line-h-2"></div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover" alt="Nature">
+                        <div class="absolute bottom-4 left-4 font-mono text-[9px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            ISO 100 &nbsp; 24mm &nbsp; f/11
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-4">
+                        <h3 class="font-serif text-2xl italic">Silent Hills</h3>
+                        <span class="font-mono text-[10px] opacity-50">LANDSCAPE</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group reveal-up">
+                    <div class="focus-container aspect-[16/9] mb-6 cursor-pointer relative bg-[#111]">
+                         <div class="grid-lines">
+                            <div class="grid-line-v" style="left: 33%"></div>
+                            <div class="grid-line-v" style="left: 66%"></div>
+                            <div class="grid-line-h"></div>
+                            <div class="grid-line-h-2"></div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1517260739337-6799d239ce83?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover" alt="Urban">
+                        <div class="absolute bottom-4 left-4 font-mono text-[9px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            ISO 3200 &nbsp; 35mm &nbsp; f/1.4
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-4">
+                        <h3 class="font-serif text-2xl italic">Neon Rain</h3>
+                        <span class="font-mono text-[10px] opacity-50">STREET</span>
+                    </div>
+                </div>
+
+                <!-- Project 4 (Offset) -->
+                <div class="group reveal-up md:mt-32">
+                    <div class="focus-container aspect-[3/4] mb-6 cursor-pointer relative bg-[#111]">
+                         <div class="grid-lines">
+                            <div class="grid-line-v" style="left: 33%"></div>
+                            <div class="grid-line-v" style="left: 66%"></div>
+                            <div class="grid-line-h"></div>
+                            <div class="grid-line-h-2"></div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1502989642968-94fbdc9eace4?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover" alt="Editorial">
+                        <div class="absolute bottom-4 left-4 font-mono text-[9px] text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                            ISO 200 &nbsp; 85mm &nbsp; f/2.0
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-baseline border-b border-white/10 pb-4">
+                        <h3 class="font-serif text-2xl italic">Vogue Noir</h3>
+                        <span class="font-mono text-[10px] opacity-50">EDITORIAL</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- COLOR THEORY / ABOUT -->
+        <section id="about" class="py-40 px-8 md:px-16 mt-20 border-t border-white/5">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-4 font-mono text-xs opacity-50 uppercase tracking-widest reveal-up">
+                    02 / The Philosophy
+                </div>
+                <div class="md:col-span-8 reveal-up">
+                    <h2 class="font-serif text-4xl md:text-6xl italic leading-tight mb-12">
+                        "Photography is the truth, and the cinema is the truth twenty-four times per second."
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm leading-relaxed text-[#888]">
+                        <p>
+                            I specialize in high-contrast, emotive imagery. My color grading process is rooted in analog film emulation—extracting deep blacks and preserving the integrity of skin tones. 
+                        </p>
+                        <p>
+                            Every frame is a composed painting. I use light not just to illuminate, but to obscure. The shadows are where the story lives.
+                        </p>
+                    </div>
+
+                    <!-- Color Palette Display -->
+                    <div class="flex gap-4 mt-16">
+                        <div>
+                            <div class="w-16 h-16 bg-[#cc0000] rounded-full mb-2 border border-white/10"></div>
+                            <div class="font-mono text-[9px] text-center opacity-50">#CC0000</div>
+                        </div>
+                        <div>
+                            <div class="w-16 h-16 bg-[#050505] rounded-full mb-2 border border-white/20"></div>
+                            <div class="font-mono text-[9px] text-center opacity-50">#050505</div>
+                        </div>
+                        <div>
+                            <div class="w-16 h-16 bg-[#e0e0e0] rounded-full mb-2 border border-white/10"></div>
+                            <div class="font-mono text-[9px] text-center opacity-50">#E0E0E0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <footer id="contact" class="py-32 px-8 md:px-16 border-t border-white/5 bg-[#080808]">
+            <div class="flex flex-col items-center text-center reveal-up">
+                <div class="font-mono text-xs text-[var(--accent-red)] mb-8 tracking-[0.3em] uppercase">Ready to Shoot</div>
+                <h2 class="font-serif text-[10vw] leading-none italic hover:text-white transition-colors cursor-pointer mb-12">
+                    Let's Create.
+                </h2>
+                <a href="mailto:contact@lumen.art" class="font-mono text-sm border border-white/20 px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all">
+                    contact@lumen.art
+                </a>
+                
+                <div class="mt-24 flex gap-12 font-mono text-[10px] uppercase tracking-widest opacity-40">
+                    <a href="#" class="hover:text-white hover:opacity-100">Instagram</a>
+                    <a href="#" class="hover:text-white hover:opacity-100">Behance</a>
+                    <a href="#" class="hover:text-white hover:opacity-100">Unsplash</a>
+                </div>
+            </div>
+            
+            <div class="mt-24 text-center font-mono text-[9px] opacity-20">
+                &copy; 2025 LUMEN PHOTOGRAPHY. ALL RIGHTS RESERVED.
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- 1. SHUTTER ANIMATION ON LOAD ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.classList.add('shutter-open');
+                
+                // Play shutter flash simulation (visual only)
+                const flash = document.getElementById('flash');
+                flash.classList.add('flash-active');
+                setTimeout(() => flash.classList.remove('flash-active'), 150);
+            }, 600);
+        });
+
+        // --- 2. CUSTOM CROSSHAIR CURSOR ---
+        const cursor = document.getElementById('cursor-crosshair');
+        const hLine = cursor.querySelector('.crosshair-h');
+        const vLine = cursor.querySelector('.crosshair-v');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Cursor expands on clickable elements
+        document.querySelectorAll('a, .focus-container, button').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                hLine.style.width = '60px';
+                vLine.style.height = '60px';
+                cursor.style.transform = 'translate(-50%, -50%) rotate(45deg)';
+            });
+            el.addEventListener('mouseleave', () => {
+                hLine.style.width = '40px';
+                vLine.style.height = '40px';
+                cursor.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+            });
+        });
+
+        // --- 3. FLASH EFFECT ON CLICK ---
+        document.addEventListener('click', (e) => {
+            // Create a small flash effect
+            const flash = document.getElementById('flash');
+            
+            // Clone flash node to allow rapid firing if user clicks fast
+            const newFlash = flash.cloneNode(true);
+            newFlash.id = ''; // remove id to prevent dupes
+            newFlash.className = 'camera-flash'; // Ensure base class
+            document.body.appendChild(newFlash);
+            
+            requestAnimationFrame(() => {
+                newFlash.classList.add('flash-active');
+            });
+            
+            setTimeout(() => {
+                newFlash.remove();
+            }, 200);
+        });
+
+        // --- 4. DYNAMIC VIEWFINDER DATA ---
+        // Updates ISO/Shutter values based on mouse position to simulate metering
+        const isoVal = document.getElementById('iso-val');
+        const shutterVal = document.getElementById('shutter-val');
+        const apertureVal = document.getElementById('aperture-val');
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            // Simple logic to change values occasionally
+            if(Math.random() > 0.92) { 
+                const fStops = ['1.2', '1.4', '1.8', '2.0', '2.8', '4.0', '5.6'];
+                const shutterSpeeds = ['125', '250', '500', '1000', '2000', '4000'];
+                
+                apertureVal.innerText = fStops[Math.floor(x * fStops.length)];
+                shutterVal.innerText = shutterSpeeds[Math.floor(y * shutterSpeeds.length)];
+            }
+        });
+
+        // --- 5. SCROLL REVEAL OBSERVER ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+
+    </script>
+</body>
+</html>
