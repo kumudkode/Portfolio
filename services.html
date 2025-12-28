@@ -3,14 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projects | Kumud Ranjan</title>
+    <title>Services | Kumud Ranjan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
     />
-    <!-- Animation Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
@@ -32,16 +33,6 @@
       preload="auto"
     ></audio>
     <audio id="moon-sound" src="assets/audio/moon.mp3" preload="auto"></audio>
-    <audio
-      id="interface-sound"
-      src="assets/audio/interface-1244645.mp3"
-      preload="auto"
-    ></audio>
-    <audio
-      id="hover-sound"
-      src="assets/audio/ui-6-sound-effect-modern-smooth-fade-out-stereo-332452.mp3"
-      preload="auto"
-    ></audio>
 
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
@@ -51,14 +42,14 @@
 
     <!-- Navigation -->
     <nav
-      class="fixed top-0 w-full px-4 sm:px-6 md:px-12 py-4 sm:py-5 flex justify-between items-center z-[100] mix-blend-difference"
+      class="fixed top-0 w-full px-4 sm:px-6 md:px-12 py-4 sm:py-5 flex justify-between items-center z-[100]"
       role="navigation"
-      aria-label="Main navigation"
+      style="mix-blend-mode: difference; pointer-events: none"
     >
       <a
         href="index.html"
         class="flex items-center gap-1 select-none cursor-pointer"
-        aria-label="Kumud Kode - Home"
+        style="pointer-events: auto"
       >
         <span
           class="text-white text-base sm:text-lg md:text-xl tracking-normal"
@@ -72,45 +63,42 @@
           >Kode</span
         >
       </a>
-      <div class="flex items-center gap-3 sm:gap-6 md:gap-8" role="menubar">
+      <div
+        class="flex items-center gap-3 sm:gap-6 md:gap-8"
+        role="menubar"
+        style="pointer-events: auto"
+      >
         <a
           href="index.html#about"
           class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
           style="font-family: 'Lora', serif"
-          role="menuitem"
           >About</a
         >
         <a
           href="services.html"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+          class="text-white text-xs sm:text-sm tracking-wide opacity-100 border-b border-white"
           style="font-family: 'Lora', serif"
-          role="menuitem"
+          aria-current="page"
           >Services</a
         >
         <a
           href="projects.html"
-          class="text-white text-xs sm:text-sm tracking-wide opacity-100 border-b border-white"
+          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
           style="font-family: 'Lora', serif"
-          role="menuitem"
-          aria-current="page"
           >Projects</a
         >
         <a
           href="index.html#contact"
           class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
           style="font-family: 'Lora', serif"
-          role="menuitem"
           >Contact</a
         >
         <button
           class="theme-toggle flex-shrink-0"
           onclick="toggleTheme()"
-          aria-label="Toggle dark and light theme"
-          aria-pressed="false"
+          aria-label="Toggle theme"
           type="button"
-          tabindex="0"
         >
-          <!-- Sun Icon -->
           <svg
             class="sun-icon"
             viewBox="0 0 24 24"
@@ -190,7 +178,6 @@
               stroke-linecap="round"
             />
           </svg>
-          <!-- Moon Icon -->
           <svg
             class="moon-icon"
             viewBox="0 0 24 24"
@@ -198,14 +185,12 @@
           >
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
-          <span class="sr-only">Toggle theme</span>
         </button>
         <button
           class="sound-toggle flex-shrink-0"
           onclick="toggleSound()"
           aria-label="Toggle sound"
           type="button"
-          tabindex="0"
         >
           <svg
             class="sound-on"
@@ -235,60 +220,110 @@
               fill="none"
             />
           </svg>
-          <span class="sr-only">Toggle sound</span>
         </button>
       </div>
     </nav>
 
     <main id="main-content" role="main" tabindex="-1">
-      <!-- Projects Hero -->
+      <!-- Hero Section -->
       <section
-        class="min-h-[40vh] flex flex-col justify-center px-4 sm:px-6 md:px-16 pt-24 sm:pt-28 pb-8 sm:pb-12"
-        aria-label="Projects overview"
+        class="min-h-[50vh] flex flex-col justify-center px-4 sm:px-6 md:px-16 pt-24 sm:pt-28 pb-8 sm:pb-12 relative overflow-hidden"
       >
         <div class="max-w-[1400px] w-full mx-auto">
-          <h1
-            class="text-4xl sm:text-6xl md:text-8xl serif italic tracking-tighter mb-4"
-          >
-            All Projects
+          <div class="mono opacity-50 mb-4 text-sm reveal-text">
+            Services I Offer
+          </div>
+          <h1 class="text-4xl sm:text-6xl md:text-7xl serif mb-4 hero-reveal">
+            What I <span class="italic" style="color: #ff4d00">Build</span>
           </h1>
-          <p class="text-base sm:text-lg opacity-60 max-w-2xl">
-            A comprehensive collection of my work in full-stack development,
-            cloud architecture, and interactive web applications.
+          <p class="text-base sm:text-lg opacity-60 max-w-2xl reveal-text">
+            From simple WordPress sites to complex full-stack applications.
+            Let's build something amazing together.
           </p>
         </div>
       </section>
 
-      <!-- Filter/Category Tabs -->
-      <section class="px-4 sm:px-6 md:px-16 pb-8">
+      <!-- Divider -->
+      <div class="px-6 md:px-16">
+        <div class="divider scroll-line"></div>
+      </div>
+
+      <!-- Services Grid -->
+      <section class="py-16 sm:py-24 px-4 sm:px-6 md:px-16">
         <div class="max-w-[1400px] mx-auto">
-          <div class="flex flex-wrap gap-3">
-            <button class="filter-btn active" data-filter="all">
-              All Projects
-            </button>
-            <button class="filter-btn" data-filter="fullstack">
-              Full Stack
-            </button>
-            <button class="filter-btn" data-filter="frontend">Frontend</button>
-            <button class="filter-btn" data-filter="cloud">
-              Cloud & DevOps
-            </button>
-            <button class="filter-btn" data-filter="algorithm">
-              Algorithms
-            </button>
+          <div
+            id="services-grid"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          >
+            <!-- Services loaded dynamically -->
+            <div class="col-span-full text-center py-12 opacity-50">
+              <p class="mono text-sm">Loading services...</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Projects Grid - Dynamically loaded from data/projects.json -->
-      <section class="py-8 px-4 sm:px-6 md:px-16" aria-label="All projects">
+      <!-- Testimonials Section -->
+      <section
+        class="py-16 sm:py-24 px-4 sm:px-6 md:px-16 bg-white/30"
+        aria-label="Client testimonials"
+      >
         <div class="max-w-[1400px] mx-auto">
-          <!-- Dynamic projects will be loaded here -->
-          <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Loading state -->
+          <div class="text-center mb-12">
+            <div class="mono opacity-50 mb-4 text-sm">(04) Client Feedback</div>
+            <h2
+              class="text-3xl sm:text-5xl md:text-6xl serif italic reveal-text"
+            >
+              What Users Say
+            </h2>
+          </div>
+          <div
+            id="testimonials-grid"
+            class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
+          >
             <div class="col-span-full text-center py-12 opacity-50">
-              <p class="mono text-sm">Loading projects...</p>
+              <p class="mono text-sm">Loading testimonials...</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="px-6 md:px-16 py-4">
+        <div class="max-w-[1400px] mx-auto">
+          <div class="h-[1px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent"></div>
+        </div>
+      </div>
+
+      <!-- CTA Section -->
+      <section class="py-16 sm:py-24 px-4 sm:px-6 md:px-16">
+        <div class="max-w-[1400px] mx-auto text-center">
+          <div class="mono opacity-50 mb-4 text-sm reveal-text">Let's Build Together</div>
+          <h2
+            class="text-3xl sm:text-5xl md:text-6xl serif italic mb-6 reveal-text"
+          >
+            Want to work with me?
+          </h2>
+          <p class="text-base sm:text-lg opacity-60 mb-4 reveal-text max-w-2xl mx-auto">
+            I'm always excited to collaborate on new projects. Whether you need a complete web application, 
+            a landing page, or technical consultation — let's discuss how I can help bring your ideas to life.
+          </p>
+          <p class="text-sm opacity-40 mb-8 reveal-text">
+            Response time: Usually within 24 hours ⚡
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal-text">
+            <a
+              href="index.html#contact"
+              class="mono text-sm py-3 px-8 bg-orange-600 text-white rounded-full hover:bg-orange-700 transition-all duration-500 inline-block hover:scale-105"
+            >
+              Start a Conversation →
+            </a>
+            <a
+              href="mailto:connect.kumud@gmail.com"
+              class="mono text-sm py-3 px-8 border border-black/20 rounded-full hover:border-orange-600 hover:text-orange-600 transition-all duration-500 inline-block"
+            >
+              connect.kumud@gmail.com
+            </a>
           </div>
         </div>
       </section>
@@ -297,7 +332,6 @@
       <footer
         id="contact"
         class="py-16 sm:py-20 px-4 sm:px-6 md:px-16 border-t border-black/10"
-        role="contentinfo"
       >
         <div class="max-w-[1400px] mx-auto">
           <div
@@ -333,14 +367,12 @@
                 <a
                   href="https://linkedin.com/in/kumudkode"
                   target="_blank"
-                  rel="noopener noreferrer"
                   class="serif text-lg hover:text-orange-600 transition-colors"
                   >LinkedIn</a
                 >
                 <a
                   href="https://github.com/kumudkode"
                   target="_blank"
-                  rel="noopener noreferrer"
                   class="serif text-lg hover:text-orange-600 transition-colors"
                   >GitHub</a
                 >
@@ -367,11 +399,9 @@
     </main>
 
     <script src="assets/theme.js"></script>
-    <script src="assets/projectLoader.js"></script>
     <script>
-      // Sound toggle function
+      // Sound toggle
       let soundEnabled = true;
-
       function toggleSound() {
         soundEnabled = !soundEnabled;
         localStorage.setItem("soundEnabled", soundEnabled);
@@ -383,22 +413,6 @@
         }
       }
 
-      // Load sound preference
-      window.addEventListener("load", () => {
-        const saved = localStorage.getItem("soundEnabled");
-        if (saved !== null) {
-          soundEnabled = saved === "true";
-          const toggle = document.querySelector(".sound-toggle");
-          if (!soundEnabled && toggle) {
-            toggle.classList.add("muted");
-          }
-        }
-        // Play welcome sound on page load (desktop only)
-        if (window.innerWidth > 768) {
-          playSound("interface-sound");
-        }
-      });
-
       // Audio functions
       const playSound = (id) => {
         if (!soundEnabled) return;
@@ -409,12 +423,21 @@
         }
       };
 
+      window.addEventListener("load", () => {
+        const saved = localStorage.getItem("soundEnabled");
+        if (saved !== null) {
+          soundEnabled = saved === "true";
+          const toggle = document.querySelector(".sound-toggle");
+          if (!soundEnabled && toggle) toggle.classList.add("muted");
+        }
+      });
+
       // Click sound for all clickable elements
       document.addEventListener(
         "click",
         (e) => {
           const target = e.target.closest(
-            'a, button, [role="menuitem"], .project-card, .filter-btn'
+            'a, button, [role="menuitem"], .service-card, .skill-tag'
           );
           if (target) {
             const text = target.textContent.trim();
@@ -428,19 +451,11 @@
             else if (target.classList.contains("sound-toggle")) {
               playSound("click-sound");
             }
-            // Filter button click
-            else if (target.classList.contains("filter-btn")) {
-              playSound("click-sound");
-            }
-            // Project card click
+            // Project sound for project links
             else if (
-              target.classList.contains("project-card") ||
-              target.closest(".project-card")
+              href.includes("projects.html") ||
+              text.includes("Project")
             ) {
-              playSound("project-sound");
-            }
-            // Services navigation
-            else if (href.includes("services.html")) {
               e.preventDefault();
               playSound("project-sound");
               setTimeout(() => {
@@ -448,8 +463,17 @@
               }, 500);
             }
             // Connect sound for contact links
-            else if (href.includes("#contact") || href.includes("mailto:")) {
+            else if (
+              href.includes("#contact") ||
+              href.includes("mailto:") ||
+              text.includes("Get Quote") ||
+              text.includes("Get in Touch")
+            ) {
               playSound("connect-sound");
+            }
+            // Service card interaction
+            else if (target.classList.contains("service-card")) {
+              playSound("effect-sound");
             }
             // Default click sound
             else {
@@ -460,27 +484,30 @@
         true
       );
 
-      // Hover sound for project cards (desktop only)
-      document.addEventListener("DOMContentLoaded", () => {
-        if (window.innerWidth > 768) {
-          document.querySelectorAll(".project-card").forEach((card) => {
-            let hoverPlayed = false;
-            card.addEventListener("mouseenter", () => {
-              if (!hoverPlayed) {
-                playSound("hover-sound");
-                hoverPlayed = true;
-                setTimeout(() => (hoverPlayed = false), 1000);
-              }
-            });
-          });
-        }
+      // Smooth scroll
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero animations
+      window.addEventListener("load", () => {
+        gsap.from(".hero-reveal", {
+          opacity: 0,
+          y: 30,
+          duration: 1,
+          ease: "expo.out",
+        });
       });
 
-      // Logo Text Cycling Animation
+      // Logo cycling
       const logoCycle = document.getElementById("cycle-logo");
       const words = ["KODE", "CODE", "DEV", "SYSTEM"];
       let wordIndex = 0;
-
       function cycleText() {
         gsap.to(logoCycle, {
           opacity: 0,
@@ -489,77 +516,218 @@
           onComplete: () => {
             wordIndex = (wordIndex + 1) % words.length;
             logoCycle.innerText = words[wordIndex];
-            gsap.to(logoCycle, {
-              opacity: 1,
-              y: 0,
-              duration: 0.3,
-            });
+            gsap.to(logoCycle, { opacity: 1, y: 0, duration: 0.3 });
           },
         });
       }
       setInterval(cycleText, 3000);
 
-      // Refined Cursor Animation
+      // Cursor
       const blob = document.getElementById("cursor-blob");
       const ring = document.getElementById("cursor-ring");
       let mouseX = 0,
         mouseY = 0,
+        blobX = 0,
+        blobY = 0,
         ringX = 0,
         ringY = 0;
 
-      if (blob && ring && window.innerWidth > 768) {
-        window.addEventListener("mousemove", (e) => {
-          mouseX = e.clientX;
-          mouseY = e.clientY;
-          gsap.to(blob, { x: mouseX - 3, y: mouseY - 3, duration: 0.1 });
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function animateCursor() {
+        blobX += (mouseX - blobX) * 0.8;
+        blobY += (mouseY - blobY) * 0.8;
+        ringX += (mouseX - ringX) * 0.15;
+        ringY += (mouseY - ringY) * 0.15;
+        blob.style.transform = `translate3d(${blobX - 4}px, ${blobY - 4}px, 0)`;
+        ring.style.transform = `translate3d(${ringX - 17.5}px, ${
+          ringY - 17.5
+        }px, 0)`;
+        requestAnimationFrame(animateCursor);
+      }
+      if (window.innerWidth > 768) animateCursor();
+
+      // Reveal animations
+      gsap.utils.toArray(".reveal-text").forEach((text) => {
+        gsap.from(text, {
+          scrollTrigger: { trigger: text, start: "top 90%" },
+          opacity: 0,
+          y: 20,
+          duration: 1,
+          ease: "power3.out",
+        });
+      });
+
+      gsap.utils.toArray(".scroll-line").forEach((line) => {
+        gsap.from(line, {
+          scrollTrigger: { trigger: line, start: "top 95%" },
+          scaleX: 0,
+          duration: 1.5,
+          ease: "expo.out",
+        });
+      });
+
+      // Magnetic effect
+      const magnets = document.querySelectorAll(".magnetic-wrap");
+      magnets.forEach((magnet) => {
+        magnet.addEventListener("mousemove", (e) => {
+          const rect = magnet.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.3;
+          const y = (e.clientY - rect.top - rect.height / 2) * 0.3;
+          gsap.to(magnet.querySelector("a"), { x, y, duration: 0.3 });
+        });
+        magnet.addEventListener("mouseleave", () => {
+          gsap.to(magnet.querySelector("a"), {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      });
+
+      // Load services
+      fetch("data/services.json")
+        .then((res) => res.json())
+        .then((services) => {
+          const grid = document.getElementById("services-grid");
+          grid.innerHTML = services
+            .map(
+              (service) => `
+            <div class="service-card bg-white/40 border border-black/10 rounded-2xl p-6 sm:p-8 hover:shadow-xl hover:scale-[1.02] transition-all duration-500 reveal-text relative overflow-hidden group">
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-14 h-14 rounded-full bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span class="text-3xl">${getIcon(service.icon)}</span>
+                  </div>
+                  ${
+                    service.trending
+                      ? '<div class="bg-gradient-to-r from-orange-500 to-pink-500 text-white text-xs px-2 py-1 rounded-full mono">Trending 2026</div>'
+                      : ""
+                  }
+                </div>
+                <span class="mono text-xs opacity-50">${
+                  service.deliveryTime
+                }</span>
+              </div>
+              <h3 class="text-xl sm:text-2xl font-semibold mb-3 group-hover:text-orange-600 transition-colors">${
+                service.title
+              }</h3>
+              <p class="text-sm opacity-70 mb-4 leading-relaxed">${
+                service.description
+              }</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                ${service.features
+                  .map((f) => `<span class="skill-tag text-xs">${f}</span>`)
+                  .join("")}
+              </div>
+              <div class="flex items-center justify-end pt-4 border-t border-black/5">
+                <a href="index.html#contact" class="mono text-xs hover:text-orange-600 transition-colors flex items-center gap-1 group/link">
+                  Get Quote 
+                  <svg class="w-3 h-3 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          `
+            )
+            .join("");
+
+          // Animate service cards
+          gsap.utils.toArray(".service-card").forEach((card, i) => {
+            gsap.from(card, {
+              scrollTrigger: { trigger: card, start: "top 90%" },
+              opacity: 0,
+              y: 30,
+              duration: 0.8,
+              delay: i * 0.1,
+              ease: "power3.out",
+            });
+          });
         });
 
-        const animateRing = () => {
-          ringX += (mouseX - ringX - 15) * 0.2;
-          ringY += (mouseY - ringY - 15) * 0.2;
-          ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-          requestAnimationFrame(animateRing);
+      function getIcon(type) {
+        const icons = {
+          design: "🎨",
+          redesign: "✨",
+          wordpress: "🌐",
+          landing: "🚀",
+          fullstack: "⚡",
+          ecommerce: "🛒",
+          dashboard: "📊",
+          api: "🔌",
+          ai: "🤖",
+          realtime: "⚡",
+          integration: "🔗",
+          pwa: "📱",
+          maintenance: "🔧",
+          automation: "🤖",
         };
-        animateRing();
-
-        // Cursor hover effects
-        document.querySelectorAll("a, button, .project-card").forEach((el) => {
-          el.addEventListener("mouseenter", () => {
-            gsap.to(ring, { scale: 1.5, duration: 0.3 });
-            gsap.to(blob, { scale: 1.5, duration: 0.3 });
-          });
-          el.addEventListener("mouseleave", () => {
-            gsap.to(ring, { scale: 1, duration: 0.3 });
-            gsap.to(blob, { scale: 1, duration: 0.3 });
-          });
-        });
+        return icons[type] || "💻";
       }
 
-      // Random accent color (matching home page)
+      // Random accent color
       (function () {
         const palettes = [
-          ["#ff4d00", "#ff6b2b", "#ff8952"],
-          ["#00d4aa", "#00e5bb", "#00f5cc"],
-          ["#8b5cf6", "#a78bfa", "#c4b5fd"],
-          ["#f59e0b", "#fbbf24", "#fcd34d"],
-          ["#ef4444", "#f87171", "#fca5a5"],
-          ["#06b6d4", "#22d3ee", "#67e8f9"],
+          ["#ff4d00", "#ff6b2b"],
+          ["#00d4aa", "#00e5bb"],
+          ["#8b5cf6", "#a78bfa"],
+          ["#f59e0b", "#fbbf24"],
+          ["#ef4444", "#f87171"],
+          ["#06b6d4", "#22d3ee"],
         ];
         const randomPalette =
           palettes[Math.floor(Math.random() * palettes.length)];
-
-        // Update logo color
-        const logoElement = document.getElementById("cycle-logo");
-        if (logoElement) {
-          logoElement.style.color = randomPalette[0];
-        }
-
-        // Update CSS accent variable
         document.documentElement.style.setProperty(
           "--accent",
           randomPalette[0]
         );
+        const logo = document.getElementById("cycle-logo");
+        if (logo) logo.style.color = randomPalette[0];
       })();
+
+      // Load testimonials
+      fetch("data/testimonials.json")
+        .then((res) => res.json())
+        .then((testimonials) => {
+          const grid = document.getElementById("testimonials-grid");
+          grid.innerHTML = testimonials
+            .map(
+              (t) => `
+            <div class="bg-white/40 border border-black/10 rounded-2xl p-6 sm:p-8 reveal-text">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold">
+                  ${t.avatar}
+                </div>
+                <div>
+                  <div class="font-semibold">${t.name}</div>
+                  <div class="text-sm opacity-60">${t.role}</div>
+                </div>
+              </div>
+              <div class="flex gap-1 mb-3">
+                ${Array(t.rating).fill("⭐").join("")}
+              </div>
+              <p class="text-sm opacity-70 mb-3 leading-relaxed">${t.text}</p>
+              <div class="mono text-xs opacity-50">Project: ${t.project}</div>
+            </div>
+          `
+            )
+            .join("");
+
+          gsap.utils.toArray("#testimonials-grid > div").forEach((card, i) => {
+            gsap.from(card, {
+              scrollTrigger: { trigger: card, start: "top 90%" },
+              opacity: 0,
+              y: 30,
+              duration: 0.8,
+              delay: i * 0.1,
+            });
+          });
+        });
 
       // Visitor Tracking
       (async function trackVisitor() {
@@ -578,7 +746,7 @@
           const SECRET_SALT = 'kk_portfolio_2026';
           const rawToken = `${timestamp}_${SECRET_SALT}_${navigator.userAgent.slice(0,20)}`;
           const token = btoa(rawToken).replace(/=/g, '');
-          
+
           // Session tracking
           const sessionKey = 'portfolio_session';
           const visitorKey = 'portfolio_visitor_id';
@@ -610,7 +778,7 @@
             campaign: urlParams.get('utm_campaign') || '',
             content: urlParams.get('utm_content') || ''
           };
-          
+
           function getSource() {
             if (utm.source) return utm.source;
             const ref = document.referrer.toLowerCase();
@@ -634,12 +802,12 @@
             if (ua.includes('Opera') || ua.includes('OPR')) return 'Opera';
             return 'Other';
           }
-          
+
           const response = await fetch('https://ipapi.co/json/');
           const data = await response.json();
           
           // Only send if not already tracked this page in session
-          const pageKey = 'visited_projects';
+          const pageKey = 'visited_services';
           if (!sessionStorage.getItem(pageKey)) {
             sessionStorage.setItem(pageKey, 'true');
             
@@ -664,7 +832,7 @@
                 longitude: data.longitude || null,
                 timezone: data.timezone || 'Unknown',
                 isp: data.org || 'Unknown',
-                page: 'projects',
+                page: 'services',
                 device: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
                 browser: getBrowser(),
                 screenRes: `${screen.width}x${screen.height}`,
@@ -676,7 +844,7 @@
               })
             });
           }
-        } catch (e) {}
+        } catch (error) {}
       })();
     </script>
   </body>

@@ -2,11 +2,11 @@
   "projects": [
     {
       "id": 1,
-      "name": "V-Tube Video System",
-      "description": "Backend for a streaming platform with AI-powered title & thumbnail generation using Gemini API. Built with Node.js, Express, MongoDB, and Cloudinary.",
+      "name": "Shell-utility-toolkit",
+      "description": " Shell Utility Toolkit project, you’ll learn practically important DevOps + Linux scripting skills. Built with Shell $",
       "category": ["fullstack"],
-      "tech": ["Node.js", "Express", "MongoDB", "Gemini AI", "Cloudinary"],
-      "github": "https://github.com/kumudkode/v-tube",
+      "tech": ["shell"],
+      "github": "https://github.com/kumudkode/Shell-utility-toolkit",
       "live": "",
       "featured": true,
       "order": 1
@@ -28,7 +28,7 @@
       "description": "Secure, high-availability architecture with global CDN distribution and SSL. Implemented VPC, load balancing, and auto-scaling for production workloads.",
       "category": ["cloud"],
       "tech": ["AWS EC2", "S3", "CloudFront", "VPC", "Route53"],
-      "github": "https://github.com/kumudkode/aws-infrastructure",
+      "github": "https://github.com/kumudkode",
       "live": "",
       "featured": true,
       "order": 3

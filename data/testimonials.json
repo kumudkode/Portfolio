@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "role": "Business Owner",
+    "avatar": "SJ",
+    "rating": 5,
+    "text": "Kumud delivered an exceptional full-stack application. The code quality and attention to detail were outstanding. Highly recommend!",
+    "project": "SaaS Dashboard"
+  },
+  {
+    "id": 2,
+    "name": "Raj Patel",
+    "role": "Entrepreneur",
+    "avatar": "RP",
+    "rating": 5,
+    "text": "Our e-commerce site exceeded expectations. Fast, secure, and beautiful. Sales increased by 40% in the first month!",
+    "project": "E-commerce Platform"
+  },
+  {
+    "id": 3,
+    "name": "Emily Chen",
+    "role": "Marketing Manager",
+    "avatar": "EC",
+    "rating": 5,
+    "text": "The landing page converted 3x better than our previous one. Clean design and lightning-fast performance.",
+    "project": "Landing Page"
+  },
+  {
+    "id": 4,
+    "name": "Michael Brown",
+    "role": "Startup Founder",
+    "avatar": "MB",
+    "rating": 5,
+    "text": "Professional, responsive, and delivered on time. The WordPress site looks amazing and is easy to manage.",
+    "project": "WordPress Site"
+  },
+  {
+    "id": 5,
+    "name": "Priya Sharma",
+    "role": "Product Manager",
+    "avatar": "PS",
+    "rating": 5,
+    "text": "The AI chatbot integration transformed our customer support. Response time reduced by 70% and customers love it!",
+    "project": "AI Chatbot"
+  },
+  {
+    "id": 6,
+    "name": "David Lee",
+    "role": "Tech Lead",
+    "avatar": "DL",
+    "rating": 5,
+    "text": "Real-time features work flawlessly. The WebSocket implementation is solid and handles thousands of concurrent users.",
+    "project": "Real-time App"
+  },
+  {
+    "id": 7,
+    "name": "Ananya Gupta",
+    "role": "Designer",
+    "avatar": "AG",
+    "rating": 5,
+    "text": "The PWA feels like a native app! Offline support and push notifications work perfectly. Users are impressed.",
+    "project": "Progressive Web App"
+  },
+  {
+    "id": 8,
+    "name": "James Wilson",
+    "role": "Business Analyst",
+    "avatar": "JW",
+    "rating": 5,
+    "text": "Custom dashboard with beautiful data visualizations. Makes complex data easy to understand at a glance.",
+    "project": "Analytics Dashboard"
+  }
+]

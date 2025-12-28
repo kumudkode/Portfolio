@@ -294,6 +294,49 @@ button:focus-visible {
   }
 }
 
+/* Sound toggle */
+.sound-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.sound-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sound-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  color: white;
+}
+
+.sound-on {
+  display: block;
+}
+
+.sound-off {
+  display: none;
+}
+
+.sound-toggle.muted .sound-on {
+  display: none;
+}
+
+.sound-toggle.muted .sound-off,
+.sound-toggle:not(.muted) .sound-off {
+  display: none;
+}
+
+.sound-toggle.muted .sound-off {
+  display: block;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   #cursor-blob,
