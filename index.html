@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
     <title>Kumud Ranjan | Full Stack & Cloud</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Premium Fonts -->
@@ -203,9 +207,11 @@
         cursor: pointer !important;
         position: relative;
         transition: transform 0.3s ease;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .sound-toggle:hover {
+      .sound-toggle:hover,
+      .sound-toggle:active {
         transform: scale(1.1);
       }
 
@@ -230,6 +236,15 @@
 
       .sound-toggle:not(.muted) .sound-off {
         display: none;
+      }
+
+      /* Theme toggle touch friendly */
+      .theme-toggle {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .theme-toggle:active {
+        transform: rotate(20deg);
       }
 
       * {
@@ -519,18 +534,49 @@
         * {
           cursor: auto !important;
         }
-        /* Better touch targets */
+        /* Better touch targets - minimum 44px for accessibility */
         a,
         button {
           min-height: 44px;
+          min-width: 44px;
           display: inline-flex;
           align-items: center;
+          justify-content: center;
+          -webkit-tap-highlight-color: rgba(255, 77, 0, 0.2);
+        }
+        /* Navigation links - better spacing on mobile */
+        nav a {
+          padding: 8px 4px;
         }
         .theme-toggle,
         .sound-toggle {
-          width: 24px;
-          height: 24px;
-          padding: 8px;
+          width: 28px;
+          height: 28px;
+          padding: 10px;
+          box-sizing: content-box;
+        }
+        /* Remove hover effects on touch devices */
+        .hover\:opacity-60:active {
+          opacity: 0.6;
+        }
+        /* Better button feedback on touch */
+        button:active,
+        a:active {
+          transform: scale(0.95);
+          transition: transform 0.1s ease;
+        }
+        /* Prevent zoom on input focus (iOS) */
+        input, textarea, select {
+          font-size: 16px !important;
+        }
+        /* Smoother scrolling on iOS */
+        html {
+          -webkit-overflow-scrolling: touch;
+        }
+        /* Fix for iOS safe areas */
+        body {
+          padding-left: env(safe-area-inset-left);
+          padding-right: env(safe-area-inset-right);
         }
       }
 
@@ -1777,7 +1823,7 @@
           // Honeypot - bots often execute immediately
           await new Promise(r => setTimeout(r, 1500));
           
-          const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzVvv07kVbEiAWSPZcA9EO5Xc49iiw4gFZFNGtytWgHZ-5iESI2dsk96DGLX2ved7KiQ/exec';
+          const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXbUb4VdC1WCGeClF3WqRS93ElLfX9H25OEO2YSQlgfmIsKSRsVIdzuhpSxuDuwuiOgA/exec';
           
           // Generate secure token (timestamp + hash)
           const timestamp = Date.now();
