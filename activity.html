@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>Activity Calendar | Kumud Ranjan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
@@ -258,6 +262,110 @@
 
       .calendar-day:hover .tooltip {
         opacity: 1;
+      }
+
+      /* Mobile Responsive - Touch Friendly */
+      @media (max-width: 768px) {
+        /* Hide tooltips on touch - use tap instead */
+        .tooltip {
+          display: none;
+        }
+        
+        /* Larger calendar days for touch */
+        .calendar-day {
+          min-width: 38px;
+          min-height: 38px;
+          font-size: 0.65rem;
+          -webkit-tap-highlight-color: rgba(16, 185, 129, 0.3);
+          touch-action: manipulation;
+        }
+        
+        .calendar-day:active {
+          transform: scale(0.95);
+          transition: transform 0.1s ease;
+        }
+        
+        /* Better modal on mobile */
+        .modal-content {
+          width: 95%;
+          padding: 1.5rem;
+          max-height: 85vh;
+          border-radius: 16px;
+        }
+        
+        /* Touch-friendly buttons */
+        button {
+          min-height: 44px;
+          min-width: 44px;
+          -webkit-tap-highlight-color: rgba(16, 185, 129, 0.2);
+          touch-action: manipulation;
+        }
+        
+        button:active {
+          transform: scale(0.95);
+          transition: transform 0.1s ease;
+        }
+        
+        /* Better checklist items for touch */
+        .checklist-item {
+          min-height: 48px;
+          padding: 0.875rem;
+        }
+        
+        /* Stat cards - stack on mobile */
+        .stat-card {
+          min-height: 80px;
+        }
+        
+        /* Input fields - prevent iOS zoom */
+        input, textarea, select {
+          font-size: 16px !important;
+        }
+        
+        /* Better note card touch */
+        .note-card {
+          -webkit-tap-highlight-color: transparent;
+        }
+        
+        .note-card:active {
+          transform: scale(0.98);
+          transition: transform 0.1s ease;
+        }
+      }
+      
+      /* Small phones */
+      @media (max-width: 480px) {
+        .calendar-day {
+          min-width: 32px;
+          min-height: 32px;
+          font-size: 0.6rem;
+        }
+        
+        .modal-content {
+          padding: 1rem;
+        }
+      }
+      
+      /* Touch device detection */
+      @media (hover: none) and (pointer: coarse) {
+        .calendar-day:hover {
+          transform: none;
+          box-shadow: none;
+        }
+        
+        .calendar-day:active {
+          transform: scale(1.1);
+          border-color: var(--accent);
+          box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .checklist-item:hover {
+          background: transparent;
+        }
+        
+        .checklist-item:active {
+          background: var(--accent-light);
+        }
       }
     </style>
   </head>

@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>Privacy Policy | Kumud Kode</title>
     <meta name="description" content="Privacy Policy for Kumud Kode Portfolio" />
     <meta name="robots" content="noindex" />
@@ -22,6 +26,27 @@
       }
       .serif { font-family: "Playfair Display", serif; }
       .mono { font-family: "JetBrains Mono", monospace; }
+      
+      /* Mobile Touch Friendly */
+      @media (max-width: 768px) {
+        a, button {
+          min-height: 44px;
+          display: inline-flex;
+          align-items: center;
+          -webkit-tap-highlight-color: rgba(255, 77, 0, 0.2);
+          touch-action: manipulation;
+        }
+        a:active, button:active {
+          transform: scale(0.95);
+          transition: transform 0.1s ease;
+        }
+        /* iOS safe areas */
+        body {
+          padding-left: env(safe-area-inset-left);
+          padding-right: env(safe-area-inset-right);
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+      }
     </style>
   </head>
   <body class="min-h-screen">

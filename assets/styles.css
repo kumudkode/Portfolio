@@ -337,15 +337,200 @@ button:focus-visible {
   display: block;
 }
 
-/* Mobile Responsive */
+/* Mobile Responsive - Touch Friendly */
 @media (max-width: 768px) {
+  /* Hide custom cursor on touch devices */
   #cursor-blob,
   #cursor-ring {
     display: none !important;
   }
 
+  /* Enable native cursor on mobile */
+  * {
+    cursor: auto !important;
+  }
+
+  /* Smooth scrolling for iOS */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Safe area for notched phones (iPhone X+, Samsung etc.) */
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Filter buttons - touch friendly */
   .filter-btn {
     font-size: 0.75rem;
-    padding: 6px 16px;
+    padding: 10px 18px;
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: rgba(255, 77, 0, 0.2);
+    touch-action: manipulation;
+  }
+
+  .filter-btn:active {
+    transform: scale(0.95);
+    background: var(--accent);
+    color: white;
+  }
+
+  /* Theme toggle - larger touch target */
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(255, 77, 0, 0.2);
+    touch-action: manipulation;
+  }
+
+  .theme-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .theme-toggle:active {
+    transform: scale(0.9);
+  }
+
+  /* Sound toggle - larger touch target */
+  .sound-toggle {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(255, 77, 0, 0.2);
+    touch-action: manipulation;
+  }
+
+  .sound-toggle svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .sound-toggle:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* All links and buttons - minimum touch target */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: rgba(255, 77, 0, 0.15);
+    touch-action: manipulation;
+  }
+
+  /* Inline links can be smaller */
+  p a, span a, li a {
+    min-height: auto;
+    min-width: auto;
+    padding: 4px 2px;
+  }
+
+  /* Project cards - touch feedback */
+  .project-card {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .project-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Tech tags - slightly larger for touch */
+  .tech-tag {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  /* Nav items spacing for touch */
+  nav a {
+    padding: 12px 16px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 480px) {
+  .filter-btn {
+    padding: 8px 14px;
+    font-size: 0.7rem;
+  }
+
+  .tech-tag {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Larger touch targets for tablets */
+  .filter-btn {
+    padding: 10px 22px;
+    min-height: 44px;
+  }
+
+  .theme-toggle,
+  .sound-toggle {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Touch device detection - show native cursor */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+
+  #cursor-blob,
+  #cursor-ring {
+    display: none !important;
+  }
+
+  /* Remove hover-only effects on touch devices */
+  .filter-btn:hover {
+    background: transparent;
+    color: var(--ink);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .filter-btn.active:hover,
+  .filter-btn:active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+
+  .theme-toggle:hover {
+    transform: none;
+  }
+
+  .sound-toggle:hover {
+    background: transparent;
+  }
+
+  /* Active states for touch */
+  .theme-toggle:active {
+    transform: scale(0.9);
+  }
+
+  .sound-toggle:active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.9);
   }
 }
