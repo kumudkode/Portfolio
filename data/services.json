@@ -4,7 +4,12 @@
     "title": "UI/UX Design",
     "category": "design",
     "description": "User-centered design with wireframes, prototypes, and pixel-perfect interfaces that convert visitors into customers.",
-    "features": ["Wireframes", "Prototyping", "User Research", "Design Systems"],
+    "features": [
+      "Wireframes",
+      "Prototyping",
+      "User Research",
+      "Design Systems"
+    ],
     "priceRange": "$800 - $3000",
     "deliveryTime": "1-3 weeks",
     "icon": "design",
@@ -15,7 +20,12 @@
     "title": "Website Redesign",
     "category": "redesign",
     "description": "Transform your outdated website into a modern, fast, and conversion-focused experience.",
-    "features": ["Modern UI", "Performance Boost", "Mobile-First", "SEO Improvement"],
+    "features": [
+      "Modern UI",
+      "Performance Boost",
+      "Mobile-First",
+      "SEO Improvement"
+    ],
     "priceRange": "$1000 - $4000",
     "deliveryTime": "2-4 weeks",
     "icon": "redesign",
@@ -26,7 +36,12 @@
     "title": "WordPress Development",
     "category": "cms",
     "description": "Custom WordPress sites with premium themes, plugins, and SEO optimization. Perfect for blogs, portfolios, and small businesses.",
-    "features": ["Custom Theme Design", "Plugin Integration", "SEO Optimization", "Responsive Design"],
+    "features": [
+      "Custom Theme Design",
+      "Plugin Integration",
+      "SEO Optimization",
+      "Responsive Design"
+    ],
     "priceRange": "$500 - $2000",
     "deliveryTime": "1-2 weeks",
     "icon": "wordpress",
@@ -37,7 +52,12 @@
     "title": "Full Stack Web Apps",
     "category": "fullstack",
     "description": "Complete MERN stack applications with authentication, databases, and cloud deployment on AWS.",
-    "features": ["MERN Stack", "Authentication", "Database Design", "AWS Deployment"],
+    "features": [
+      "MERN Stack",
+      "Authentication",
+      "Database Design",
+      "AWS Deployment"
+    ],
     "priceRange": "$3000 - $10000",
     "deliveryTime": "4-8 weeks",
     "icon": "fullstack",
@@ -48,7 +68,12 @@
     "title": "AI Integration & Chatbots",
     "category": "ai",
     "description": "Integrate ChatGPT, Claude, or custom AI models into your website. Smart chatbots, content generation, and automation.",
-    "features": ["ChatGPT API", "Custom AI Models", "Smart Chatbots", "AI Automation"],
+    "features": [
+      "ChatGPT API",
+      "Custom AI Models",
+      "Smart Chatbots",
+      "AI Automation"
+    ],
     "priceRange": "$2000 - $5000",
     "deliveryTime": "2-4 weeks",
     "icon": "ai",
@@ -59,7 +84,12 @@
     "title": "Real-time Features",
     "category": "realtime",
     "description": "WebSocket integration for live chat, notifications, collaborative editing, and real-time data updates.",
-    "features": ["Live Chat", "Push Notifications", "WebSockets", "Real-time Sync"],
+    "features": [
+      "Live Chat",
+      "Push Notifications",
+      "WebSockets",
+      "Real-time Sync"
+    ],
     "priceRange": "$1500 - $4000",
     "deliveryTime": "2-3 weeks",
     "icon": "realtime",
@@ -70,7 +100,12 @@
     "title": "E-commerce Solutions",
     "category": "ecommerce",
     "description": "Online stores with payment integration, inventory management, and admin dashboards.",
-    "features": ["Payment Gateway", "Inventory System", "Admin Panel", "Order Tracking"],
+    "features": [
+      "Payment Gateway",
+      "Inventory System",
+      "Admin Panel",
+      "Order Tracking"
+    ],
     "priceRange": "$2000 - $5000",
     "deliveryTime": "3-6 weeks",
     "icon": "ecommerce",
@@ -81,7 +116,12 @@
     "title": "Third-party API Integration",
     "category": "api",
     "description": "Seamless integration with Google Maps, social media APIs, analytics, CRM systems, and more.",
-    "features": ["Google Maps", "Social Media APIs", "Analytics", "CRM Integration"],
+    "features": [
+      "Google Maps",
+      "Social Media APIs",
+      "Analytics",
+      "CRM Integration"
+    ],
     "priceRange": "$800 - $2500",
     "deliveryTime": "1-2 weeks",
     "icon": "integration",
@@ -92,7 +132,12 @@
     "title": "Progressive Web Apps (PWA)",
     "category": "pwa",
     "description": "Installable web apps that work offline, send push notifications, and feel like native mobile apps.",
-    "features": ["Offline Support", "Push Notifications", "App Install", "Fast Loading"],
+    "features": [
+      "Offline Support",
+      "Push Notifications",
+      "App Install",
+      "Fast Loading"
+    ],
     "priceRange": "$2500 - $6000",
     "deliveryTime": "3-5 weeks",
     "icon": "pwa",
@@ -103,7 +148,12 @@
     "title": "Website Maintenance",
     "category": "maintenance",
     "description": "Monthly maintenance packages including updates, backups, security monitoring, and performance optimization.",
-    "features": ["Regular Updates", "Security Monitoring", "Backups", "Performance Tuning"],
+    "features": [
+      "Regular Updates",
+      "Security Monitoring",
+      "Backups",
+      "Performance Tuning"
+    ],
     "priceRange": "$200 - $800/mo",
     "deliveryTime": "Ongoing",
     "icon": "maintenance",
@@ -114,7 +164,12 @@
     "title": "No-Code Automation",
     "category": "automation",
     "description": "Zapier, Make.com workflows to automate business processes, data sync, and integrations.",
-    "features": ["Workflow Automation", "Data Sync", "Email Automation", "CRM Integration"],
+    "features": [
+      "Workflow Automation",
+      "Data Sync",
+      "Email Automation",
+      "CRM Integration"
+    ],
     "priceRange": "$500 - $2000",
     "deliveryTime": "1-2 weeks",
     "icon": "automation",
@@ -125,7 +180,12 @@
     "title": "Custom Dashboards",
     "category": "dashboard",
     "description": "Interactive data visualization dashboards with real-time updates and analytics.",
-    "features": ["Data Visualization", "Real-time Updates", "Custom Charts", "API Integration"],
+    "features": [
+      "Data Visualization",
+      "Real-time Updates",
+      "Custom Charts",
+      "API Integration"
+    ],
     "priceRange": "$1500 - $4000",
     "deliveryTime": "2-4 weeks",
     "icon": "dashboard",

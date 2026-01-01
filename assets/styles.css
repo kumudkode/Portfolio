@@ -351,7 +351,8 @@ button:focus-visible {
   }
 
   /* Smooth scrolling for iOS */
-  html, body {
+  html,
+  body {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
@@ -424,7 +425,8 @@ button:focus-visible {
   }
 
   /* All links and buttons - minimum touch target */
-  a, button {
+  a,
+  button {
     min-height: 44px;
     min-width: 44px;
     -webkit-tap-highlight-color: rgba(255, 77, 0, 0.15);
@@ -432,7 +434,9 @@ button:focus-visible {
   }
 
   /* Inline links can be smaller */
-  p a, span a, li a {
+  p a,
+  span a,
+  li a {
     min-height: auto;
     min-width: auto;
     padding: 4px 2px;

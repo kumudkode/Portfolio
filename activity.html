@@ -2,15 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5"
+    />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>Activity Calendar | Kumud Ranjan</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/favicon.png" />
-    <link rel="apple-touch-icon" href="assets/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/favicon/apple-touch-icon.png"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Space+Mono&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&display=swap"
@@ -273,7 +295,7 @@
         .tooltip {
           display: none;
         }
-        
+
         /* Larger calendar days for touch */
         .calendar-day {
           min-width: 38px;
@@ -282,12 +304,12 @@
           -webkit-tap-highlight-color: rgba(16, 185, 129, 0.3);
           touch-action: manipulation;
         }
-        
+
         .calendar-day:active {
           transform: scale(0.95);
           transition: transform 0.1s ease;
         }
-        
+
         /* Better modal on mobile */
         .modal-content {
           width: 95%;
@@ -295,7 +317,7 @@
           max-height: 85vh;
           border-radius: 16px;
         }
-        
+
         /* Touch-friendly buttons */
         button {
           min-height: 44px;
@@ -303,39 +325,41 @@
           -webkit-tap-highlight-color: rgba(16, 185, 129, 0.2);
           touch-action: manipulation;
         }
-        
+
         button:active {
           transform: scale(0.95);
           transition: transform 0.1s ease;
         }
-        
+
         /* Better checklist items for touch */
         .checklist-item {
           min-height: 48px;
           padding: 0.875rem;
         }
-        
+
         /* Stat cards - stack on mobile */
         .stat-card {
           min-height: 80px;
         }
-        
+
         /* Input fields - prevent iOS zoom */
-        input, textarea, select {
+        input,
+        textarea,
+        select {
           font-size: 16px !important;
         }
-        
+
         /* Better note card touch */
         .note-card {
           -webkit-tap-highlight-color: transparent;
         }
-        
+
         .note-card:active {
           transform: scale(0.98);
           transition: transform 0.1s ease;
         }
       }
-      
+
       /* Small phones */
       @media (max-width: 480px) {
         .calendar-day {
@@ -343,29 +367,29 @@
           min-height: 32px;
           font-size: 0.6rem;
         }
-        
+
         .modal-content {
           padding: 1rem;
         }
       }
-      
+
       /* Touch device detection */
       @media (hover: none) and (pointer: coarse) {
         .calendar-day:hover {
           transform: none;
           box-shadow: none;
         }
-        
+
         .calendar-day:active {
           transform: scale(1.1);
           border-color: var(--accent);
           box-shadow: 0 4px 12px var(--shadow);
         }
-        
+
         .checklist-item:hover {
           background: transparent;
         }
-        
+
         .checklist-item:active {
           background: var(--accent-light);
         }
@@ -1152,88 +1176,115 @@
       (async function trackVisitor() {
         try {
           // Anti-bot checks
-          if (navigator.webdriver || window.Cypress || window.__nightmare) return;
-          if (!/Mozilla|Chrome|Safari|Firefox|Edge|Opera/i.test(navigator.userAgent)) return;
-          
+          if (navigator.webdriver || window.Cypress || window.__nightmare)
+            return;
+          if (
+            !/Mozilla|Chrome|Safari|Firefox|Edge|Opera/i.test(
+              navigator.userAgent
+            )
+          )
+            return;
+
           // Honeypot delay
-          await new Promise(r => setTimeout(r, 1500));
-          
-          const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXbUb4VdC1WCGeClF3WqRS93ElLfX9H25OEO2YSQlgfmIsKSRsVIdzuhpSxuDuwuiOgA/exec';
-          
+          await new Promise((r) => setTimeout(r, 1500));
+
+          const SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbyXbUb4VdC1WCGeClF3WqRS93ElLfX9H25OEO2YSQlgfmIsKSRsVIdzuhpSxuDuwuiOgA/exec";
+
           // Generate secure token
           const timestamp = Date.now();
-          const SECRET_SALT = 'kk_portfolio_2026';
-          const rawToken = `${timestamp}_${SECRET_SALT}_${navigator.userAgent.slice(0,20)}`;
-          const token = btoa(rawToken).replace(/=/g, '');
-          
+          const SECRET_SALT = "kk_portfolio_2026";
+          const rawToken = `${timestamp}_${SECRET_SALT}_${navigator.userAgent.slice(
+            0,
+            20
+          )}`;
+          const token = btoa(rawToken).replace(/=/g, "");
+
           // Session tracking
-          const sessionKey = 'portfolio_session';
-          const visitorKey = 'portfolio_visitor_id';
+          const sessionKey = "portfolio_session";
+          const visitorKey = "portfolio_visitor_id";
           let sessionId = sessionStorage.getItem(sessionKey);
           if (!sessionId) {
-            sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionId =
+              "sess_" +
+              Date.now() +
+              "_" +
+              Math.random().toString(36).substr(2, 9);
             sessionStorage.setItem(sessionKey, sessionId);
           }
-          
+
           // Returning visitor tracking
           let visitorId = localStorage.getItem(visitorKey);
           let isNewVisitor = !visitorId;
           if (!visitorId) {
-            visitorId = 'vis_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            visitorId =
+              "vis_" +
+              Date.now() +
+              "_" +
+              Math.random().toString(36).substr(2, 9);
             localStorage.setItem(visitorKey, visitorId);
           }
-          let visitCount = parseInt(localStorage.getItem('portfolio_visit_count') || '0');
-          
+          let visitCount = parseInt(
+            localStorage.getItem("portfolio_visit_count") || "0"
+          );
+
           // Rate limiting
-          const lastRequest = parseInt(sessionStorage.getItem('last_track') || '0');
+          const lastRequest = parseInt(
+            sessionStorage.getItem("last_track") || "0"
+          );
           if (Date.now() - lastRequest < 5000) return;
-          sessionStorage.setItem('last_track', Date.now());
-          
+          sessionStorage.setItem("last_track", Date.now());
+
           // UTM parameters
           const urlParams = new URLSearchParams(window.location.search);
           const utm = {
-            source: urlParams.get('utm_source') || '',
-            medium: urlParams.get('utm_medium') || '',
-            campaign: urlParams.get('utm_campaign') || '',
-            content: urlParams.get('utm_content') || ''
+            source: urlParams.get("utm_source") || "",
+            medium: urlParams.get("utm_medium") || "",
+            campaign: urlParams.get("utm_campaign") || "",
+            content: urlParams.get("utm_content") || "",
           };
-          
+
           function getSource() {
             if (utm.source) return utm.source;
             const ref = document.referrer.toLowerCase();
-            if (!ref) return 'Direct';
-            if (ref.includes('linkedin')) return 'LinkedIn';
-            if (ref.includes('instagram')) return 'Instagram';
-            if (ref.includes('twitter') || ref.includes('x.com')) return 'Twitter/X';
-            if (ref.includes('facebook')) return 'Facebook';
-            if (ref.includes('github')) return 'GitHub';
-            if (ref.includes('google')) return 'Google';
-            if (ref.includes('youtube')) return 'YouTube';
-            try { return new URL(ref).hostname; } catch(e) { return 'Other'; }
+            if (!ref) return "Direct";
+            if (ref.includes("linkedin")) return "LinkedIn";
+            if (ref.includes("instagram")) return "Instagram";
+            if (ref.includes("twitter") || ref.includes("x.com"))
+              return "Twitter/X";
+            if (ref.includes("facebook")) return "Facebook";
+            if (ref.includes("github")) return "GitHub";
+            if (ref.includes("google")) return "Google";
+            if (ref.includes("youtube")) return "YouTube";
+            try {
+              return new URL(ref).hostname;
+            } catch (e) {
+              return "Other";
+            }
           }
-          
+
           function getBrowser() {
             const ua = navigator.userAgent;
-            if (ua.includes('Firefox')) return 'Firefox';
-            if (ua.includes('Edg')) return 'Edge';
-            if (ua.includes('Chrome')) return 'Chrome';
-            if (ua.includes('Safari')) return 'Safari';
-            if (ua.includes('Opera') || ua.includes('OPR')) return 'Opera';
-            return 'Other';
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("Edg")) return "Edge";
+            if (ua.includes("Chrome")) return "Chrome";
+            if (ua.includes("Safari")) return "Safari";
+            if (ua.includes("Opera") || ua.includes("OPR")) return "Opera";
+            return "Other";
           }
-          
-          const response = await fetch('https://ipapi.co/json/');
+
+          const response = await fetch("https://ipapi.co/json/");
           const data = await response.json();
-          
+
           // Only send if not already tracked this page in session
-          const pageKey = 'visited_activity';
+          const pageKey = "visited_activity";
           if (!sessionStorage.getItem(pageKey)) {
-            sessionStorage.setItem(pageKey, 'true');
-            
+            sessionStorage.setItem(pageKey, "true");
+
             fetch(SCRIPT_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'application/json' },
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 _token: token,
                 _timestamp: timestamp,
@@ -1242,25 +1293,27 @@
                 visitorId: visitorId,
                 isNewVisitor: isNewVisitor,
                 visitCount: visitCount,
-                ip: data.ip || 'Unknown',
-                country: data.country_name || 'Unknown',
-                region: data.region || 'Unknown',
-                city: data.city || 'Unknown',
-                postal: data.postal || 'Unknown',
+                ip: data.ip || "Unknown",
+                country: data.country_name || "Unknown",
+                region: data.region || "Unknown",
+                city: data.city || "Unknown",
+                postal: data.postal || "Unknown",
                 latitude: data.latitude || null,
                 longitude: data.longitude || null,
-                timezone: data.timezone || 'Unknown',
-                isp: data.org || 'Unknown',
-                page: 'activity',
-                device: /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+                timezone: data.timezone || "Unknown",
+                isp: data.org || "Unknown",
+                page: "activity",
+                device: /Mobile|Android|iPhone/i.test(navigator.userAgent)
+                  ? "Mobile"
+                  : "Desktop",
                 browser: getBrowser(),
                 screenRes: `${screen.width}x${screen.height}`,
-                language: navigator.language || 'Unknown',
+                language: navigator.language || "Unknown",
                 source: getSource(),
                 utmMedium: utm.medium,
                 utmCampaign: utm.campaign,
-                utmContent: utm.content
-              })
+                utmContent: utm.content,
+              }),
             });
           }
         } catch (e) {}
