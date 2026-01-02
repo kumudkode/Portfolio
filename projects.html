@@ -480,10 +480,6 @@
                 if (href) window.location.href = href;
               }, 500);
             }
-            // Connect sound for contact links
-            else if (href.includes("#contact") || href.includes("mailto:")) {
-              playSound("connect-sound");
-            }
             // Default click sound
             else {
               playSound("click-sound");
