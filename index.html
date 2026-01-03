@@ -1506,14 +1506,24 @@
       gsap.registerPlugin(ScrollTrigger);
 
       // Preloader
-      window.addEventListener("load", () => {
-        // Play welcome sound only on desktop and if sound is enabled
-        if (window.innerWidth > 768 && soundEnabled) {
+      let welcomeSoundPlayed = false;
+      const playWelcomeSound = () => {
+        if (
+          !welcomeSoundPlayed &&
+          window.innerWidth > 768 &&
+          soundEnabled
+        ) {
           document
             .getElementById("welcome-sound")
             .play()
             .catch(() => {});
+          welcomeSoundPlayed = true;
         }
+      };
+
+      window.addEventListener("load", () => {
+        // Try to play welcome sound on load
+        playWelcomeSound();
 
         const tl = gsap.timeline();
         tl.to("#loader-bar", {
@@ -1533,6 +1543,15 @@
             "-=0.3"
           );
       });
+
+      // Play welcome sound on first user interaction (for autoplay policy compliance)
+      const enableWelcomeOnInteraction = () => {
+        playWelcomeSound();
+        document.removeEventListener("click", enableWelcomeOnInteraction);
+        document.removeEventListener("touchstart", enableWelcomeOnInteraction);
+      };
+      document.addEventListener("click", enableWelcomeOnInteraction);
+      document.addEventListener("touchstart", enableWelcomeOnInteraction);
 
       // Audio functions
       const playSound = (id) => {
