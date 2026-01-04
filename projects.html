@@ -551,8 +551,8 @@
         };
         animateRing();
 
-        // Cursor hover effects
-        document.querySelectorAll("a, button, .project-card").forEach((el) => {
+        // Cursor hover effects - exclude nav and logo
+        document.querySelectorAll("a:not([class*='logo']):not(nav a), button, .project-card").forEach((el) => {
           el.addEventListener("mouseenter", () => {
             gsap.to(ring, { scale: 1.5, duration: 0.3 });
             gsap.to(blob, { scale: 1.5, duration: 0.3 });
