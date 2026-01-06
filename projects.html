@@ -538,6 +538,10 @@
         cursorVisible = false;
 
       if (blob && ring && window.innerWidth > 768) {
+        // Hide by default until the first movement
+        blob.style.opacity = "0";
+        ring.style.opacity = "0";
+
         // Faster updates with GSAP quickSetter to avoid queue buildup
         const setBlobX = gsap.quickSetter(blob, "x", "px");
         const setBlobY = gsap.quickSetter(blob, "y", "px");
@@ -575,6 +579,8 @@
 
           requestAnimationFrame(animateCursor);
         };
+        // Start loop after ensuring hidden state is applied
+        hideCursor();
         animateCursor();
 
         // Cursor hover effects - exclude nav and logo
