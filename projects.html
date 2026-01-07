@@ -528,34 +528,31 @@
       }
       setInterval(cycleText, 3000);
 
-      // Refined Cursor Animation (smoother + no sticking near logo)
+      // Custom Cursor (fixed for stickiness on Projects page)
       const blob = document.getElementById("cursor-blob");
       const ring = document.getElementById("cursor-ring");
-      let mouseX = 0,
-        mouseY = 0,
-        ringX = 0,
-        ringY = 0,
-        cursorVisible = false;
-
       if (blob && ring && window.innerWidth > 768) {
-        // Hide by default until the first movement
+        // Ensure visible (may have been hidden previously)
+        blob.style.display = "block";
+        ring.style.display = "block";
         blob.style.opacity = "0";
         ring.style.opacity = "0";
 
-        // Faster updates with GSAP quickSetter to avoid queue buildup
+        let mouseX = 0,
+          mouseY = 0,
+          ringX = 0,
+          ringY = 0,
+          hasMoved = false;
+
         const setBlobX = gsap.quickSetter(blob, "x", "px");
         const setBlobY = gsap.quickSetter(blob, "y", "px");
 
-        const showCursor = () => {
-          if (!cursorVisible) {
-            cursorVisible = true;
-            blob.style.opacity = "1";
-            ring.style.opacity = "1";
-          }
+        const show = () => {
+          blob.style.opacity = "1";
+          ring.style.opacity = "1";
         };
 
-        const hideCursor = () => {
-          cursorVisible = false;
+        const hide = () => {
           blob.style.opacity = "0";
           ring.style.opacity = "0";
         };
@@ -563,13 +560,28 @@
         window.addEventListener("mousemove", (e) => {
           mouseX = e.clientX;
           mouseY = e.clientY;
-          showCursor();
+
+          // On first move, jump ring to cursor to avoid lag from (0,0)
+          if (!hasMoved) {
+            ringX = mouseX - 15;
+            ringY = mouseY - 15;
+            setBlobX(mouseX - 3);
+            setBlobY(mouseY - 3);
+            hasMoved = true;
+            show();
+          }
         });
 
-        window.addEventListener("mouseleave", hideCursor);
+        window.addEventListener("mouseleave", hide);
 
-        const animateCursor = () => {
-          // Lerp for fluid motion
+        const animate = () => {
+          // If not moved yet, keep hidden
+          if (!hasMoved) {
+            requestAnimationFrame(animate);
+            return;
+          }
+
+          // Smooth follow
           ringX += (mouseX - ringX - 15) * 0.18;
           ringY += (mouseY - ringY - 15) * 0.18;
 
@@ -577,23 +589,20 @@
           setBlobY(mouseY - 3);
           ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
 
-          requestAnimationFrame(animateCursor);
+          requestAnimationFrame(animate);
         };
-        // Start loop after ensuring hidden state is applied
-        hideCursor();
-        animateCursor();
+        hide();
+        animate();
 
-        // Cursor hover effects - exclude nav and logo
+        // Hover scaling (exclude logo + nav)
         document
           .querySelectorAll("a:not([class*='logo']):not(nav a), button, .project-card")
           .forEach((el) => {
             el.addEventListener("mouseenter", () => {
-              gsap.to(ring, { scale: 1.5, duration: 0.25, ease: "power2.out" });
-              gsap.to(blob, { scale: 1.5, duration: 0.25, ease: "power2.out" });
+              gsap.to([ring, blob], { scale: 1.5, duration: 0.2, ease: "power2.out" });
             });
             el.addEventListener("mouseleave", () => {
-              gsap.to(ring, { scale: 1, duration: 0.25, ease: "power2.out" });
-              gsap.to(blob, { scale: 1, duration: 0.25, ease: "power2.out" });
+              gsap.to([ring, blob], { scale: 1, duration: 0.2, ease: "power2.out" });
             });
           });
       }
