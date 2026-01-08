@@ -1508,11 +1508,7 @@
       // Preloader
       let welcomeSoundPlayed = false;
       const playWelcomeSound = () => {
-        if (
-          !welcomeSoundPlayed &&
-          window.innerWidth > 768 &&
-          soundEnabled
-        ) {
+        if (!welcomeSoundPlayed && window.innerWidth > 768 && soundEnabled) {
           document
             .getElementById("welcome-sound")
             .play()
