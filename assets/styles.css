@@ -24,6 +24,7 @@ body {
   color: var(--ink);
   transition: background-color 0.4s ease, color 0.4s ease;
   font-family: "Inter", sans-serif;
+  overflow-x: hidden;
 }
 
 .serif {
@@ -348,6 +349,30 @@ button:focus-visible {
   /* Enable native cursor on mobile */
   * {
     cursor: auto !important;
+    max-width: 100%;
+  }
+
+  body, main, section {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Navigation wraps neatly */
+  [role="navigation"] {
+    flex-wrap: wrap;
+    row-gap: 10px;
+    padding-inline: 12px !important;
+  }
+
+  [role="navigation"] .flex {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  [role="navigation"] a,
+  [role="navigation"] button {
+    min-height: 44px;
+    padding: 8px 10px;
   }
 
   /* Smooth scrolling for iOS */
@@ -464,6 +489,29 @@ button:focus-visible {
     padding: 12px 16px;
     display: inline-flex;
     align-items: center;
+  }
+
+  /* Headings scale down gracefully */
+  h1,
+  h2,
+  h3 {
+    line-height: 1.1;
+    word-break: break-word;
+  }
+
+  h1.serif {
+    font-size: clamp(2.4rem, 7vw, 3.5rem);
+  }
+
+  /* Project filters wrap nicely */
+  .filter-btn {
+    flex: 1 1 calc(50% - 8px);
+    text-align: center;
+  }
+
+  /* Grid spacing tighter on phones */
+  #projects-grid {
+    gap: 1.25rem;
   }
 }
 
