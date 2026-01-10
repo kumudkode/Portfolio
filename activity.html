@@ -164,127 +164,119 @@
       }
 
       .progress-ring-circle {
-        <nav
-          class="fixed top-0 w-full px-4 sm:px-6 md:px-12 py-4 sm:py-5 flex justify-between items-center z-[100]"
-          style="mix-blend-mode: difference; pointer-events: none"
-        >
-          <div class="flex items-center gap-3" style="pointer-events: auto">
-            <button
-              class="mobile-nav-toggle"
-              aria-label="Open menu"
-              aria-expanded="false"
-              type="button"
-            >
-              <span></span><span></span><span></span>
-            </button>
-            <a
-              href="index.html"
-              class="flex items-center gap-1 select-none cursor-pointer"
-              aria-label="Kumud Kode - Home"
-            >
-              <span
-                class="text-white text-base sm:text-lg md:text-xl tracking-normal"
-                style="font-family: 'Lora', serif"
-                >Kumud</span
-              >
-              <span
-                class="logo-word text-white text-base sm:text-lg md:text-xl tracking-normal"
-                style="font-family: 'Lora', serif"
-                >Kode</span
-              >
-            </a>
-          </div>
-          <div
-            class="flex items-center gap-3 sm:gap-6 md:gap-8 desktop-nav"
-            style="pointer-events: auto"
-          >
-            <a
-              href="index.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              >Home</a
-            >
-            <a
-              href="services.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              >Services</a
-            >
-            <a
-              href="projects.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              >Projects</a
-            >
-            <a
-              href="activity.html"
-              class="text-white text-xs sm:text-sm tracking-wide opacity-100 border-b border-white"
-              style="font-family: 'Lora', serif"
-              aria-current="page"
-              >Activity</a
-            >
-            <button
-              class="theme-toggle flex-shrink-0"
-              onclick="toggleTheme(); if(typeof playSound === 'function') playSound('moon-sound');"
-              aria-label="Toggle theme"
-              type="button"
-            >
-              <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-              </svg>
-              <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" stroke-width="2" />
-              </svg>
-            </button>
-          </div>
+        transition: stroke-dashoffset 0.5s ease;
+      }
 
-          <div class="mobile-drawer" data-drawer>
-            <div class="mobile-drawer__header">
-              <span class="mobile-drawer__title">Menu</span>
-              <button class="mobile-drawer__close" aria-label="Close menu">×</button>
-            </div>
-            <div class="mobile-drawer__links">
-              <a href="index.html">Home</a>
-              <a href="services.html">Services</a>
-              <a href="projects.html">Projects</a>
-              <a href="activity.html">Activity</a>
-              <a href="index.html#contact">Contact</a>
-            </div>
-            <div class="mobile-drawer__actions">
-              <button
-                class="theme-toggle"
-                onclick="toggleTheme(); if(typeof playSound === 'function') playSound('moon-sound');"
-                aria-label="Toggle theme"
-                type="button"
-              >
-                <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="5" />
-                </svg>
-                <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" stroke-width="2" />
-                </svg>
-              </button>
-              <button
-                id="sound-toggle-mobile"
-                class="sound-toggle bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center"
-                aria-label="Toggle sound effects"
-                type="button"
-              >
-                <svg class="sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 5 6 9H2v6h4l5 4V5Zm6.5 1a8.38 8.38 0 0 1 0 12M14 8a4.21 4.21 0 0 1 0 8" />
-                </svg>
-                <svg class="sound-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m5 5 14 14M15 9.34v-.01M9.53 9.53 6 12H2v2h4l3.53 2.47" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="mobile-drawer-overlay" data-drawer-overlay></div>
-        </nav>
+      .stat-card {
+        background: linear-gradient(135deg, var(--accent) 0%, #059669 100%);
+        color: white;
+        border: none;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 600px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+        animation: slideUp 0.4s ease;
+        box-shadow: 0 20px 60px var(--shadow);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      #day-notes {
+        color: var(--text);
+        background: var(--card-bg);
+        caret-color: var(--accent);
+        border-color: var(--border);
+      }
+
+      #day-notes:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 0 3px var(--accent-light);
+      }
+
+      #day-notes::placeholder {
+        color: var(--text-light);
+      }
+
+      .checklist-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s ease;
+      }
+
+      .checklist-item:hover {
+        background: var(--accent-light);
+      }
+
+      .checklist-item input[type="text"] {
+        color: var(--text);
+        background: transparent;
+      }
+
+      .note-card {
+        animation: fadeInUp 0.3s ease forwards;
+        opacity: 0;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-8px);
+        background: var(--text);
+        color: var(--bg);
+        padding: 4px 8px;
+        border-radius: 6px;
         font-size: 0.7rem;
         white-space: nowrap;
         opacity: 0;

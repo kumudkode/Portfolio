@@ -124,216 +124,165 @@
       body {
         background-color: var(--bg);
         color: var(--ink);
-        <nav
-          class="fixed top-0 w-full px-4 sm:px-6 md:px-12 py-4 sm:py-5 flex justify-between items-center z-[100]"
-          role="navigation"
-          aria-label="Main navigation"
-          style="mix-blend-mode: difference; pointer-events: none"
-        >
-          <div class="flex items-center gap-3" style="pointer-events: auto">
-            <button
-              class="mobile-nav-toggle"
-              aria-label="Open menu"
-              aria-expanded="false"
-              type="button"
-            >
-              <span></span><span></span><span></span>
-            </button>
-            <a
-              href="#"
-              class="flex items-center gap-1 select-none cursor-pointer"
-              aria-label="Kumud Kode - Home"
-            >
-              <span
-                class="text-white text-base sm:text-lg md:text-xl tracking-normal"
-                style="font-family: 'Lora', serif"
-                >Kumud</span
-              >
-              <span
-                id="cycle-logo"
-                class="logo-word text-base sm:text-lg md:text-xl tracking-normal"
-                style="font-family: 'Lora', serif"
-                >Kode</span
-              >
-            </a>
-          </div>
-          <div
-            class="flex items-center gap-3 sm:gap-6 md:gap-8 desktop-nav"
-            role="menubar"
-            style="pointer-events: auto"
-          >
-            <a
-              href="#about"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
-              style="font-family: 'Lora', serif"
-              role="menuitem"
-              >About</a
-            >
-            <a
-              href="services.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              role="menuitem"
-              >Services</a
-            >
-            <a
-              href="projects.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              role="menuitem"
-              >Projects</a
-            >
-            <a
-              href="activity.html"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
-              style="font-family: 'Lora', serif"
-              role="menuitem"
-              >Activity</a
-            >
-            <a
-              href="#contact"
-              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-              style="font-family: 'Lora', serif"
-              role="menuitem"
-              >Contact</a
-            >
-            <button
-              class="theme-toggle flex-shrink-0"
-              onclick="toggleTheme(); if(typeof playSound === 'function') playSound('moon-sound');"
-              aria-label="Toggle theme"
-              type="button"
-            >
-              <svg
-                class="sun-icon"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line
-                  x1="12"
-                  y1="1"
-                  x2="12"
-                  y2="3"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <line
-                  x1="12"
-                  y1="21"
-                  x2="12"
-                  y2="23"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <line
-                  x1="4.22"
-                  y1="4.22"
-                  x2="5.64"
-                  y2="5.64"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <line
-                  x1="18.36"
-                  y1="18.36"
-                  x2="19.78"
-                  y2="19.78"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-              <svg
-                class="moon-icon"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-              </svg>
-            </button>
-            <button
-              id="sound-toggle"
-              class="sound-toggle bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center"
-              aria-label="Toggle sound effects"
-              type="button"
-            >
-              <svg
-                class="sound-on"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  d="M11 5 6 9H2v6h4l5 4V5Zm6.5 1a8.38 8.38 0 0 1 0 12M14 8a4.21 4.21 0 0 1 0 8"
-                />
-              </svg>
-              <svg
-                class="sound-off"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="m5 5 14 14M15 9.34v-.01M9.53 9.53 6 12H2v2h4l3.53 2.47" />
-              </svg>
-            </button>
-          </div>
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
 
-          <!-- Mobile drawer -->
-          <div class="mobile-drawer" data-drawer>
-            <div class="mobile-drawer__header">
-              <span class="mobile-drawer__title">Menu</span>
-              <button class="mobile-drawer__close" aria-label="Close menu">×</button>
-            </div>
-            <div class="mobile-drawer__links">
-              <a href="#about">About</a>
-              <a href="services.html">Services</a>
-              <a href="projects.html">Projects</a>
-              <a href="activity.html">Activity</a>
-              <a href="#contact">Contact</a>
-            </div>
-            <div class="mobile-drawer__actions">
-              <button
-                class="theme-toggle"
-                onclick="toggleTheme(); if(typeof playSound === 'function') playSound('moon-sound');"
-                aria-label="Toggle theme"
-                type="button"
-              >
-                <svg class="sun-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="5" />
-                </svg>
-                <svg class="moon-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="currentColor" stroke-width="2" />
-                </svg>
-              </button>
-              <button
-                id="sound-toggle-mobile"
-                class="sound-toggle bg-white/10 hover:bg-white/20 transition-all duration-300 flex items-center justify-center"
-                aria-label="Toggle sound effects"
-                type="button"
-              >
-                <svg class="sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 5 6 9H2v6h4l5 4V5Zm6.5 1a8.38 8.38 0 0 1 0 12M14 8a4.21 4.21 0 0 1 0 8" />
-                </svg>
-                <svg class="sound-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m5 5 14 14M15 9.34v-.01M9.53 9.53 6 12H2v2h4l3.53 2.47" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="mobile-drawer-overlay" data-drawer-overlay></div>
-        </nav>
+      /* Dark mode overrides */
+      [data-theme="dark"] .bg-white\/30,
+      [data-theme="dark"] .bg-white\/40 {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      [data-theme="dark"] .border-black\/5,
+      [data-theme="dark"] .border-black\/10 {
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+
+      [data-theme="dark"] .text-black {
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .border-black {
+        border-color: var(--ink);
+      }
+
+      [data-theme="dark"] .bg-black {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .skill-tag {
+        border-color: rgba(255, 255, 255, 0.2);
+        color: var(--ink);
+      }
+
+      [data-theme="dark"] .divider {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* Footer - truly uniform with page */
+      #contact {
+        background-color: var(--bg) !important;
+        color: var(--ink) !important;
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      #contact .border-white\/10 {
+        border-color: rgba(128, 128, 128, 0.2);
+      }
+
+      #contact .text-white {
+        color: var(--ink) !important;
+      }
+
+      #contact .opacity-20,
+      #contact .opacity-30,
+      #contact .opacity-40 {
+        opacity: 0.6;
+      }
+
+      /* Theme toggle - Sun/Moon */
+      .theme-toggle {
+        width: 20px;
+        height: 20px;
+        cursor: pointer !important;
+        position: relative;
+        transition: transform 0.5s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: rotate(30deg);
+      }
+
+      .theme-toggle svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+        transition: transform 0.5s ease, opacity 0.3s ease;
+      }
+
+      .sun-icon {
+        color: #fbbf24;
+      }
+
+      .moon-icon {
+        color: #a78bfa;
+      }
+
+      [data-theme="light"] .moon-icon {
+        display: none;
+      }
+
+      [data-theme="dark"] .sun-icon {
+        display: none;
+      }
+
+      [data-theme="light"] .theme-toggle:hover {
+        transform: rotate(180deg);
+      }
+
+      [data-theme="dark"] .theme-toggle:hover {
+        transform: rotate(-30deg);
+      }
+
+      /* Sound toggle */
+      .sound-toggle {
+        width: 20px;
+        height: 20px;
+        cursor: pointer !important;
+        position: relative;
+        transition: transform 0.3s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .sound-toggle:hover,
+      .sound-toggle:active {
+        transform: scale(1.1);
+      }
+
+      .sound-toggle svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+        transition: opacity 0.3s ease;
+      }
+
+      .sound-on {
+        color: #10b981;
+      }
+
+      .sound-off {
+        color: #ef4444;
+      }
+
+      .sound-toggle.muted .sound-on {
+        display: none;
+      }
+
+      .sound-toggle:not(.muted) .sound-off {
+        display: none;
+      }
+
+      /* Theme toggle touch friendly */
+      .theme-toggle {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .theme-toggle:active {
+        transform: rotate(20deg);
+      }
+
+      * {
+        cursor: none !important;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
 
       .serif {
         font-family: "Instrument Serif", serif;
