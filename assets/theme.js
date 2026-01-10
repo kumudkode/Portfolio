@@ -52,3 +52,65 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+// Mobile drawer menu (hamburger)
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".mobile-nav-toggle");
+  const drawer = document.querySelector("[data-drawer]");
+  const overlay = document.querySelector("[data-drawer-overlay]");
+  const closeBtn = drawer
+    ? drawer.querySelector(".mobile-drawer__close")
+    : null;
+
+  if (!toggle || !drawer || !overlay) return;
+
+  const setSoundIcon = (muted) => {
+    const toggles = [
+      document.getElementById("sound-toggle"),
+      document.getElementById("sound-toggle-mobile"),
+    ].filter(Boolean);
+    toggles.forEach((btn) => {
+      btn.classList.toggle("muted", muted);
+    });
+  };
+
+  const open = () => {
+    drawer.classList.add("open");
+    overlay.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  };
+
+  const close = () => {
+    drawer.classList.remove("open");
+    overlay.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  };
+
+  toggle.addEventListener("click", open);
+  overlay.addEventListener("click", close);
+  if (closeBtn) closeBtn.addEventListener("click", close);
+
+  drawer.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", close);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drawer.classList.contains("open")) close();
+  });
+
+  // Sync sound toggle in drawer with main
+  const soundToggles = [
+    document.getElementById("sound-toggle"),
+    document.getElementById("sound-toggle-mobile"),
+  ].filter(Boolean);
+
+  soundToggles.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const muted = btn.classList.toggle("muted");
+      setSoundIcon(muted);
+      if (typeof toggleSound === "function") toggleSound();
+    });
+  });
+});

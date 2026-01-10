@@ -338,6 +338,105 @@ button:focus-visible {
   display: block;
 }
 
+/* Mobile nav toggle & drawer */
+.mobile-nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.mobile-nav-toggle span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: white;
+  border-radius: 999px;
+}
+
+.mobile-drawer {
+  position: fixed;
+  inset: 0 0 0 30%;
+  max-width: 320px;
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(12px);
+  color: white;
+  transform: translateX(110%);
+  transition: transform 0.3s ease;
+  z-index: 120;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.mobile-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-drawer__title {
+  font-family: "Lora", serif;
+  font-size: 18px;
+}
+
+.mobile-drawer__close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+}
+
+.mobile-drawer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-drawer__links a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-drawer__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.mobile-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 110;
+}
+
+.mobile-drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Mobile Responsive - Touch Friendly */
 @media (max-width: 768px) {
   /* Hide custom cursor on touch devices */
@@ -352,7 +451,9 @@ button:focus-visible {
     max-width: 100%;
   }
 
-  body, main, section {
+  body,
+  main,
+  section {
     max-width: 100%;
     overflow-x: hidden;
   }
@@ -489,6 +590,18 @@ button:focus-visible {
     padding: 12px 16px;
     display: inline-flex;
     align-items: center;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+  }
+
+  .mobile-drawer {
+    inset: 0 0 0 25%;
   }
 
   /* Headings scale down gracefully */
