@@ -46,28 +46,9 @@ Responsive Architecture: Fully optimized for mobile, tablet, and desktop viewpor
 ├── README.md        # Documentation
 └── (Assets)         # External libraries loaded via CDN for high speed
 
-
-🚀 Local Development
-
-Since this is a single-file Vanilla JS architecture, there are no dependencies to install.
-
-
-Open the file:
-Simply open index.html in any modern web browser or use a "Live Server" extension in VS Code.
-
 🌐 Deployment
 
-This project is optimized for GitHub Pages.
-
-Push your code to the main branch.
-
-In your GitHub Repository, go to Settings > Pages.
-
-Set the source to Deploy from a branch.
-
-Select main and /root, then click Save.
-
-Your site will be live at https://<username>.github.io/<repository-name>/ within minutes.
+https://kumudkode.github.io/Portfolio/
 
 👨‍💻 Author
 
