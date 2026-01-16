@@ -1,6 +1,6 @@
 Kumud Ranjan | Portfolio 2025
 
-An ultra-premium, editorial-style portfolio designed for Kumud Ranjan, a Full Stack Engineer and Cloud Specialist. This project focuses on high-performance motion design, minimalist "Paper" aesthetics, and a sophisticated developer-centric user experience.
+An ultra-premium, editorial-style portfolio designed by Kumud Ranjan, a Full Stack Engineer and Cloud Specialist. This project focuses on high-performance motion design, minimalist "Paper" aesthetics, and a sophisticated developer-centric user experience.
 
 Live Site: https://kumudkode.github.io/Portfolio/
 
