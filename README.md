@@ -77,6 +77,6 @@ LinkedIn: linkedin.com/in/kumudkode
 
 GitHub: github.com/kumudkode
 
-Email: raj94971@gmail.com
+Email: connect.kumud@gmail.com
 
 Built with code, design, and a lot of coffee.
