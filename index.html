@@ -183,11 +183,14 @@
 
       /* Theme toggle - Sun/Moon */
       .theme-toggle {
-        width: 20px;
-        height: 20px;
+        width: 28px;
+        height: 28px;
         cursor: pointer !important;
         position: relative;
         transition: transform 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .theme-toggle:hover {
@@ -195,8 +198,8 @@
       }
 
       .theme-toggle svg {
-        width: 100%;
-        height: 100%;
+        width: 18px;
+        height: 18px;
         fill: currentColor;
         transition: transform 0.5s ease, opacity 0.3s ease;
       }
@@ -227,12 +230,15 @@
 
       /* Sound toggle */
       .sound-toggle {
-        width: 20px;
-        height: 20px;
+        width: 28px;
+        height: 28px;
         cursor: pointer !important;
         position: relative;
         transition: transform 0.3s ease;
         -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .sound-toggle:hover,
@@ -241,8 +247,8 @@
       }
 
       .sound-toggle svg {
-        width: 100%;
-        height: 100%;
+        width: 18px;
+        height: 18px;
         fill: currentColor;
         transition: opacity 0.3s ease;
       }
@@ -272,8 +278,35 @@
         transform: rotate(20deg);
       }
 
-      * {
-        cursor: none !important;
+      @media (max-width: 768px) {
+        .theme-toggle,
+        .sound-toggle {
+          width: 36px;
+          height: 36px;
+        }
+
+        .theme-toggle svg,
+        .sound-toggle svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        * {
+          cursor: none !important;
+        }
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        * {
+          cursor: auto !important;
+        }
+
+        #cursor-blob,
+        #cursor-ring {
+          display: none !important;
+        }
       }
 
       body {
@@ -325,6 +358,151 @@
         z-index: 10000;
         transition: width 0.3s ease, height 0.3s ease,
           background-color 0.3s ease;
+      }
+
+      /* Mobile Navigation */
+      .mobile-nav-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(0, 0, 0, 0.25);
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.2s ease, background 0.2s ease,
+          border-color 0.2s ease;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      @media (min-width: 768px) {
+        .mobile-nav-toggle {
+          display: none !important;
+        }
+      }
+
+      /* Solid navbar for mobile only */
+      @media (max-width: 767px) {
+        nav {
+          background: rgba(10, 10, 10, 0.98) !important;
+          backdrop-filter: blur(10px);
+          mix-blend-mode: normal !important;
+          padding-top: calc(env(safe-area-inset-top, 8px) + 12px) !important;
+          padding-bottom: 12px !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+      }
+
+      .mobile-nav-toggle:hover,
+      .mobile-nav-toggle:active {
+        transform: scale(0.96);
+        border-color: rgba(255, 255, 255, 0.45);
+        background: rgba(0, 0, 0, 0.35);
+      }
+
+      .mobile-nav-toggle .line {
+        width: 18px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        display: block;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+      }
+
+      .mobile-nav-toggle .line:nth-child(2) {
+        margin-block: 4px;
+      }
+
+      .mobile-nav-toggle[aria-expanded="true"] .line:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+      }
+
+      .mobile-nav-toggle[aria-expanded="true"] .line:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-nav-toggle[aria-expanded="true"] .line:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+      }
+
+      .mobile-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 110;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(320px, 82vw);
+        height: 100vh;
+        background: rgba(10, 10, 10, 0.94);
+        color: white;
+        padding: calc(env(safe-area-inset-top, 16px) + 12px) 20px 28px;
+        transform: translateX(100%);
+        transition: transform 0.35s ease;
+        z-index: 120;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        pointer-events: none;
+      }
+
+      .mobile-menu.open {
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+
+      .mobile-menu a {
+        color: white;
+        font-family: "Lora", serif;
+        font-size: 1.05rem;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mobile-menu a:last-child {
+        border-bottom: none;
+      }
+
+      .mobile-menu .menu-meta {
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        opacity: 0.6;
+      }
+
+      .mobile-menu .menu-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .mobile-menu .menu-actions .mono {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      @media (min-width: 768px) {
+        .mobile-menu,
+        .mobile-menu-overlay {
+          display: none;
+        }
       }
 
       /* Preloader */
@@ -710,203 +888,273 @@
       aria-label="Main navigation"
       style="mix-blend-mode: difference; pointer-events: none"
     >
-      <a
-        href="#"
-        class="flex items-center gap-1 select-none cursor-pointer"
-        aria-label="Kumud Kode - Home"
-        style="pointer-events: auto"
-      >
-        <span
-          class="text-white text-base sm:text-lg md:text-xl tracking-normal"
-          style="font-family: 'Lora', serif"
-          >Kumud</span
-        >
-        <span
-          id="cycle-logo"
-          class="logo-word text-base sm:text-lg md:text-xl tracking-normal"
-          style="font-family: 'Lora', serif"
-          >Kode</span
-        >
-      </a>
-      <div
-        class="flex items-center gap-3 sm:gap-6 md:gap-8"
-        role="menubar"
-        style="pointer-events: auto"
-      >
+      <div class="flex items-center justify-between w-full">
         <a
-          href="#about"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
-          style="font-family: 'Lora', serif"
-          role="menuitem"
-          >About</a
+          href="#"
+          class="flex items-center gap-1 select-none cursor-pointer"
+          aria-label="Kumud Kode - Home"
+          style="pointer-events: auto"
         >
-        <a
-          href="services.html"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-          style="font-family: 'Lora', serif"
-          role="menuitem"
-          >Services</a
-        >
-        <a
-          href="projects.html"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-          style="font-family: 'Lora', serif"
-          role="menuitem"
-          >Projects</a
-        >
-        <a
-          href="activity.html"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300 hidden sm:inline"
-          style="font-family: 'Lora', serif"
-          role="menuitem"
-          >Activity</a
-        >
-        <a
-          href="#contact"
-          class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
-          style="font-family: 'Lora', serif"
-          role="menuitem"
-          >Contact</a
-        >
-        <button
-          class="theme-toggle flex-shrink-0"
-          onclick="toggleTheme()"
-          aria-label="Toggle dark and light theme"
-          aria-pressed="false"
-          type="button"
-          tabindex="0"
-        >
-          <!-- Sun Icon -->
-          <svg
-            class="sun-icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <span
+            class="text-white text-base sm:text-lg md:text-xl tracking-normal"
+            style="font-family: 'Lora', serif"
+            >Kumud</span
           >
-            <circle cx="12" cy="12" r="5" />
-            <line
-              x1="12"
-              y1="1"
-              x2="12"
-              y2="3"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="12"
-              y1="21"
-              x2="12"
-              y2="23"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="4.22"
-              y1="4.22"
-              x2="5.64"
-              y2="5.64"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="18.36"
-              y1="18.36"
-              x2="19.78"
-              y2="19.78"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="1"
-              y1="12"
-              x2="3"
-              y2="12"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="21"
-              y1="12"
-              x2="23"
-              y2="12"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="4.22"
-              y1="19.78"
-              x2="5.64"
-              y2="18.36"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <line
-              x1="18.36"
-              y1="5.64"
-              x2="19.78"
-              y2="4.22"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-          <!-- Moon Icon -->
-          <svg
-            class="moon-icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <span
+            id="cycle-logo"
+            class="logo-word text-base sm:text-lg md:text-xl tracking-normal"
+            style="font-family: 'Lora', serif"
+            >Kode</span
           >
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-          </svg>
-          <span class="sr-only">Toggle theme</span>
-        </button>
-        <button
-          class="sound-toggle flex-shrink-0"
-          onclick="toggleSound()"
-          aria-label="Toggle sound"
-          type="button"
-          tabindex="0"
+        </a>
+        <div
+          class="flex items-center gap-0.5 sm:gap-1 md:gap-3"
+          style="pointer-events: auto"
         >
-          <!-- Sound On Icon -->
-          <svg
-            class="sound-on"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="hidden md:flex items-center gap-4 md:gap-6"
+            role="menubar"
           >
-            <path
-              d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              fill="none"
-            />
-          </svg>
-          <!-- Sound Off Icon -->
-          <svg
-            class="sound-off"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+            <a
+              href="#about"
+              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+              style="font-family: 'Lora', serif"
+              role="menuitem"
+              >About</a
+            >
+            <a
+              href="services.html"
+              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+              style="font-family: 'Lora', serif"
+              role="menuitem"
+              >Services</a
+            >
+            <a
+              href="projects.html"
+              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+              style="font-family: 'Lora', serif"
+              role="menuitem"
+              >Projects</a
+            >
+            <a
+              href="activity.html"
+              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+              style="font-family: 'Lora', serif"
+              role="menuitem"
+              >Activity</a
+            >
+            <a
+              href="#contact"
+              class="text-white text-xs sm:text-sm tracking-wide hover:opacity-60 transition-all duration-300"
+              style="font-family: 'Lora', serif"
+              role="menuitem"
+              >Contact</a
+            >
+          </div>
+          <button
+            class="theme-toggle flex-shrink-0"
+            onclick="toggleTheme()"
+            aria-label="Toggle dark and light theme"
+            aria-pressed="false"
+            type="button"
+            tabindex="0"
           >
-            <path
-              d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              fill="none"
-            />
-          </svg>
-          <span class="sr-only">Toggle sound</span>
-        </button>
+            <!-- Sun Icon -->
+            <svg
+              class="sun-icon"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line
+                x1="12"
+                y1="1"
+                x2="12"
+                y2="3"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="12"
+                y1="21"
+                x2="12"
+                y2="23"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="4.22"
+                y1="4.22"
+                x2="5.64"
+                y2="5.64"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="18.36"
+                y1="18.36"
+                x2="19.78"
+                y2="19.78"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="1"
+                y1="12"
+                x2="3"
+                y2="12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="21"
+                y1="12"
+                x2="23"
+                y2="12"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="4.22"
+                y1="19.78"
+                x2="5.64"
+                y2="18.36"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="18.36"
+                y1="5.64"
+                x2="19.78"
+                y2="4.22"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+            <!-- Moon Icon -->
+            <svg
+              class="moon-icon"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+          <button
+            class="sound-toggle flex-shrink-0"
+            onclick="toggleSound()"
+            aria-label="Toggle sound"
+            type="button"
+            tabindex="0"
+          >
+            <!-- Sound On Icon -->
+            <svg
+              class="sound-on"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"
+              />
+            </svg>
+            <!-- Sound Off Icon -->
+            <svg
+              class="sound-off"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                fill="none"
+              />
+            </svg>
+            <span class="sr-only">Toggle sound</span>
+          </button>
+          <button
+            class="mobile-nav-toggle md:hidden text-white"
+            type="button"
+            aria-label="Toggle navigation menu"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            style="pointer-events: auto"
+          >
+            <span class="sr-only">Toggle menu</span>
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+          </button>
+        </div>
       </div>
     </nav>
+
+    <div
+      id="mobile-overlay"
+      class="mobile-menu-overlay md:hidden"
+      hidden
+      aria-hidden="true"
+    ></div>
+    <div
+      id="mobile-menu"
+      class="mobile-menu md:hidden"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mobile navigation"
+    >
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1 select-none">
+          <span
+            class="text-white text-base sm:text-lg tracking-normal"
+            style="font-family: 'Lora', serif"
+            >Kumud</span
+          >
+          <span
+            class="logo-word text-base sm:text-lg tracking-normal"
+            style="font-family: 'Lora', serif"
+            aria-hidden="true"
+            >Kode</span
+          >
+        </div>
+        <button
+          class="mobile-nav-toggle text-white"
+          type="button"
+          aria-label="Close navigation menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">Close menu</span>
+          <span class="line"></span>
+          <span class="line"></span>
+          <span class="line"></span>
+        </button>
+      </div>
+      <div class="menu-meta mono">Navigate</div>
+      <div class="flex flex-col" role="menu">
+        <a href="#about" role="menuitem">About</a>
+        <a href="services.html" role="menuitem">Services</a>
+        <a href="projects.html" role="menuitem">Projects</a>
+        <a href="activity.html" role="menuitem">Activity</a>
+        <a href="#contact" role="menuitem">Contact</a>
+      </div>
+    </div>
 
     <main id="main-content" role="main" tabindex="-1">
       <!-- Hero Section -->
@@ -1493,6 +1741,63 @@
         const toggle = document.querySelector(".sound-toggle");
         if (!soundEnabled && toggle) {
           toggle.classList.add("muted");
+        }
+      });
+
+      // Mobile menu toggle
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileOverlay = document.getElementById("mobile-overlay");
+      const mobileToggleButtons = document.querySelectorAll(
+        ".mobile-nav-toggle"
+      );
+
+      // Ensure hamburger is visible on load
+      window.addEventListener("DOMContentLoaded", () => {
+        if (window.innerWidth < 768) {
+          mobileToggleButtons.forEach((btn) => {
+            btn.style.display = "inline-flex";
+          });
+        }
+      });
+
+      const setMobileMenuState = (isOpen) => {
+        if (!mobileMenu || !mobileOverlay) return;
+
+        mobileMenu.classList.toggle("open", isOpen);
+        mobileMenu.setAttribute("aria-hidden", isOpen ? "false" : "true");
+        mobileOverlay.classList.toggle("active", isOpen);
+        mobileOverlay.hidden = !isOpen;
+
+        document.body.classList.toggle("overflow-hidden", isOpen);
+        document.documentElement.classList.toggle("overflow-hidden", isOpen);
+
+        mobileToggleButtons.forEach((btn) =>
+          btn.setAttribute("aria-expanded", isOpen ? "true" : "false")
+        );
+      };
+
+      mobileToggleButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const isOpen = mobileMenu?.classList.contains("open");
+          setMobileMenuState(!isOpen);
+        });
+      });
+
+      mobileOverlay?.addEventListener("click", () => setMobileMenuState(false));
+
+      mobileMenu?.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => setMobileMenuState(false));
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          setMobileMenuState(false);
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (window.innerWidth >= 768) {
+          setMobileMenuState(false);
         }
       });
 
