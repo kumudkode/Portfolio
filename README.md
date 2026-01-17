@@ -1,6 +1,6 @@
 Kumud Ranjan | Portfolio 2025
 
-An ultra-premium, editorial-style portfolio designed for Kumud Ranjan, a Full Stack Engineer and Cloud Specialist. This project focuses on high-performance motion design, minimalist "Paper" aesthetics, and a sophisticated developer-centric user experience.
+An ultra-premium, editorial-style portfolio designed by Kumud Ranjan, a Full Stack Engineer and Cloud Specialist. This project focuses on high-performance motion design, minimalist "Paper" aesthetics, and a sophisticated developer-centric user experience.
 
 Live Site: https://kumudkode.github.io/Portfolio/
 
@@ -46,28 +46,9 @@ Responsive Architecture: Fully optimized for mobile, tablet, and desktop viewpor
 ├── README.md        # Documentation
 └── (Assets)         # External libraries loaded via CDN for high speed
 
-
-🚀 Local Development
-
-Since this is a single-file Vanilla JS architecture, there are no dependencies to install.
-
-
-Open the file:
-Simply open index.html in any modern web browser or use a "Live Server" extension in VS Code.
-
 🌐 Deployment
 
-This project is optimized for GitHub Pages.
-
-Push your code to the main branch.
-
-In your GitHub Repository, go to Settings > Pages.
-
-Set the source to Deploy from a branch.
-
-Select main and /root, then click Save.
-
-Your site will be live at https://<username>.github.io/<repository-name>/ within minutes.
+https://kumudkode.github.io/Portfolio/
 
 👨‍💻 Author
 
@@ -77,6 +58,6 @@ LinkedIn: linkedin.com/in/kumudkode
 
 GitHub: github.com/kumudkode
 
-Email: raj94971@gmail.com
+Email: connect.kumud@gmail.com
 
 Built with code, design, and a lot of coffee.
